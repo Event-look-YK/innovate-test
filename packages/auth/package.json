@@ -1,0 +1,24 @@
+{
+  "name": "@innovate-test/auth",
+  "type": "module",
+  "exports": {
+    ".": {
+      "default": "./src/index.ts"
+    },
+    "./*": {
+      "default": "./src/*.ts"
+    }
+  },
+  "scripts": {},
+  "dependencies": {
+    "@innovate-test/db": "workspace:*",
+    "@innovate-test/env": "workspace:*",
+    "better-auth": "catalog:",
+    "dotenv": "catalog:",
+    "zod": "catalog:"
+  },
+  "devDependencies": {
+    "@innovate-test/config": "workspace:*",
+    "typescript": "^5"
+  }
+}

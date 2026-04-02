@@ -1,0 +1,32 @@
+{
+  "name": "innovate-test",
+  "private": true,
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "type": "module",
+  "scripts": {
+    "dev": "turbo dev",
+    "build": "turbo build",
+    "check-types": "turbo check-types",
+    "dev:web": "turbo -F web dev",
+    "dev:server": "turbo -F server dev",
+    "db:push": "turbo -F @innovate-test/db db:push",
+    "db:studio": "turbo -F @innovate-test/db db:studio",
+    "db:generate": "turbo -F @innovate-test/db db:generate",
+    "db:migrate": "turbo -F @innovate-test/db db:migrate"
+  },
+  "dependencies": {
+    "@innovate-test/env": "workspace:*",
+    "dotenv": "catalog:",
+    "zod": "catalog:"
+  },
+  "devDependencies": {
+    "@innovate-test/config": "workspace:*",
+    "@types/node": "catalog:",
+    "turbo": "^2.8.12",
+    "typescript": "^5"
+  },
+  "packageManager": "pnpm@10.18.2"
+}

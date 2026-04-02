@@ -1,0 +1,3 @@
+{
+  "extends": "@innovate-test/config/tsconfig.base.json"
+}
