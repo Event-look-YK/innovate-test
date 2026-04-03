@@ -1,0 +1,110 @@
+import { zodResolver } from "@hookform/resolvers/zod";
+import { Link, useParams } from "@tanstack/react-router";
+import { buttonVariants } from "@innovate-test/ui/components/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@innovate-test/ui/components/card";
+import { Field, FieldGroup, FieldLabel } from "@innovate-test/ui/components/field";
+import { Input } from "@innovate-test/ui/components/input";
+import { Textarea } from "@innovate-test/ui/components/textarea";
+import { cn } from "@innovate-test/ui/lib/utils";
+import { type Resolver, useForm } from "react-hook-form";
+import { toast } from "sonner";
+import { z } from "zod";
+
+import { useOffers } from "@/features/offers/hooks/use-offers";
+import { formatCurrencyUah } from "@/shared/lib/format";
+
+const counterSchema = z.object({
+  price: z.coerce.number().positive(),
+  message: z.string().optional(),
+});
+
+type CounterValues = z.infer<typeof counterSchema>;
+
+export const OfferDetailView = () => {
+  const { offerId } = useParams({ strict: false }) as { offerId: string };
+  const { data: offers } = useOffers();
+  const offer = offers?.find((o) => o.id === offerId);
+  const form = useForm<CounterValues>({
+    resolver: zodResolver(counterSchema) as Resolver<CounterValues>,
+    defaultValues: { price: offer?.offeredPriceUah ?? 0, message: "" },
+  });
+
+  if (!offer) {
+    return <p className="text-muted-foreground">Offer not found.</p>;
+  }
+
+  const onCounter = form.handleSubmit(() => {
+    toast.success("Counter-offer sent (mock)");
+  });
+
+  return (
+    <div className="flex flex-col gap-6">
+      <Link className={cn(buttonVariants({ size: "sm", variant: "ghost" }))} to="/offers">
+        ← Offers
+      </Link>
+      <h1 className="text-2xl font-semibold tracking-tight">{offer.taskTitle}</h1>
+      <div className="grid gap-4 lg:grid-cols-2">
+        <Card>
+          <CardHeader>
+            <CardTitle className="text-base">Cargo</CardTitle>
+          </CardHeader>
+          <CardContent className="text-sm text-muted-foreground">
+            <p>
+              {offer.cargoType} · {offer.weightT} t
+            </p>
+            <p>
+              {offer.originLabel} → {offer.destinationLabel} ({offer.distanceKm} km)
+            </p>
+            <p>Deadline {offer.deadline}</p>
+            <p className="mt-2 font-medium text-foreground">
+              Offered {formatCurrencyUah(offer.offeredPriceUah)}
+            </p>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardHeader>
+            <CardTitle className="text-base">Carrier</CardTitle>
+          </CardHeader>
+          <CardContent className="text-sm text-muted-foreground">Mock carrier · ★ 4.9</CardContent>
+        </Card>
+      </div>
+      <div className="flex h-40 items-center justify-center rounded-lg border border-dashed border-border bg-muted/30 text-sm text-muted-foreground">
+        Route map placeholder
+      </div>
+      <Card>
+        <CardHeader>
+          <CardTitle className="text-base">Respond</CardTitle>
+        </CardHeader>
+        <CardContent className="flex flex-col gap-4">
+          <div className="flex flex-wrap gap-2">
+            <button className={cn(buttonVariants())} type="button" onClick={() => toast.success("Accepted")}>
+              Accept
+            </button>
+            <button
+              className={cn(buttonVariants({ variant: "outline" }))}
+              type="button"
+              onClick={() => toast.success("Declined")}
+            >
+              Decline
+            </button>
+          </div>
+          <form className="flex flex-col gap-4" onSubmit={onCounter}>
+            <FieldGroup>
+              <Field>
+                <FieldLabel htmlFor="co-price">Proposed price (UAH)</FieldLabel>
+                <Input id="co-price" type="number" {...form.register("price")} />
+              </Field>
+              <Field>
+                <FieldLabel htmlFor="co-msg">Message</FieldLabel>
+                <Textarea id="co-msg" rows={2} {...form.register("message")} />
+              </Field>
+            </FieldGroup>
+            <button className={cn(buttonVariants({ variant: "secondary" }))} type="submit">
+              Counter-offer
+            </button>
+          </form>
+        </CardContent>
+      </Card>
+    </div>
+  );
+};

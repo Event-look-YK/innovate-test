@@ -9,38 +9,347 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as AuthenticatedRouteImport } from './routes/_authenticated'
+import { Route as AuthRouteRouteImport } from './routes/auth/route'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AuthSignUpRouteImport } from './routes/auth/sign-up'
+import { Route as AuthSignInRouteImport } from './routes/auth/sign-in'
+import { Route as AuthenticatedTeamRouteImport } from './routes/_authenticated.team'
+import { Route as AuthenticatedTasksRouteImport } from './routes/_authenticated.tasks'
+import { Route as AuthenticatedSettingsRouteImport } from './routes/_authenticated.settings'
+import { Route as AuthenticatedRoutesRouteImport } from './routes/_authenticated.routes_'
+import { Route as AuthenticatedOffersRouteImport } from './routes/_authenticated.offers'
+import { Route as AuthenticatedMessagesRouteImport } from './routes/_authenticated.messages'
+import { Route as AuthenticatedFleetRouteImport } from './routes/_authenticated.fleet'
+import { Route as AuthenticatedDemandRouteImport } from './routes/_authenticated.demand'
+import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated.dashboard'
+import { Route as AuthenticatedMessagesIndexRouteImport } from './routes/_authenticated.messages.index'
+import { Route as AuthSignUpFreelanceRouteImport } from './routes/auth/sign-up.freelance'
+import { Route as AuthenticatedTeamInviteRouteImport } from './routes/_authenticated.team.invite'
+import { Route as AuthenticatedTasksNewRouteImport } from './routes/_authenticated.tasks.new'
+import { Route as AuthenticatedTasksTaskIdRouteImport } from './routes/_authenticated.tasks.$taskId'
+import { Route as AuthenticatedRoutesGenerateRouteImport } from './routes/_authenticated.routes_.generate'
+import { Route as AuthenticatedRoutesRouteIdRouteImport } from './routes/_authenticated.routes_.$routeId'
+import { Route as AuthenticatedOffersOfferIdRouteImport } from './routes/_authenticated.offers.$offerId'
+import { Route as AuthenticatedMessagesThreadIdRouteImport } from './routes/_authenticated.messages.$threadId'
+import { Route as AuthenticatedFleetTruckIdRouteImport } from './routes/_authenticated.fleet.$truckId'
+import { Route as AuthenticatedDemandRequestIdRouteImport } from './routes/_authenticated.demand.$requestId'
 
+const AuthenticatedRoute = AuthenticatedRouteImport.update({
+  id: '/_authenticated',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AuthRouteRoute = AuthRouteRouteImport.update({
+  id: '/auth',
+  path: '/auth',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AuthSignUpRoute = AuthSignUpRouteImport.update({
+  id: '/sign-up',
+  path: '/sign-up',
+  getParentRoute: () => AuthRouteRoute,
+} as any)
+const AuthSignInRoute = AuthSignInRouteImport.update({
+  id: '/sign-in',
+  path: '/sign-in',
+  getParentRoute: () => AuthRouteRoute,
+} as any)
+const AuthenticatedTeamRoute = AuthenticatedTeamRouteImport.update({
+  id: '/team',
+  path: '/team',
+  getParentRoute: () => AuthenticatedRoute,
+} as any)
+const AuthenticatedTasksRoute = AuthenticatedTasksRouteImport.update({
+  id: '/tasks',
+  path: '/tasks',
+  getParentRoute: () => AuthenticatedRoute,
+} as any)
+const AuthenticatedSettingsRoute = AuthenticatedSettingsRouteImport.update({
+  id: '/settings',
+  path: '/settings',
+  getParentRoute: () => AuthenticatedRoute,
+} as any)
+const AuthenticatedRoutesRoute = AuthenticatedRoutesRouteImport.update({
+  id: '/routes_',
+  path: '/routes',
+  getParentRoute: () => AuthenticatedRoute,
+} as any)
+const AuthenticatedOffersRoute = AuthenticatedOffersRouteImport.update({
+  id: '/offers',
+  path: '/offers',
+  getParentRoute: () => AuthenticatedRoute,
+} as any)
+const AuthenticatedMessagesRoute = AuthenticatedMessagesRouteImport.update({
+  id: '/messages',
+  path: '/messages',
+  getParentRoute: () => AuthenticatedRoute,
+} as any)
+const AuthenticatedFleetRoute = AuthenticatedFleetRouteImport.update({
+  id: '/fleet',
+  path: '/fleet',
+  getParentRoute: () => AuthenticatedRoute,
+} as any)
+const AuthenticatedDemandRoute = AuthenticatedDemandRouteImport.update({
+  id: '/demand',
+  path: '/demand',
+  getParentRoute: () => AuthenticatedRoute,
+} as any)
+const AuthenticatedDashboardRoute = AuthenticatedDashboardRouteImport.update({
+  id: '/dashboard',
+  path: '/dashboard',
+  getParentRoute: () => AuthenticatedRoute,
+} as any)
+const AuthenticatedMessagesIndexRoute =
+  AuthenticatedMessagesIndexRouteImport.update({
+    id: '/',
+    path: '/',
+    getParentRoute: () => AuthenticatedMessagesRoute,
+  } as any)
+const AuthSignUpFreelanceRoute = AuthSignUpFreelanceRouteImport.update({
+  id: '/freelance',
+  path: '/freelance',
+  getParentRoute: () => AuthSignUpRoute,
+} as any)
+const AuthenticatedTeamInviteRoute = AuthenticatedTeamInviteRouteImport.update({
+  id: '/invite',
+  path: '/invite',
+  getParentRoute: () => AuthenticatedTeamRoute,
+} as any)
+const AuthenticatedTasksNewRoute = AuthenticatedTasksNewRouteImport.update({
+  id: '/new',
+  path: '/new',
+  getParentRoute: () => AuthenticatedTasksRoute,
+} as any)
+const AuthenticatedTasksTaskIdRoute =
+  AuthenticatedTasksTaskIdRouteImport.update({
+    id: '/$taskId',
+    path: '/$taskId',
+    getParentRoute: () => AuthenticatedTasksRoute,
+  } as any)
+const AuthenticatedRoutesGenerateRoute =
+  AuthenticatedRoutesGenerateRouteImport.update({
+    id: '/generate',
+    path: '/generate',
+    getParentRoute: () => AuthenticatedRoutesRoute,
+  } as any)
+const AuthenticatedRoutesRouteIdRoute =
+  AuthenticatedRoutesRouteIdRouteImport.update({
+    id: '/$routeId',
+    path: '/$routeId',
+    getParentRoute: () => AuthenticatedRoutesRoute,
+  } as any)
+const AuthenticatedOffersOfferIdRoute =
+  AuthenticatedOffersOfferIdRouteImport.update({
+    id: '/$offerId',
+    path: '/$offerId',
+    getParentRoute: () => AuthenticatedOffersRoute,
+  } as any)
+const AuthenticatedMessagesThreadIdRoute =
+  AuthenticatedMessagesThreadIdRouteImport.update({
+    id: '/$threadId',
+    path: '/$threadId',
+    getParentRoute: () => AuthenticatedMessagesRoute,
+  } as any)
+const AuthenticatedFleetTruckIdRoute =
+  AuthenticatedFleetTruckIdRouteImport.update({
+    id: '/$truckId',
+    path: '/$truckId',
+    getParentRoute: () => AuthenticatedFleetRoute,
+  } as any)
+const AuthenticatedDemandRequestIdRoute =
+  AuthenticatedDemandRequestIdRouteImport.update({
+    id: '/$requestId',
+    path: '/$requestId',
+    getParentRoute: () => AuthenticatedDemandRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/auth': typeof AuthRouteRouteWithChildren
+  '/dashboard': typeof AuthenticatedDashboardRoute
+  '/demand': typeof AuthenticatedDemandRouteWithChildren
+  '/fleet': typeof AuthenticatedFleetRouteWithChildren
+  '/messages': typeof AuthenticatedMessagesRouteWithChildren
+  '/offers': typeof AuthenticatedOffersRouteWithChildren
+  '/routes': typeof AuthenticatedRoutesRouteWithChildren
+  '/settings': typeof AuthenticatedSettingsRoute
+  '/tasks': typeof AuthenticatedTasksRouteWithChildren
+  '/team': typeof AuthenticatedTeamRouteWithChildren
+  '/auth/sign-in': typeof AuthSignInRoute
+  '/auth/sign-up': typeof AuthSignUpRouteWithChildren
+  '/demand/$requestId': typeof AuthenticatedDemandRequestIdRoute
+  '/fleet/$truckId': typeof AuthenticatedFleetTruckIdRoute
+  '/messages/$threadId': typeof AuthenticatedMessagesThreadIdRoute
+  '/offers/$offerId': typeof AuthenticatedOffersOfferIdRoute
+  '/routes/$routeId': typeof AuthenticatedRoutesRouteIdRoute
+  '/routes/generate': typeof AuthenticatedRoutesGenerateRoute
+  '/tasks/$taskId': typeof AuthenticatedTasksTaskIdRoute
+  '/tasks/new': typeof AuthenticatedTasksNewRoute
+  '/team/invite': typeof AuthenticatedTeamInviteRoute
+  '/auth/sign-up/freelance': typeof AuthSignUpFreelanceRoute
+  '/messages/': typeof AuthenticatedMessagesIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/auth': typeof AuthRouteRouteWithChildren
+  '/dashboard': typeof AuthenticatedDashboardRoute
+  '/demand': typeof AuthenticatedDemandRouteWithChildren
+  '/fleet': typeof AuthenticatedFleetRouteWithChildren
+  '/offers': typeof AuthenticatedOffersRouteWithChildren
+  '/routes': typeof AuthenticatedRoutesRouteWithChildren
+  '/settings': typeof AuthenticatedSettingsRoute
+  '/tasks': typeof AuthenticatedTasksRouteWithChildren
+  '/team': typeof AuthenticatedTeamRouteWithChildren
+  '/auth/sign-in': typeof AuthSignInRoute
+  '/auth/sign-up': typeof AuthSignUpRouteWithChildren
+  '/demand/$requestId': typeof AuthenticatedDemandRequestIdRoute
+  '/fleet/$truckId': typeof AuthenticatedFleetTruckIdRoute
+  '/messages/$threadId': typeof AuthenticatedMessagesThreadIdRoute
+  '/offers/$offerId': typeof AuthenticatedOffersOfferIdRoute
+  '/routes/$routeId': typeof AuthenticatedRoutesRouteIdRoute
+  '/routes/generate': typeof AuthenticatedRoutesGenerateRoute
+  '/tasks/$taskId': typeof AuthenticatedTasksTaskIdRoute
+  '/tasks/new': typeof AuthenticatedTasksNewRoute
+  '/team/invite': typeof AuthenticatedTeamInviteRoute
+  '/auth/sign-up/freelance': typeof AuthSignUpFreelanceRoute
+  '/messages': typeof AuthenticatedMessagesIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/auth': typeof AuthRouteRouteWithChildren
+  '/_authenticated': typeof AuthenticatedRouteWithChildren
+  '/_authenticated/dashboard': typeof AuthenticatedDashboardRoute
+  '/_authenticated/demand': typeof AuthenticatedDemandRouteWithChildren
+  '/_authenticated/fleet': typeof AuthenticatedFleetRouteWithChildren
+  '/_authenticated/messages': typeof AuthenticatedMessagesRouteWithChildren
+  '/_authenticated/offers': typeof AuthenticatedOffersRouteWithChildren
+  '/_authenticated/routes_': typeof AuthenticatedRoutesRouteWithChildren
+  '/_authenticated/settings': typeof AuthenticatedSettingsRoute
+  '/_authenticated/tasks': typeof AuthenticatedTasksRouteWithChildren
+  '/_authenticated/team': typeof AuthenticatedTeamRouteWithChildren
+  '/auth/sign-in': typeof AuthSignInRoute
+  '/auth/sign-up': typeof AuthSignUpRouteWithChildren
+  '/_authenticated/demand/$requestId': typeof AuthenticatedDemandRequestIdRoute
+  '/_authenticated/fleet/$truckId': typeof AuthenticatedFleetTruckIdRoute
+  '/_authenticated/messages/$threadId': typeof AuthenticatedMessagesThreadIdRoute
+  '/_authenticated/offers/$offerId': typeof AuthenticatedOffersOfferIdRoute
+  '/_authenticated/routes_/$routeId': typeof AuthenticatedRoutesRouteIdRoute
+  '/_authenticated/routes_/generate': typeof AuthenticatedRoutesGenerateRoute
+  '/_authenticated/tasks/$taskId': typeof AuthenticatedTasksTaskIdRoute
+  '/_authenticated/tasks/new': typeof AuthenticatedTasksNewRoute
+  '/_authenticated/team/invite': typeof AuthenticatedTeamInviteRoute
+  '/auth/sign-up/freelance': typeof AuthSignUpFreelanceRoute
+  '/_authenticated/messages/': typeof AuthenticatedMessagesIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths:
+    | '/'
+    | '/auth'
+    | '/dashboard'
+    | '/demand'
+    | '/fleet'
+    | '/messages'
+    | '/offers'
+    | '/routes'
+    | '/settings'
+    | '/tasks'
+    | '/team'
+    | '/auth/sign-in'
+    | '/auth/sign-up'
+    | '/demand/$requestId'
+    | '/fleet/$truckId'
+    | '/messages/$threadId'
+    | '/offers/$offerId'
+    | '/routes/$routeId'
+    | '/routes/generate'
+    | '/tasks/$taskId'
+    | '/tasks/new'
+    | '/team/invite'
+    | '/auth/sign-up/freelance'
+    | '/messages/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to:
+    | '/'
+    | '/auth'
+    | '/dashboard'
+    | '/demand'
+    | '/fleet'
+    | '/offers'
+    | '/routes'
+    | '/settings'
+    | '/tasks'
+    | '/team'
+    | '/auth/sign-in'
+    | '/auth/sign-up'
+    | '/demand/$requestId'
+    | '/fleet/$truckId'
+    | '/messages/$threadId'
+    | '/offers/$offerId'
+    | '/routes/$routeId'
+    | '/routes/generate'
+    | '/tasks/$taskId'
+    | '/tasks/new'
+    | '/team/invite'
+    | '/auth/sign-up/freelance'
+    | '/messages'
+  id:
+    | '__root__'
+    | '/'
+    | '/auth'
+    | '/_authenticated'
+    | '/_authenticated/dashboard'
+    | '/_authenticated/demand'
+    | '/_authenticated/fleet'
+    | '/_authenticated/messages'
+    | '/_authenticated/offers'
+    | '/_authenticated/routes_'
+    | '/_authenticated/settings'
+    | '/_authenticated/tasks'
+    | '/_authenticated/team'
+    | '/auth/sign-in'
+    | '/auth/sign-up'
+    | '/_authenticated/demand/$requestId'
+    | '/_authenticated/fleet/$truckId'
+    | '/_authenticated/messages/$threadId'
+    | '/_authenticated/offers/$offerId'
+    | '/_authenticated/routes_/$routeId'
+    | '/_authenticated/routes_/generate'
+    | '/_authenticated/tasks/$taskId'
+    | '/_authenticated/tasks/new'
+    | '/_authenticated/team/invite'
+    | '/auth/sign-up/freelance'
+    | '/_authenticated/messages/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AuthRouteRoute: typeof AuthRouteRouteWithChildren
+  AuthenticatedRoute: typeof AuthenticatedRouteWithChildren
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/_authenticated': {
+      id: '/_authenticated'
+      path: ''
+      fullPath: '/'
+      preLoaderRoute: typeof AuthenticatedRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/auth': {
+      id: '/auth'
+      path: '/auth'
+      fullPath: '/auth'
+      preLoaderRoute: typeof AuthRouteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
@@ -48,11 +357,306 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/auth/sign-up': {
+      id: '/auth/sign-up'
+      path: '/sign-up'
+      fullPath: '/auth/sign-up'
+      preLoaderRoute: typeof AuthSignUpRouteImport
+      parentRoute: typeof AuthRouteRoute
+    }
+    '/auth/sign-in': {
+      id: '/auth/sign-in'
+      path: '/sign-in'
+      fullPath: '/auth/sign-in'
+      preLoaderRoute: typeof AuthSignInRouteImport
+      parentRoute: typeof AuthRouteRoute
+    }
+    '/_authenticated/team': {
+      id: '/_authenticated/team'
+      path: '/team'
+      fullPath: '/team'
+      preLoaderRoute: typeof AuthenticatedTeamRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
+    '/_authenticated/tasks': {
+      id: '/_authenticated/tasks'
+      path: '/tasks'
+      fullPath: '/tasks'
+      preLoaderRoute: typeof AuthenticatedTasksRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
+    '/_authenticated/settings': {
+      id: '/_authenticated/settings'
+      path: '/settings'
+      fullPath: '/settings'
+      preLoaderRoute: typeof AuthenticatedSettingsRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
+    '/_authenticated/routes_': {
+      id: '/_authenticated/routes_'
+      path: '/routes'
+      fullPath: '/routes'
+      preLoaderRoute: typeof AuthenticatedRoutesRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
+    '/_authenticated/offers': {
+      id: '/_authenticated/offers'
+      path: '/offers'
+      fullPath: '/offers'
+      preLoaderRoute: typeof AuthenticatedOffersRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
+    '/_authenticated/messages': {
+      id: '/_authenticated/messages'
+      path: '/messages'
+      fullPath: '/messages'
+      preLoaderRoute: typeof AuthenticatedMessagesRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
+    '/_authenticated/fleet': {
+      id: '/_authenticated/fleet'
+      path: '/fleet'
+      fullPath: '/fleet'
+      preLoaderRoute: typeof AuthenticatedFleetRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
+    '/_authenticated/demand': {
+      id: '/_authenticated/demand'
+      path: '/demand'
+      fullPath: '/demand'
+      preLoaderRoute: typeof AuthenticatedDemandRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
+    '/_authenticated/dashboard': {
+      id: '/_authenticated/dashboard'
+      path: '/dashboard'
+      fullPath: '/dashboard'
+      preLoaderRoute: typeof AuthenticatedDashboardRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
+    '/_authenticated/messages/': {
+      id: '/_authenticated/messages/'
+      path: '/'
+      fullPath: '/messages/'
+      preLoaderRoute: typeof AuthenticatedMessagesIndexRouteImport
+      parentRoute: typeof AuthenticatedMessagesRoute
+    }
+    '/auth/sign-up/freelance': {
+      id: '/auth/sign-up/freelance'
+      path: '/freelance'
+      fullPath: '/auth/sign-up/freelance'
+      preLoaderRoute: typeof AuthSignUpFreelanceRouteImport
+      parentRoute: typeof AuthSignUpRoute
+    }
+    '/_authenticated/team/invite': {
+      id: '/_authenticated/team/invite'
+      path: '/invite'
+      fullPath: '/team/invite'
+      preLoaderRoute: typeof AuthenticatedTeamInviteRouteImport
+      parentRoute: typeof AuthenticatedTeamRoute
+    }
+    '/_authenticated/tasks/new': {
+      id: '/_authenticated/tasks/new'
+      path: '/new'
+      fullPath: '/tasks/new'
+      preLoaderRoute: typeof AuthenticatedTasksNewRouteImport
+      parentRoute: typeof AuthenticatedTasksRoute
+    }
+    '/_authenticated/tasks/$taskId': {
+      id: '/_authenticated/tasks/$taskId'
+      path: '/$taskId'
+      fullPath: '/tasks/$taskId'
+      preLoaderRoute: typeof AuthenticatedTasksTaskIdRouteImport
+      parentRoute: typeof AuthenticatedTasksRoute
+    }
+    '/_authenticated/routes_/generate': {
+      id: '/_authenticated/routes_/generate'
+      path: '/generate'
+      fullPath: '/routes/generate'
+      preLoaderRoute: typeof AuthenticatedRoutesGenerateRouteImport
+      parentRoute: typeof AuthenticatedRoutesRoute
+    }
+    '/_authenticated/routes_/$routeId': {
+      id: '/_authenticated/routes_/$routeId'
+      path: '/$routeId'
+      fullPath: '/routes/$routeId'
+      preLoaderRoute: typeof AuthenticatedRoutesRouteIdRouteImport
+      parentRoute: typeof AuthenticatedRoutesRoute
+    }
+    '/_authenticated/offers/$offerId': {
+      id: '/_authenticated/offers/$offerId'
+      path: '/$offerId'
+      fullPath: '/offers/$offerId'
+      preLoaderRoute: typeof AuthenticatedOffersOfferIdRouteImport
+      parentRoute: typeof AuthenticatedOffersRoute
+    }
+    '/_authenticated/messages/$threadId': {
+      id: '/_authenticated/messages/$threadId'
+      path: '/$threadId'
+      fullPath: '/messages/$threadId'
+      preLoaderRoute: typeof AuthenticatedMessagesThreadIdRouteImport
+      parentRoute: typeof AuthenticatedMessagesRoute
+    }
+    '/_authenticated/fleet/$truckId': {
+      id: '/_authenticated/fleet/$truckId'
+      path: '/$truckId'
+      fullPath: '/fleet/$truckId'
+      preLoaderRoute: typeof AuthenticatedFleetTruckIdRouteImport
+      parentRoute: typeof AuthenticatedFleetRoute
+    }
+    '/_authenticated/demand/$requestId': {
+      id: '/_authenticated/demand/$requestId'
+      path: '/$requestId'
+      fullPath: '/demand/$requestId'
+      preLoaderRoute: typeof AuthenticatedDemandRequestIdRouteImport
+      parentRoute: typeof AuthenticatedDemandRoute
+    }
   }
 }
 
+interface AuthSignUpRouteChildren {
+  AuthSignUpFreelanceRoute: typeof AuthSignUpFreelanceRoute
+}
+
+const AuthSignUpRouteChildren: AuthSignUpRouteChildren = {
+  AuthSignUpFreelanceRoute: AuthSignUpFreelanceRoute,
+}
+
+const AuthSignUpRouteWithChildren = AuthSignUpRoute._addFileChildren(
+  AuthSignUpRouteChildren,
+)
+
+interface AuthRouteRouteChildren {
+  AuthSignInRoute: typeof AuthSignInRoute
+  AuthSignUpRoute: typeof AuthSignUpRouteWithChildren
+}
+
+const AuthRouteRouteChildren: AuthRouteRouteChildren = {
+  AuthSignInRoute: AuthSignInRoute,
+  AuthSignUpRoute: AuthSignUpRouteWithChildren,
+}
+
+const AuthRouteRouteWithChildren = AuthRouteRoute._addFileChildren(
+  AuthRouteRouteChildren,
+)
+
+interface AuthenticatedDemandRouteChildren {
+  AuthenticatedDemandRequestIdRoute: typeof AuthenticatedDemandRequestIdRoute
+}
+
+const AuthenticatedDemandRouteChildren: AuthenticatedDemandRouteChildren = {
+  AuthenticatedDemandRequestIdRoute: AuthenticatedDemandRequestIdRoute,
+}
+
+const AuthenticatedDemandRouteWithChildren =
+  AuthenticatedDemandRoute._addFileChildren(AuthenticatedDemandRouteChildren)
+
+interface AuthenticatedFleetRouteChildren {
+  AuthenticatedFleetTruckIdRoute: typeof AuthenticatedFleetTruckIdRoute
+}
+
+const AuthenticatedFleetRouteChildren: AuthenticatedFleetRouteChildren = {
+  AuthenticatedFleetTruckIdRoute: AuthenticatedFleetTruckIdRoute,
+}
+
+const AuthenticatedFleetRouteWithChildren =
+  AuthenticatedFleetRoute._addFileChildren(AuthenticatedFleetRouteChildren)
+
+interface AuthenticatedMessagesRouteChildren {
+  AuthenticatedMessagesThreadIdRoute: typeof AuthenticatedMessagesThreadIdRoute
+  AuthenticatedMessagesIndexRoute: typeof AuthenticatedMessagesIndexRoute
+}
+
+const AuthenticatedMessagesRouteChildren: AuthenticatedMessagesRouteChildren = {
+  AuthenticatedMessagesThreadIdRoute: AuthenticatedMessagesThreadIdRoute,
+  AuthenticatedMessagesIndexRoute: AuthenticatedMessagesIndexRoute,
+}
+
+const AuthenticatedMessagesRouteWithChildren =
+  AuthenticatedMessagesRoute._addFileChildren(
+    AuthenticatedMessagesRouteChildren,
+  )
+
+interface AuthenticatedOffersRouteChildren {
+  AuthenticatedOffersOfferIdRoute: typeof AuthenticatedOffersOfferIdRoute
+}
+
+const AuthenticatedOffersRouteChildren: AuthenticatedOffersRouteChildren = {
+  AuthenticatedOffersOfferIdRoute: AuthenticatedOffersOfferIdRoute,
+}
+
+const AuthenticatedOffersRouteWithChildren =
+  AuthenticatedOffersRoute._addFileChildren(AuthenticatedOffersRouteChildren)
+
+interface AuthenticatedRoutesRouteChildren {
+  AuthenticatedRoutesRouteIdRoute: typeof AuthenticatedRoutesRouteIdRoute
+  AuthenticatedRoutesGenerateRoute: typeof AuthenticatedRoutesGenerateRoute
+}
+
+const AuthenticatedRoutesRouteChildren: AuthenticatedRoutesRouteChildren = {
+  AuthenticatedRoutesRouteIdRoute: AuthenticatedRoutesRouteIdRoute,
+  AuthenticatedRoutesGenerateRoute: AuthenticatedRoutesGenerateRoute,
+}
+
+const AuthenticatedRoutesRouteWithChildren =
+  AuthenticatedRoutesRoute._addFileChildren(AuthenticatedRoutesRouteChildren)
+
+interface AuthenticatedTasksRouteChildren {
+  AuthenticatedTasksTaskIdRoute: typeof AuthenticatedTasksTaskIdRoute
+  AuthenticatedTasksNewRoute: typeof AuthenticatedTasksNewRoute
+}
+
+const AuthenticatedTasksRouteChildren: AuthenticatedTasksRouteChildren = {
+  AuthenticatedTasksTaskIdRoute: AuthenticatedTasksTaskIdRoute,
+  AuthenticatedTasksNewRoute: AuthenticatedTasksNewRoute,
+}
+
+const AuthenticatedTasksRouteWithChildren =
+  AuthenticatedTasksRoute._addFileChildren(AuthenticatedTasksRouteChildren)
+
+interface AuthenticatedTeamRouteChildren {
+  AuthenticatedTeamInviteRoute: typeof AuthenticatedTeamInviteRoute
+}
+
+const AuthenticatedTeamRouteChildren: AuthenticatedTeamRouteChildren = {
+  AuthenticatedTeamInviteRoute: AuthenticatedTeamInviteRoute,
+}
+
+const AuthenticatedTeamRouteWithChildren =
+  AuthenticatedTeamRoute._addFileChildren(AuthenticatedTeamRouteChildren)
+
+interface AuthenticatedRouteChildren {
+  AuthenticatedDashboardRoute: typeof AuthenticatedDashboardRoute
+  AuthenticatedDemandRoute: typeof AuthenticatedDemandRouteWithChildren
+  AuthenticatedFleetRoute: typeof AuthenticatedFleetRouteWithChildren
+  AuthenticatedMessagesRoute: typeof AuthenticatedMessagesRouteWithChildren
+  AuthenticatedOffersRoute: typeof AuthenticatedOffersRouteWithChildren
+  AuthenticatedRoutesRoute: typeof AuthenticatedRoutesRouteWithChildren
+  AuthenticatedSettingsRoute: typeof AuthenticatedSettingsRoute
+  AuthenticatedTasksRoute: typeof AuthenticatedTasksRouteWithChildren
+  AuthenticatedTeamRoute: typeof AuthenticatedTeamRouteWithChildren
+}
+
+const AuthenticatedRouteChildren: AuthenticatedRouteChildren = {
+  AuthenticatedDashboardRoute: AuthenticatedDashboardRoute,
+  AuthenticatedDemandRoute: AuthenticatedDemandRouteWithChildren,
+  AuthenticatedFleetRoute: AuthenticatedFleetRouteWithChildren,
+  AuthenticatedMessagesRoute: AuthenticatedMessagesRouteWithChildren,
+  AuthenticatedOffersRoute: AuthenticatedOffersRouteWithChildren,
+  AuthenticatedRoutesRoute: AuthenticatedRoutesRouteWithChildren,
+  AuthenticatedSettingsRoute: AuthenticatedSettingsRoute,
+  AuthenticatedTasksRoute: AuthenticatedTasksRouteWithChildren,
+  AuthenticatedTeamRoute: AuthenticatedTeamRouteWithChildren,
+}
+
+const AuthenticatedRouteWithChildren = AuthenticatedRoute._addFileChildren(
+  AuthenticatedRouteChildren,
+)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AuthRouteRoute: AuthRouteRouteWithChildren,
+  AuthenticatedRoute: AuthenticatedRouteWithChildren,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

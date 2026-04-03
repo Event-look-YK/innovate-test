@@ -1,10 +1,33 @@
 import { Toaster } from "@innovate-test/ui/components/sonner";
+import { TooltipProvider } from "@innovate-test/ui/components/tooltip";
 import { HeadContent, Outlet, Scripts, createRootRouteWithContext } from "@tanstack/react-router";
 import { TanStackRouterDevtools } from "@tanstack/react-router-devtools";
 
 import appCss from "../index.css?url";
+import { QueryProvider } from "@/shared/providers/query-provider";
+import { ThemeProvider } from "@/shared/providers/theme-provider";
 
 export interface RouterAppContext {}
+
+const RootDocument = () => (
+  <html lang="en" suppressHydrationWarning>
+    <head>
+      <HeadContent />
+    </head>
+    <body>
+      <ThemeProvider>
+        <QueryProvider>
+          <TooltipProvider>
+            <Outlet />
+          </TooltipProvider>
+        </QueryProvider>
+      </ThemeProvider>
+      <Toaster richColors />
+      <TanStackRouterDevtools position="bottom-left" />
+      <Scripts />
+    </body>
+  </html>
+);
 
 export const Route = createRootRouteWithContext<RouterAppContext>()({
   head: () => ({
@@ -17,7 +40,7 @@ export const Route = createRootRouteWithContext<RouterAppContext>()({
         content: "width=device-width, initial-scale=1",
       },
       {
-        title: "My App",
+        title: "Innovate Logistics",
       },
     ],
     links: [
@@ -30,21 +53,3 @@ export const Route = createRootRouteWithContext<RouterAppContext>()({
 
   component: RootDocument,
 });
-
-function RootDocument() {
-  return (
-    <html lang="en">
-      <head>
-        <HeadContent />
-      </head>
-      <body>
-        <div className="grid h-svh grid-rows-[auto_1fr]">
-          <Outlet />
-        </div>
-        <Toaster richColors />
-        <TanStackRouterDevtools position="bottom-left" />
-        <Scripts />
-      </body>
-    </html>
-  );
-}

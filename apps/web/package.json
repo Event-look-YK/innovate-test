@@ -8,6 +8,7 @@
     "dev": "vite dev"
   },
   "dependencies": {
+    "@hookform/resolvers": "^5.2.2",
     "@innovate-test/auth": "workspace:*",
     "@innovate-test/env": "workspace:*",
     "@innovate-test/ui": "workspace:*",
@@ -19,15 +20,18 @@
     "@tanstack/react-start": "^1.141.1",
     "@tanstack/router-plugin": "^1.141.1",
     "better-auth": "catalog:",
+    "date-fns": "^4.1.0",
     "dotenv": "catalog:",
     "lucide-react": "catalog:",
     "next-themes": "catalog:",
     "react": "catalog:",
     "react-dom": "catalog:",
+    "react-hook-form": "^7.72.1",
     "sonner": "catalog:",
     "tailwindcss": "catalog:",
     "vite-tsconfig-paths": "^5.1.4",
-    "zod": "catalog:"
+    "zod": "catalog:",
+    "zustand": "^5.0.12"
   },
   "devDependencies": {
     "@innovate-test/config": "workspace:*",
