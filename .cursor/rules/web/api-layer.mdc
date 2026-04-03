@@ -1,0 +1,77 @@
+---
+description: HTTP API and TanStack Query conventions for the web app (apps/web)
+globs: apps/web/src/shared/lib/http.ts
+alwaysApply: false
+---
+
+# Web API layer (HTTP + TanStack Query)
+
+Server communication uses **typed `fetch`** against the Fastify app (REST-style JSON endpoints). Pair with **TanStack Query** for caching, retries, and mutations.
+
+## Client setup
+
+Centralise base URL, credentials, and JSON parsing in `apps/web/src/shared/lib/http.ts`:
+
+```ts
+import { env } from "@innovate-test/env/web";
+
+const baseUrl = env.VITE_SERVER_URL.replace(/\/$/, "");
+
+export const http = {
+  async get<T>(path: string, init?: RequestInit): Promise<T> {
+    const res = await fetch(`${baseUrl}${path}`, {
+      ...init,
+      method: "GET",
+      credentials: "include",
+      headers: { Accept: "application/json", ...init?.headers },
+    });
+    if (!res.ok) throw await parseError(res);
+    return res.json() as Promise<T>;
+  },
+  async post<T>(path: string, body: unknown, init?: RequestInit): Promise<T> {
+    const res = await fetch(`${baseUrl}${path}`, {
+      ...init,
+      method: "POST",
+      credentials: "include",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+        ...init?.headers,
+      },
+      body: JSON.stringify(body),
+    });
+    if (!res.ok) throw await parseError(res);
+    return res.json() as Promise<T>;
+  },
+};
+```
+
+Import `http` from the concrete path: `@/shared/lib/http`. Do not use barrel `index.ts` re-exports.
+
+## TanStack Query
+
+- Use `useQuery` / `useMutation` with explicit `queryKey` arrays and `queryFn` / `mutationFn` that call `http.get` / `http.post`.
+- Invalidate related keys after mutations with `queryClient.invalidateQueries({ queryKey: [...] })`.
+- Prefer small typed response types next to the hook or in `shared/types` rather than a generated RPC schema.
+
+```ts
+import { useQuery } from "@tanstack/react-query";
+import { http } from "@/shared/lib/http";
+
+type User = { id: string; name: string };
+
+export const useUser = (id: string) =>
+  useQuery({
+    queryKey: ["user", id],
+    queryFn: () => http.get<User>(`/api/users/${id}`),
+  });
+```
+
+## Local-first
+
+When a response should be available offline, persist via **Dexie** and surface to the UI with **TanStack DB** collections (see `shared/db/`). TanStack Query remains the remote source; on success, write through to local stores as needed.
+
+## Error handling
+
+- Normalize HTTP errors in `parseError` (status, message, optional body shape).
+- Let React Query expose errors to the UI; use `onError` or error boundaries for toasts where appropriate.

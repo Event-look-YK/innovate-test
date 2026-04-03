@@ -1,0 +1,77 @@
+---
+description: Preferred folder structure and placement of logic for the main web app (apps/web)
+alwaysApply: true
+---
+
+# Monorepo overview
+
+This project is a **pnpm workspaces + Turborepo** monorepo:
+
+- `apps/web/` — React + Vite + TanStack frontend.
+- `apps/server/` — Fastify API server.
+- `packages/auth` — Better Auth configuration (`@innovate-test/auth`).
+- `packages/db` — Drizzle ORM schema and migrations (`@innovate-test/db`).
+- `packages/env` — Typed env validation (`@innovate-test/env/web`, `@innovate-test/env/server`).
+- `packages/ui` — Shared shadcn/Radix/Tailwind UI components and global styles (`@innovate-test/ui`).
+- `packages/config` — Shared TypeScript config (`@innovate-test/config`).
+
+Use `@innovate-test/*` imports for shared packages. Use `@/*` (maps to `apps/web/src/*`) for app-local code.
+
+# Web app folder structure (FSD)
+
+The web app (`apps/web/src/`) follows **Feature-Sliced Design**:
+
+- `src/shared/**` — cross-cutting code used by many domains.
+- `src/features/**` — domain-oriented feature slices.
+- `src/views/**` — view/container components (pages-layer composition).
+- `src/routes/**` — TanStack Router file-based routes (routing and layout composition only).
+
+## Imports
+
+- Import **concrete modules** by path (e.g. `@/shared/lib/format`, `@/features/fleet/ui/fleet-table`, `@/views/auth/sign-in-view`).
+- Do **not** add `index.ts` barrel files that re-export whole folders. Avoid deep barrel chains; they fight tree-shaking and obscure origins.
+
+## Shared
+
+- Put shared utilities, UI primitives, stores, and cross-domain helpers in `shared`.
+- If multiple features need the same helper or component, promote it into `shared` instead of duplicating it.
+- If you spot the same helper implemented in 2+ places, consolidate into `src/shared/lib/**` (or `src/shared/ui/**` for UI) and delete duplicates.
+- **Infrastructure + primitives:**
+  - `shared/db` — Dexie (IndexedDB schema, migrations) and TanStack DB collection wiring for local-first data.
+  - `shared/lib` — utilities and non-UI helpers (e.g. `http.ts` for typed fetch to Fastify).
+  - `shared/assets` — shared assets (images, icons, fonts).
+  - `shared/constants` — global constants (roles, flags, limits).
+  - `shared/hooks` — generic hooks.
+  - `shared/middlewares` — auth/role middlewares for TanStack Router.
+  - `shared/providers` — app-wide React providers (e.g. `query-provider.tsx`, `offline-provider.tsx`).
+  - `shared/ui` — local reusable UI primitives not covered by `@innovate-test/ui`.
+  - `shared/stores` — Zustand stores.
+  - `shared/types` — shared types.
+
+## Features (domain slices)
+
+- Each domain lives under `src/features/<domain>/`.
+- Inside a domain, use **segments**: `ui/`, `lib/`, `hooks/` as needed.
+- **Do not** add `index.ts` at the feature root to re-export the slice; import from the file that defines the symbol.
+- When adding new behavior, **extend the feature** instead of putting code directly in routes.
+
+## Views
+
+- Use `src/views/**` for view/container components that wire features together.
+- Naming: `<name>-view.tsx` exporting `<Name>View` (e.g. `sign-in-view.tsx` → `SignInView`).
+- Prefer grouping by domain: `src/views/<domain>/<name>-view.tsx`.
+- **Do not** add per-domain or root `index.ts` barrels under `views/`; routes import explicit view paths.
+
+## Routes (TanStack Router)
+
+- `src/routes/**` — routing and layout composition only.
+- `routeTree.gen.ts` is auto-generated; never edit it manually.
+- Route files delegate domain logic to `features` and page composition to `views`.
+
+## Path aliases
+
+- `@/*` — app-local imports.
+- `@innovate-test/ui/components/<name>` — shadcn UI from the shared package.
+- `@innovate-test/env/web` — typed web environment variables.
+- `@innovate-test/db` — Drizzle client and schema (server-side or shared types as applicable).
+- `@innovate-test/auth` — Better Auth server instance (typically server).
