@@ -2,7 +2,7 @@ import { relations } from "drizzle-orm";
 import { index, pgTable, real, text, timestamp } from "drizzle-orm/pg-core";
 
 import { company } from "./company";
-import { demandStatusEnum } from "./enums";
+import { cargoTypeEnum, demandStatusEnum, truckTypeEnum } from "./enums";
 import { task } from "./task";
 
 export const demandRequest = pgTable(
@@ -15,10 +15,17 @@ export const demandRequest = pgTable(
     taskId: text("task_id").references(() => task.id, {
       onDelete: "set null",
     }),
-    taskTitle: text("task_title").notNull(),
-    truckType: text("truck_type").notNull(),
+    requiredTruckType: truckTypeEnum("required_truck_type").notNull(),
+    cargoType: cargoTypeEnum("cargo_type").notNull(),
     payloadT: real("payload_t").notNull(),
-    routeLabel: text("route_label").notNull(),
+    originLabel: text("origin_label").notNull(),
+    originLat: real("origin_lat").notNull(),
+    originLng: real("origin_lng").notNull(),
+    destinationLabel: text("destination_label").notNull(),
+    destinationLat: real("destination_lat").notNull(),
+    destinationLng: real("destination_lng").notNull(),
+    distanceKm: real("distance_km").notNull(),
+    deadline: timestamp("deadline").notNull(),
     budgetUah: real("budget_uah").notNull(),
     status: demandStatusEnum("status").default("Open").notNull(),
     createdAt: timestamp("created_at").defaultNow().notNull(),
