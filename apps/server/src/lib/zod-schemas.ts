@@ -1,5 +1,5 @@
 import type { FastifyReply } from "fastify";
-import { z } from "zod";
+import { z } from "zod/v3";
 
 import type { FastifyRequest } from "fastify";
 import { badRequest } from "./errors";

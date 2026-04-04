@@ -5,13 +5,14 @@ import type { FastifyInstance } from "fastify";
 
 import { authPreHandler, requireRole } from "../lib/auth-middleware";
 import { badRequest, notFound } from "../lib/errors";
+import { companySchemas } from "../lib/schemas/company.schemas";
 import { companyUpdateSchema, requireCompanyId, validateBody } from "../lib/zod-schemas";
 
 export async function companyRoutes(fastify: FastifyInstance) {
   // GET /company
   fastify.get(
     "/company",
-    { preHandler: [authPreHandler] },
+    { schema: companySchemas.getCompany, preHandler: [authPreHandler] },
     async (request, reply) => {
       const companyId = requireCompanyId(request, reply);
       if (!companyId) return;
@@ -30,7 +31,7 @@ export async function companyRoutes(fastify: FastifyInstance) {
   // POST /company — update (admin only)
   fastify.post(
     "/company",
-    { preHandler: [authPreHandler, requireRole("CARRIER_ADMIN")] },
+    { schema: companySchemas.updateCompany, preHandler: [authPreHandler, requireRole("CARRIER_ADMIN")] },
     async (request, reply) => {
       const companyId = requireCompanyId(request, reply);
       if (!companyId) return;

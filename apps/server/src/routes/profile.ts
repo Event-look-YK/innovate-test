@@ -9,6 +9,7 @@ import type { FastifyInstance } from "fastify";
 import { authPreHandler } from "../lib/auth-middleware";
 import { badRequest } from "../lib/errors";
 import { genId } from "../lib/id";
+import { profileSchemas } from "../lib/schemas/profile.schemas";
 import {
   onboardSchema,
   profileUpdateSchema,
@@ -19,7 +20,7 @@ export async function profileRoutes(fastify: FastifyInstance) {
   // GET /profile/me
   fastify.get(
     "/profile/me",
-    { preHandler: [authPreHandler] },
+    { schema: profileSchemas.getMe, preHandler: [authPreHandler] },
     async (request) => {
       return request.sessionUser;
     },
@@ -28,7 +29,7 @@ export async function profileRoutes(fastify: FastifyInstance) {
   // POST /profile — update name, phone, language
   fastify.post(
     "/profile",
-    { preHandler: [authPreHandler] },
+    { schema: profileSchemas.updateProfile, preHandler: [authPreHandler] },
     async (request, reply) => {
       const data = validateBody(profileUpdateSchema, request.body, reply);
       if (!data) return;
@@ -62,7 +63,7 @@ export async function profileRoutes(fastify: FastifyInstance) {
   // POST /profile/onboard — create company + profile (carrier) or profile only (freelance)
   fastify.post(
     "/profile/onboard",
-    { preHandler: [authPreHandler] },
+    { schema: profileSchemas.onboard, preHandler: [authPreHandler] },
     async (request, reply) => {
       if (request.sessionUser.profileComplete) {
         return badRequest(reply, "Already onboarded");

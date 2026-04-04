@@ -12,12 +12,13 @@ import { authPreHandler, requireRole } from "../lib/auth-middleware";
 import { notFound } from "../lib/errors";
 import { genId } from "../lib/id";
 import { parsePagination, paginatedResponse } from "../lib/pagination";
+import { marketplaceSchemas } from "../lib/schemas/marketplace.schemas";
 
 export async function marketplaceRoutes(fastify: FastifyInstance) {
   // GET /marketplace/routes — list open route offers
   fastify.get(
     "/marketplace/routes",
-    { preHandler: [authPreHandler, requireRole("FREELANCE_DRIVER")] },
+    { schema: marketplaceSchemas.listRoutes, preHandler: [authPreHandler, requireRole("FREELANCE_DRIVER")] },
     async (request) => {
       const pagination = parsePagination(request.query as Record<string, unknown>);
 
@@ -55,7 +56,7 @@ export async function marketplaceRoutes(fastify: FastifyInstance) {
   // GET /marketplace/routes/:offerId — get full offer detail
   fastify.get(
     "/marketplace/routes/:offerId",
-    { preHandler: [authPreHandler, requireRole("FREELANCE_DRIVER")] },
+    { schema: marketplaceSchemas.getRoute, preHandler: [authPreHandler, requireRole("FREELANCE_DRIVER")] },
     async (request, reply) => {
       const { offerId } = request.params as { offerId: string };
 
@@ -111,7 +112,7 @@ export async function marketplaceRoutes(fastify: FastifyInstance) {
   // POST /marketplace/routes/:offerId/accept — first-come-first-served accept
   fastify.post(
     "/marketplace/routes/:offerId/accept",
-    { preHandler: [authPreHandler, requireRole("FREELANCE_DRIVER")] },
+    { schema: marketplaceSchemas.acceptRoute, preHandler: [authPreHandler, requireRole("FREELANCE_DRIVER")] },
     async (request, reply) => {
       const { offerId } = request.params as { offerId: string };
       const driverId = request.sessionUser.userId;

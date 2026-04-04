@@ -2,13 +2,13 @@ import { db } from "@innovate-test/db";
 import { user } from "@innovate-test/db/schema/auth";
 import { routeOffer } from "@innovate-test/db/schema/route-offer";
 import { routePlan } from "@innovate-test/db/schema/route";
-import { userProfile } from "@innovate-test/db/schema/user-profile";
-import { and, eq, inArray } from "drizzle-orm";
+import { and, eq } from "drizzle-orm";
 import type { FastifyInstance } from "fastify";
 
 import { authPreHandler, requireRole } from "../lib/auth-middleware";
 import { badRequest, notFound } from "../lib/errors";
-import { createRouteOffer, notifyUsers } from "../lib/route-offer-helpers";
+import { createRouteOffer } from "../lib/route-offer-helpers";
+import { routeOfferSchemas } from "../lib/schemas/route-offers.schemas";
 import { requireCompanyId } from "../lib/zod-schemas";
 
 export async function routeOfferRoutes(fastify: FastifyInstance) {
@@ -17,7 +17,7 @@ export async function routeOfferRoutes(fastify: FastifyInstance) {
   // POST /routes/:routeId/offer — manually offer a route to freelancers
   fastify.post(
     "/routes/:routeId/offer",
-    { preHandler: [authPreHandler, requireRole(...manageRoles)] },
+    { schema: routeOfferSchemas.createOffer, preHandler: [authPreHandler, requireRole(...manageRoles)] },
     async (request, reply) => {
       const companyId = requireCompanyId(request, reply);
       if (!companyId) return;
@@ -58,7 +58,7 @@ export async function routeOfferRoutes(fastify: FastifyInstance) {
   // DELETE /routes/:routeId/offer — cancel open offer
   fastify.delete(
     "/routes/:routeId/offer",
-    { preHandler: [authPreHandler, requireRole(...manageRoles)] },
+    { schema: routeOfferSchemas.cancelOffer, preHandler: [authPreHandler, requireRole(...manageRoles)] },
     async (request, reply) => {
       const companyId = requireCompanyId(request, reply);
       if (!companyId) return;
@@ -91,7 +91,7 @@ export async function routeOfferRoutes(fastify: FastifyInstance) {
   // GET /routes/:routeId/offer — get offer status
   fastify.get(
     "/routes/:routeId/offer",
-    { preHandler: [authPreHandler, requireRole(...manageRoles)] },
+    { schema: routeOfferSchemas.getOffer, preHandler: [authPreHandler, requireRole(...manageRoles)] },
     async (request, reply) => {
       const companyId = requireCompanyId(request, reply);
       if (!companyId) return;

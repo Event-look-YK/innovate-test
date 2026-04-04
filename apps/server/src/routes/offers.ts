@@ -8,6 +8,7 @@ import type { FastifyInstance } from "fastify";
 import { authPreHandler, requireRole } from "../lib/auth-middleware";
 import { badRequest, forbidden, notFound } from "../lib/errors";
 import { genId } from "../lib/id";
+import { offerSchemas } from "../lib/schemas/offers.schemas";
 import {
   offerCreateSchema,
   offerCounterSchema,
@@ -18,7 +19,7 @@ export async function offerRoutes(fastify: FastifyInstance) {
   // GET /offers
   fastify.get(
     "/offers",
-    { preHandler: [authPreHandler] },
+    { schema: offerSchemas.listOffers, preHandler: [authPreHandler] },
     async (request, reply) => {
       const { role, userId, companyId } = request.sessionUser;
 
@@ -92,7 +93,7 @@ export async function offerRoutes(fastify: FastifyInstance) {
   // POST /offers — freelancer creates an offer
   fastify.post(
     "/offers",
-    { preHandler: [authPreHandler, requireRole("FREELANCE_DRIVER")] },
+    { schema: offerSchemas.createOffer, preHandler: [authPreHandler, requireRole("FREELANCE_DRIVER")] },
     async (request, reply) => {
       const data = validateBody(offerCreateSchema, request.body, reply);
       if (!data) return;
@@ -154,7 +155,7 @@ export async function offerRoutes(fastify: FastifyInstance) {
   // GET /offers/:offerId
   fastify.get(
     "/offers/:offerId",
-    { preHandler: [authPreHandler] },
+    { schema: offerSchemas.getOffer, preHandler: [authPreHandler] },
     async (request, reply) => {
       const { offerId } = request.params as { offerId: string };
       const { role, userId, companyId } = request.sessionUser;
@@ -205,7 +206,7 @@ export async function offerRoutes(fastify: FastifyInstance) {
   // POST /offers/:offerId/accept
   fastify.post(
     "/offers/:offerId/accept",
-    { preHandler: [authPreHandler, requireRole("CARRIER_ADMIN", "CARRIER_MANAGER")] },
+    { schema: offerSchemas.acceptOffer, preHandler: [authPreHandler, requireRole("CARRIER_ADMIN", "CARRIER_MANAGER")] },
     async (request, reply) => {
       const { offerId } = request.params as { offerId: string };
       const { companyId } = request.sessionUser;
@@ -261,7 +262,7 @@ export async function offerRoutes(fastify: FastifyInstance) {
   // POST /offers/:offerId/decline
   fastify.post(
     "/offers/:offerId/decline",
-    { preHandler: [authPreHandler, requireRole("CARRIER_ADMIN", "CARRIER_MANAGER")] },
+    { schema: offerSchemas.declineOffer, preHandler: [authPreHandler, requireRole("CARRIER_ADMIN", "CARRIER_MANAGER")] },
     async (request, reply) => {
       const { offerId } = request.params as { offerId: string };
       const { companyId } = request.sessionUser;
@@ -295,7 +296,7 @@ export async function offerRoutes(fastify: FastifyInstance) {
   // POST /offers/:offerId/counter
   fastify.post(
     "/offers/:offerId/counter",
-    { preHandler: [authPreHandler, requireRole("CARRIER_ADMIN", "CARRIER_MANAGER")] },
+    { schema: offerSchemas.counterOffer, preHandler: [authPreHandler, requireRole("CARRIER_ADMIN", "CARRIER_MANAGER")] },
     async (request, reply) => {
       const { offerId } = request.params as { offerId: string };
       const { companyId } = request.sessionUser;

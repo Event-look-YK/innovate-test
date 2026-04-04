@@ -9,6 +9,7 @@ import { authPreHandler, requireRole } from "../lib/auth-middleware";
 import { badRequest, notFound } from "../lib/errors";
 import { genId } from "../lib/id";
 import { parsePagination, paginatedResponse } from "../lib/pagination";
+import { demandSchemas } from "../lib/schemas/demand.schemas";
 import {
   demandCreateSchema,
   requireCompanyId,
@@ -19,7 +20,7 @@ export async function demandRoutes(fastify: FastifyInstance) {
   // GET /demand
   fastify.get(
     "/demand",
-    { preHandler: [authPreHandler, requireRole("CARRIER_ADMIN", "CARRIER_MANAGER")] },
+    { schema: demandSchemas.listDemand, preHandler: [authPreHandler, requireRole("CARRIER_ADMIN", "CARRIER_MANAGER")] },
     async (request, reply) => {
       const companyId = requireCompanyId(request, reply);
       if (!companyId) return;
@@ -72,7 +73,7 @@ export async function demandRoutes(fastify: FastifyInstance) {
   // POST /demand
   fastify.post(
     "/demand",
-    { preHandler: [authPreHandler, requireRole("CARRIER_ADMIN", "CARRIER_MANAGER")] },
+    { schema: demandSchemas.createDemand, preHandler: [authPreHandler, requireRole("CARRIER_ADMIN", "CARRIER_MANAGER")] },
     async (request, reply) => {
       const companyId = requireCompanyId(request, reply);
       if (!companyId) return;
@@ -119,6 +120,7 @@ export async function demandRoutes(fastify: FastifyInstance) {
   fastify.get(
     "/demand/:requestId",
     {
+      schema: demandSchemas.getDemand,
       preHandler: [
         authPreHandler,
         requireRole("CARRIER_ADMIN", "CARRIER_MANAGER", "FREELANCE_DRIVER"),

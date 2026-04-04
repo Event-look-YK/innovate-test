@@ -8,6 +8,7 @@ import { authPreHandler, requireRole } from "../lib/auth-middleware";
 import { badRequest, forbidden, notFound } from "../lib/errors";
 import { genId } from "../lib/id";
 import { parsePagination, paginatedResponse } from "../lib/pagination";
+import { taskSchemas } from "../lib/schemas/tasks.schemas";
 import {
   taskCreateSchema,
   taskUpdateSchema,
@@ -34,7 +35,7 @@ export async function taskRoutes(fastify: FastifyInstance) {
   // GET /tasks
   fastify.get(
     "/tasks",
-    { preHandler: [authPreHandler, requireRole(...allCarrier)] },
+    { schema: taskSchemas.listTasks, preHandler: [authPreHandler, requireRole(...allCarrier)] },
     async (request, reply) => {
       const companyId = requireCompanyId(request, reply);
       if (!companyId) return;
@@ -90,6 +91,7 @@ export async function taskRoutes(fastify: FastifyInstance) {
   fastify.post(
     "/tasks",
     {
+      schema: taskSchemas.createTask,
       preHandler: [
         authPreHandler,
         requireRole("CARRIER_ADMIN", "CARRIER_MANAGER", "CARRIER_WAREHOUSE_MANAGER"),
@@ -143,7 +145,7 @@ export async function taskRoutes(fastify: FastifyInstance) {
   // GET /tasks/:taskId
   fastify.get(
     "/tasks/:taskId",
-    { preHandler: [authPreHandler, requireRole(...allCarrier)] },
+    { schema: taskSchemas.getTask, preHandler: [authPreHandler, requireRole(...allCarrier)] },
     async (request, reply) => {
       const companyId = requireCompanyId(request, reply);
       if (!companyId) return;
@@ -164,7 +166,7 @@ export async function taskRoutes(fastify: FastifyInstance) {
   // PUT /tasks/:taskId
   fastify.put(
     "/tasks/:taskId",
-    { preHandler: [authPreHandler, requireRole("CARRIER_ADMIN", "CARRIER_MANAGER")] },
+    { schema: taskSchemas.updateTask, preHandler: [authPreHandler, requireRole("CARRIER_ADMIN", "CARRIER_MANAGER")] },
     async (request, reply) => {
       const companyId = requireCompanyId(request, reply);
       if (!companyId) return;
@@ -217,6 +219,7 @@ export async function taskRoutes(fastify: FastifyInstance) {
   fastify.patch(
     "/tasks/:taskId/status",
     {
+      schema: taskSchemas.updateTaskStatus,
       preHandler: [
         authPreHandler,
         requireRole("CARRIER_ADMIN", "CARRIER_MANAGER", "CARRIER_DRIVER"),
