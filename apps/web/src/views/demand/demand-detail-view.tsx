@@ -5,7 +5,7 @@ import { cn } from "@innovate-test/ui/lib/utils";
 import { useDemand } from "@/features/demand/hooks/use-demand";
 import { DemandDetailSummaryCard } from "@/features/demand/ui/demand-detail-summary-card";
 import { DemandFreelancersCard } from "@/features/demand/ui/demand-freelancers-card";
-import { DemandRouteMapPlaceholder } from "@/features/demand/ui/demand-route-map-placeholder";
+import { DemandRouteMap } from "@/features/demand/ui/demand-route-map-placeholder";
 
 export const DemandDetailView = () => {
   const { requestId } = useParams({ strict: false }) as { requestId: string };
@@ -22,7 +22,7 @@ export const DemandDetailView = () => {
         ← Demand
       </Link>
       <DemandDetailSummaryCard row={row} />
-      <DemandRouteMapPlaceholder />
+      <DemandRouteMap row={row} />
       <DemandFreelancersCard />
     </div>
   );

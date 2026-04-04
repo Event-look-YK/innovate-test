@@ -1,14 +1,18 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@innovate-test/ui/components/card";
 
-export const TruckGpsCard = () => (
+import { RouteMap } from "@/shared/ui/route-map";
+
+type Props = {
+  locationLabel: string;
+};
+
+export const TruckGpsCard = ({ locationLabel }: Props) => (
   <Card>
     <CardHeader>
-      <CardTitle className="text-base">GPS trail</CardTitle>
+      <CardTitle className="text-base">GPS location</CardTitle>
     </CardHeader>
     <CardContent>
-      <div className="flex min-h-48 items-center justify-center rounded-xl border border-dashed border-border bg-muted/30 px-4 text-center text-sm text-muted-foreground">
-        Last 24h path (Mapbox placeholder)
-      </div>
+      <RouteMap locations={[locationLabel]} className="min-h-[240px]" />
     </CardContent>
   </Card>
 );

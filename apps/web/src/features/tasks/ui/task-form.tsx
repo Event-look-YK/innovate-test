@@ -16,10 +16,16 @@ import { type Resolver, useForm } from "react-hook-form";
 import { toast } from "sonner";
 
 import { taskCreateSchema, type TaskCreateValues } from "@/features/tasks/lib/validation";
+import { useTeam } from "@/features/team/hooks/use-team";
 import { CARGO_TYPES, TASK_PRIORITIES } from "@/shared/constants/task-status";
+import { ROLES } from "@/shared/constants/roles";
 
 export const TaskForm = () => {
   const navigate = useNavigate();
+  const { data: members } = useTeam();
+  const drivers = members?.filter(
+    (m) => m.status === "active" && (m.role === ROLES.CARRIER_DRIVER || m.role === ROLES.CARRIER_MANAGER),
+  );
   const form = useForm<TaskCreateValues>({
     resolver: zodResolver(taskCreateSchema) as Resolver<TaskCreateValues>,
     defaultValues: {
@@ -31,6 +37,7 @@ export const TaskForm = () => {
       destinationLabel: "",
       deadline: "",
       priority: "MEDIUM",
+      assignedMemberId: "",
       notes: "",
     },
   });
@@ -114,6 +121,28 @@ export const TaskForm = () => {
             </SelectContent>
           </Select>
           <FieldError errors={[form.formState.errors.priority]} />
+        </Field>
+        <Field>
+          <FieldLabel>Assign to</FieldLabel>
+          <Select
+            onValueChange={(v) => form.setValue("assignedMemberId", v)}
+            value={form.watch("assignedMemberId") ?? ""}
+          >
+            <SelectTrigger className="w-full">
+              <span className="text-sm">
+                {drivers?.find((m) => m.id === form.watch("assignedMemberId"))?.name ?? "Unassigned"}
+              </span>
+            </SelectTrigger>
+            <SelectContent>
+              <SelectGroup>
+                {drivers?.map((m) => (
+                  <SelectItem key={m.id} value={m.id}>
+                    {m.name}
+                  </SelectItem>
+                ))}
+              </SelectGroup>
+            </SelectContent>
+          </Select>
         </Field>
         <Field>
           <FieldLabel htmlFor="tf-notes">Notes</FieldLabel>
