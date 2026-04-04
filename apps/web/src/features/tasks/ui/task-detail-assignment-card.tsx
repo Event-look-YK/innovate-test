@@ -30,7 +30,7 @@ export const TaskDetailAssignmentCard = ({ task }: Props) => {
 
   const handleAssign = () => {
     if (!selectedMemberId) return;
-    toast.success(`Assigned to ${assignedMember?.name ?? selectedMemberId} (mock)`);
+    toast.success(`Assigned to ${assignedMember?.name ?? selectedMemberId}`);
   };
 
   return (
@@ -46,7 +46,7 @@ export const TaskDetailAssignmentCard = ({ task }: Props) => {
         <div className="flex flex-col gap-2">
           <p className="text-sm font-medium">Assign team member</p>
           <div className="flex gap-2">
-            <Select onValueChange={setSelectedMemberId} value={selectedMemberId}>
+            <Select onValueChange={(value) => setSelectedMemberId(value ?? undefined)} value={selectedMemberId}>
               <SelectTrigger className="flex-1">
                 {assignedMember ? (
                   <span className="flex items-center gap-2 text-sm">

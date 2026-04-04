@@ -6,10 +6,10 @@ import {
 } from "@/features/demand/lib/utils";
 import { formatCurrencyUah } from "@/shared/lib/format";
 import { ListRowLink } from "@/shared/ui/list-row-link";
-import type { DemandRequest } from "@/features/demand/lib/mock-data";
+import type { DemandRequestListItem } from "@/shared/types/demand";
 
 type Props = {
-  row: DemandRequest;
+  row: DemandRequestListItem;
 };
 
 export const DemandRequestRow = ({ row: r }: Props) => (
@@ -30,10 +30,10 @@ export const DemandRequestRow = ({ row: r }: Props) => (
           <span
             className={cn(
               "size-2 shrink-0 rounded-full",
-              demandTruckTypeDot[r.truckType] ?? "bg-muted-foreground",
+              demandTruckTypeDot[r.requiredTruckType] ?? "bg-muted-foreground",
             )}
           />
-          {r.truckType}
+          {r.requiredTruckType}
         </span>
         <span className="tabular-nums">{r.payloadT} t</span>
         <span className="font-semibold tabular-nums text-foreground">{formatCurrencyUah(r.budgetUah)}</span>
@@ -47,12 +47,12 @@ export const DemandRequestRow = ({ row: r }: Props) => (
     routeParams={{ requestId: r.id }}
     subtitle={
       <span className="line-clamp-2">
-        <span className="text-foreground/85">{r.routeLabel.split("→")[0]?.trim()}</span>
+        <span className="text-foreground/85">{r.originLabel}</span>
         <span className="mx-1 text-muted-foreground/60">→</span>
-        <span className="text-foreground/85">{r.routeLabel.split("→")[1]?.trim()}</span>
+        <span className="text-foreground/85">{r.destinationLabel}</span>
       </span>
     }
-    title={r.taskTitle}
+    title={r.taskTitle ?? "Demand request"}
     to="/demand/$requestId"
   />
 );

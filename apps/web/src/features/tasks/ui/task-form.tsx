@@ -15,17 +15,15 @@ import { Textarea } from "@innovate-test/ui/components/textarea";
 import { type Resolver, useForm } from "react-hook-form";
 import { toast } from "sonner";
 
+import { useFleet } from "@/features/fleet/hooks/use-fleet";
+import { useCreateTask } from "@/features/tasks/hooks/use-tasks";
 import { taskCreateSchema, type TaskCreateValues } from "@/features/tasks/lib/validation";
-import { useTeam } from "@/features/team/hooks/use-team";
 import { CARGO_TYPES, TASK_PRIORITIES } from "@/shared/constants/task-status";
-import { ROLES } from "@/shared/constants/roles";
 
 export const TaskForm = () => {
   const navigate = useNavigate();
-  const { data: members } = useTeam();
-  const drivers = members?.filter(
-    (m) => m.status === "active" && (m.role === ROLES.CARRIER_DRIVER || m.role === ROLES.CARRIER_MANAGER),
-  );
+  const { data: trucks } = useFleet();
+  const createTask = useCreateTask();
   const form = useForm<TaskCreateValues>({
     resolver: zodResolver(taskCreateSchema) as Resolver<TaskCreateValues>,
     defaultValues: {
@@ -37,14 +35,30 @@ export const TaskForm = () => {
       destinationLabel: "",
       deadline: "",
       priority: "MEDIUM",
-      assignedMemberId: "",
+      assignedTruckId: "",
       notes: "",
     },
   });
 
-  const onSubmit = form.handleSubmit(() => {
-    toast.success("Task created (mock)");
-    navigate({ to: "/tasks" });
+  const onSubmit = form.handleSubmit(async (values) => {
+    try {
+      await createTask.mutateAsync({
+        title: values.title,
+        cargoDescription: values.cargoDescription,
+        cargoType: values.cargoType,
+        weightT: values.weightT,
+        originLabel: values.originLabel,
+        destinationLabel: values.destinationLabel,
+        deadline: values.deadline,
+        priority: values.priority,
+        assignedTruckId: values.assignedTruckId || null,
+        notes: values.notes,
+      });
+      toast.success("Task created");
+      navigate({ to: "/tasks" });
+    } catch (error) {
+      toast.error(error instanceof Error ? error.message : "Failed to create task");
+    }
   });
 
   return (
@@ -123,21 +137,21 @@ export const TaskForm = () => {
           <FieldError errors={[form.formState.errors.priority]} />
         </Field>
         <Field>
-          <FieldLabel>Assign to</FieldLabel>
+          <FieldLabel>Assign truck</FieldLabel>
           <Select
-            onValueChange={(v) => form.setValue("assignedMemberId", v)}
-            value={form.watch("assignedMemberId") ?? ""}
+            onValueChange={(v) => form.setValue("assignedTruckId", v ?? undefined)}
+            value={form.watch("assignedTruckId") ?? ""}
           >
             <SelectTrigger className="w-full">
               <span className="text-sm">
-                {drivers?.find((m) => m.id === form.watch("assignedMemberId"))?.name ?? "Unassigned"}
+                {trucks?.find((t) => t.id === (form.watch("assignedTruckId") ?? undefined))?.name ?? "Unassigned"}
               </span>
             </SelectTrigger>
             <SelectContent>
               <SelectGroup>
-                {drivers?.map((m) => (
-                  <SelectItem key={m.id} value={m.id}>
-                    {m.name}
+                {trucks?.map((t) => (
+                  <SelectItem key={t.id} value={t.id}>
+                    {t.name}
                   </SelectItem>
                 ))}
               </SelectGroup>
@@ -150,7 +164,9 @@ export const TaskForm = () => {
         </Field>
       </FieldGroup>
       <div className="flex gap-2">
-        <Button type="submit">Create task</Button>
+        <Button disabled={createTask.isPending} type="submit">
+          {createTask.isPending ? "Creating..." : "Create task"}
+        </Button>
         <Button type="button" variant="outline" onClick={() => navigate({ to: "/tasks" })}>
           Cancel
         </Button>

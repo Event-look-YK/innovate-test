@@ -14,19 +14,26 @@ import {
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 
+import { useInviteTeammate } from "@/features/team/hooks/use-team";
 import { inviteSchema, type InviteValues } from "@/features/team/lib/validation";
 import { ROLES } from "@/shared/constants/roles";
 
 export const TeamInviteForm = () => {
   const navigate = useNavigate();
+  const inviteMutation = useInviteTeammate();
   const form = useForm<InviteValues>({
     resolver: zodResolver(inviteSchema),
     defaultValues: { email: "", fullName: "", role: ROLES.CARRIER_MANAGER },
   });
 
-  const onSubmit = form.handleSubmit(() => {
-    toast.success("Invite sent (mock)");
-    navigate({ to: "/team" });
+  const onSubmit = form.handleSubmit(async (values) => {
+    try {
+      await inviteMutation.mutateAsync(values);
+      toast.success("Invite sent");
+      navigate({ to: "/team" });
+    } catch (error) {
+      toast.error(error instanceof Error ? error.message : "Failed to send invite");
+    }
   });
 
   return (
@@ -62,7 +69,9 @@ export const TeamInviteForm = () => {
         </Field>
       </FieldGroup>
       <div className="flex gap-2">
-        <Button type="submit">Send invite</Button>
+        <Button disabled={inviteMutation.isPending} type="submit">
+          {inviteMutation.isPending ? "Sending..." : "Send invite"}
+        </Button>
         <Button type="button" variant="outline" onClick={() => navigate({ to: "/team" })}>
           Cancel
         </Button>

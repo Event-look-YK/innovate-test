@@ -13,6 +13,7 @@ import {
   UsersIcon,
 } from "lucide-react";
 
+import { useDashboardStats } from "@/features/dashboard/hooks/use-dashboard-stats";
 import { useTasks } from "@/features/tasks/hooks/use-tasks";
 import { useCurrentUser } from "@/shared/hooks/use-current-user";
 
@@ -60,9 +61,17 @@ const QUICK_ACTIONS = [
 
 export const AdminManagerDashboardView = () => {
   const { data: tasks } = useTasks();
+  const { data: stats } = useDashboardStats();
   const { user } = useCurrentUser();
   const recent = tasks?.slice(0, 4) ?? [];
   const firstName = user?.name?.split(" ")[0] ?? "team";
+  const totalTrucks = stats?.totalTrucks ?? 0;
+  const activeTrucks = stats?.activeTrucks ?? 0;
+  const pendingTasks = stats?.pendingTasks ?? 0;
+  const inTransitTasks = stats?.inTransitTasks ?? 0;
+  const completedTasks = stats?.completedTasks ?? 0;
+  const openDemands = stats?.openDemands ?? 0;
+  const activeTasks = pendingTasks + inTransitTasks;
 
   return (
     <div className="flex flex-col gap-5">
@@ -95,11 +104,11 @@ export const AdminManagerDashboardView = () => {
           <div className="flex flex-wrap items-center gap-2">
             <div className="flex items-center gap-2 rounded-full bg-white/15 px-3.5 py-1.5 text-[11px] font-semibold backdrop-blur-sm">
               <span className="size-1.5 animate-pulse rounded-full bg-emerald-300" />
-              18 trucks active
+              {activeTrucks} trucks active
             </div>
             <div className="flex items-center gap-2 rounded-full bg-white/10 px-3.5 py-1.5 text-[11px] font-semibold opacity-80">
               <PackageIcon className="size-3" />
-              5 pending requests
+              {openDemands} pending requests
             </div>
           </div>
         </div>
@@ -119,19 +128,19 @@ export const AdminManagerDashboardView = () => {
             </div>
             <div className="flex items-end gap-2">
               <span className="text-[52px] font-black leading-none tabular-nums tracking-tighter">
-                <NumberTicker value={18} />
+                <NumberTicker value={activeTrucks} />
               </span>
-              <span className="mb-2 text-xl font-light text-muted-foreground">/ 32</span>
+              <span className="mb-2 text-xl font-light text-muted-foreground">/ {totalTrucks}</span>
             </div>
             <p className="mt-0.5 text-xs text-muted-foreground">Trucks currently on road</p>
 
             <div className="mt-4 flex flex-wrap gap-1">
-              {Array.from({ length: 32 }, (_, i) => (
+              {Array.from({ length: Math.max(totalTrucks, 1) }, (_, i) => (
                 <div
                   key={i}
                   className={cn(
                     "size-2.5 rounded-[3px] transition-colors",
-                    i < 2 ? "bg-amber-400" : i < 18 ? "bg-primary/70" : "bg-muted",
+                    i < activeTrucks ? "bg-primary/70" : "bg-muted",
                   )}
                 />
               ))}
@@ -164,7 +173,7 @@ export const AdminManagerDashboardView = () => {
               </div>
             </div>
             <span className="block text-[52px] font-black leading-none tabular-nums tracking-tighter">
-              <NumberTicker value={24} />
+              <NumberTicker value={activeTasks} />
             </span>
             <p className="mt-0.5 text-xs text-muted-foreground">Across all corridors</p>
 
@@ -174,9 +183,9 @@ export const AdminManagerDashboardView = () => {
               <div className="h-full w-[17%] bg-amber-400 rounded-r-full" />
             </div>
             <div className="mt-2 flex gap-3 text-[10px] text-muted-foreground">
-              <span><span className="font-bold text-red-500">8</span> urgent</span>
-              <span><span className="font-bold text-blue-500">12</span> active</span>
-              <span><span className="font-bold text-amber-500">4</span> pending</span>
+              <span><span className="font-bold text-blue-500">{inTransitTasks}</span> in transit</span>
+              <span><span className="font-bold text-amber-500">{pendingTasks}</span> pending</span>
+              <span><span className="font-bold text-emerald-500">{completedTasks}</span> completed</span>
             </div>
           </CardContent>
         </Card>
@@ -293,7 +302,7 @@ export const AdminManagerDashboardView = () => {
                   <PackageIcon className="size-4 text-amber-600" />
                 </div>
                 <div className="min-w-0">
-                  <p className="text-sm font-semibold">5 demand requests</p>
+                  <p className="text-sm font-semibold">{openDemands} demand requests</p>
                   <p className="text-xs text-muted-foreground">Awaiting freelancer match</p>
                 </div>
               </div>

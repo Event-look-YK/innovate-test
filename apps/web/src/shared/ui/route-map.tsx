@@ -1,4 +1,4 @@
-import { lazy, Suspense, type ComponentProps } from "react";
+import { lazy, Suspense } from "react";
 
 const RouteMapLazy = lazy(() => import("./route-map-client"));
 

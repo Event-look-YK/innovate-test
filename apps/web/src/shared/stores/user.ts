@@ -21,7 +21,7 @@ const roleByEmail = (email: string | undefined): Role => {
 type UserState = {
   devRoleOverride: Role | null;
   setDevRoleOverride: (role: Role | null) => void;
-  effectiveUser: (sessionUser: { id: string; name: string; email: string } | null) => AppUser | null;
+  effectiveUser: (sessionUser: { id: string; name: string; email: string; role?: Role | null } | null) => AppUser | null;
 };
 
 export const useUserStore = create<UserState>()(
@@ -36,7 +36,7 @@ export const useUserStore = create<UserState>()(
           id: sessionUser.id,
           name: sessionUser.name,
           email: sessionUser.email,
-          role: override ?? roleByEmail(sessionUser.email),
+          role: sessionUser.role ?? override ?? roleByEmail(sessionUser.email),
         };
       },
     }),

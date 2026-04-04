@@ -3,7 +3,8 @@ import { DemandListEmpty, DemandListLoading } from "@/features/demand/ui/demand-
 import { DemandRequestRow } from "@/features/demand/ui/demand-request-row";
 
 export const DemandView = () => {
-  const { data: rows, isPending } = useDemand();
+  const { data: response, isPending } = useDemand();
+  const rows = response?.data ?? [];
 
   return (
     <div className="flex flex-col gap-5">
@@ -14,11 +15,11 @@ export const DemandView = () => {
 
       {isPending ? (
         <DemandListLoading />
-      ) : rows?.length === 0 ? (
+      ) : rows.length === 0 ? (
         <DemandListEmpty />
       ) : (
         <div className="flex flex-col gap-2">
-          {rows?.map((r) => (
+          {rows.map((r) => (
             <DemandRequestRow key={r.id} row={r} />
           ))}
         </div>
