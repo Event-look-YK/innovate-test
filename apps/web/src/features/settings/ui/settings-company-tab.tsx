@@ -8,12 +8,21 @@ import type { CompanyValues } from "@/features/settings/lib/validation";
 
 type Props = {
   form: UseFormReturn<CompanyValues>;
+  isSaving?: boolean;
+  onSubmit: (values: CompanyValues) => void | Promise<void>;
 };
 
-export const SettingsCompanyTab = ({ form }: Props) => (
+export const SettingsCompanyTab = ({ form, isSaving, onSubmit }: Props) => (
   <form
     className="flex flex-col gap-4"
-    onSubmit={form.handleSubmit(() => toast.success("Company saved (mock)"))}
+    onSubmit={form.handleSubmit(async (values) => {
+      try {
+        await onSubmit(values);
+        toast.success("Company saved");
+      } catch (error) {
+        toast.error(error instanceof Error ? error.message : "Failed to save company");
+      }
+    })}
   >
     <FieldGroup>
       <Field>
@@ -33,6 +42,8 @@ export const SettingsCompanyTab = ({ form }: Props) => (
         <Input id="co-city" {...form.register("city")} />
       </Field>
     </FieldGroup>
-    <Button type="submit">Save company</Button>
+    <Button disabled={isSaving} type="submit">
+      {isSaving ? "Saving..." : "Save company"}
+    </Button>
   </form>
 );

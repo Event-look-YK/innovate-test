@@ -20,6 +20,7 @@ import {
 import { type Resolver, useForm } from "react-hook-form";
 import { toast } from "sonner";
 
+import { useCreateTruck } from "@/features/fleet/hooks/use-fleet";
 import { truckFormSchema, type TruckFormValues } from "@/features/fleet/lib/validation";
 
 type Props = {
@@ -28,6 +29,7 @@ type Props = {
 };
 
 export const TruckFormDialog = ({ open, onOpenChange }: Props) => {
+  const createTruck = useCreateTruck();
   const form = useForm<TruckFormValues>({
     resolver: zodResolver(truckFormSchema) as Resolver<TruckFormValues>,
     defaultValues: {
@@ -39,10 +41,15 @@ export const TruckFormDialog = ({ open, onOpenChange }: Props) => {
     },
   });
 
-  const onSubmit = form.handleSubmit(() => {
-    toast.success("Truck saved (mock)");
-    onOpenChange(false);
-    form.reset();
+  const onSubmit = form.handleSubmit(async (values) => {
+    try {
+      await createTruck.mutateAsync(values);
+      toast.success("Truck saved");
+      onOpenChange(false);
+      form.reset();
+    } catch (error) {
+      toast.error(error instanceof Error ? error.message : "Failed to save truck");
+    }
   });
 
   return (
@@ -98,7 +105,9 @@ export const TruckFormDialog = ({ open, onOpenChange }: Props) => {
             <Button type="button" variant="outline" onClick={() => onOpenChange(false)}>
               Cancel
             </Button>
-            <Button type="submit">Save</Button>
+            <Button disabled={createTruck.isPending} type="submit">
+              {createTruck.isPending ? "Saving..." : "Save"}
+            </Button>
           </DialogFooter>
         </form>
       </DialogContent>

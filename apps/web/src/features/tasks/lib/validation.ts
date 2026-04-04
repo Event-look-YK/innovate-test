@@ -12,7 +12,6 @@ export const taskCreateSchema = z.object({
   deadline: z.string().min(1),
   priority: z.enum(TASK_PRIORITIES),
   assignedTruckId: z.string().optional(),
-  assignedMemberId: z.string().optional(),
   notes: z.string().optional(),
 });
 

@@ -6,8 +6,8 @@ import {
   memberRoleLabel,
   memberStatusPresentation,
 } from "@/features/team/lib/utils";
-import type { TeamMember } from "@/features/team/lib/mock-data";
 import { ListRowCard } from "@/shared/ui/list-row-link";
+import type { TeamMember } from "@/shared/types/team";
 
 type Props = {
   member: TeamMember;

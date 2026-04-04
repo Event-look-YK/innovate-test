@@ -7,5 +7,5 @@ export const MessagesThreadView = () => {
   const { threadId } = useParams({ strict: false }) as { threadId: string };
   const { data: messages } = useThreadMessages(threadId);
 
-  return <MessagesThreadPanel messages={messages} />;
+  return <MessagesThreadPanel threadId={threadId} messages={messages} />;
 };

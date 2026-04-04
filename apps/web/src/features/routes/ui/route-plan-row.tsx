@@ -2,10 +2,10 @@ import { cn } from "@innovate-test/ui/lib/utils";
 
 import { routeStatusPresentation } from "@/features/routes/lib/utils";
 import { ListRowLink } from "@/shared/ui/list-row-link";
-import type { RoutePlan } from "@/shared/types/route";
+import type { RoutePlanListItem } from "@/shared/types/route";
 
 type Props = {
-  route: RoutePlan;
+  route: RoutePlanListItem;
 };
 
 export const RoutePlanRow = ({ route: r }: Props) => (
@@ -26,23 +26,17 @@ export const RoutePlanRow = ({ route: r }: Props) => (
           {r.id}
         </span>
         <span className="tabular-nums">{r.distanceKm} km</span>
-        <span>
-          {r.stops.length} stop{r.stops.length === 1 ? "" : "s"}
-        </span>
+        <span>{r.durationHours.toFixed(1)} h</span>
       </>
     }
     leading={
       <div className="flex size-11 items-center justify-center rounded-xl bg-primary/10 text-sm font-bold text-primary">
-        {r.stops.length}
+        {(r.loadT / Math.max(r.capacityT, 1) * 100).toFixed(0)}%
       </div>
     }
     routeParams={{ routeId: r.id }}
-    subtitle={
-      r.stops.length > 0
-        ? `${r.stops[0]?.label} → ${r.stops[r.stops.length - 1]?.label}`
-        : "No stops"
-    }
-    title={r.truckName}
+    subtitle={`${r.loadT} / ${r.capacityT} t`}
+    title={r.truckName ?? "Unknown truck"}
     to="/routes/$routeId"
   />
 );

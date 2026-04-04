@@ -8,7 +8,7 @@ type Props = {
 };
 
 export const RouteDetailMap = ({ route }: Props) => {
-  const locations = route.stops.map((s) => s.label);
+  const locations = [...route.stops].sort((a, b) => a.sortOrder - b.sortOrder).map((s) => s.label);
   return <RouteMap locations={locations} className="min-h-[360px]" />;
 };
 
@@ -18,13 +18,13 @@ export const RouteDetailStopsCard = ({ route }: Props) => (
       <CardTitle className="text-base">Stops</CardTitle>
     </CardHeader>
     <CardContent className="flex flex-col gap-3 text-sm">
-      {route.stops.map((s, i) => (
+      {[...route.stops].sort((a, b) => a.sortOrder - b.sortOrder).map((s, i) => (
         <div key={s.id} className="rounded-lg border border-border p-3">
           <p className="font-medium">
             {i + 1}. {s.label}
           </p>
-          <p className="text-muted-foreground">{s.eta}</p>
-          <p className="text-xs text-muted-foreground">{s.note}</p>
+          <p className="text-muted-foreground">{new Date(s.eta).toLocaleString("uk-UA", { dateStyle: "short", timeStyle: "short" })}</p>
+          <p className="text-xs text-muted-foreground">{s.note ?? "—"}</p>
         </div>
       ))}
     </CardContent>

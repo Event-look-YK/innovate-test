@@ -2,7 +2,7 @@ import { Link, useParams } from "@tanstack/react-router";
 import { buttonVariants } from "@innovate-test/ui/components/button";
 import { cn } from "@innovate-test/ui/lib/utils";
 
-import { useTasks } from "@/features/tasks/hooks/use-tasks";
+import { useTask } from "@/features/tasks/hooks/use-tasks";
 import { TaskDetailAssignmentCard } from "@/features/tasks/ui/task-detail-assignment-card";
 import { TaskDetailCargoCard } from "@/features/tasks/ui/task-detail-cargo-card";
 import { TaskDetailHeader } from "@/features/tasks/ui/task-detail-header";
@@ -12,8 +12,11 @@ import { TaskDetailTimelineCard } from "@/features/tasks/ui/task-detail-timeline
 
 export const TaskDetailView = () => {
   const { taskId } = useParams({ strict: false }) as { taskId: string };
-  const { data: tasks } = useTasks();
-  const task = tasks?.find((t) => t.id === taskId);
+  const { data: task, isPending } = useTask(taskId);
+
+  if (isPending) {
+    return <p className="text-muted-foreground">Loading task...</p>;
+  }
 
   if (!task) {
     return <p className="text-muted-foreground">Task not found.</p>;

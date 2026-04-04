@@ -3,6 +3,7 @@ import { useState } from "react";
 
 import { useFleet } from "@/features/fleet/hooks/use-fleet";
 import { useTasks } from "@/features/tasks/hooks/use-tasks";
+import { useGenerateRoutes } from "@/features/routes/hooks/use-routes";
 import { Button } from "@innovate-test/ui/components/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@innovate-test/ui/components/card";
 import { Checkbox } from "@innovate-test/ui/components/checkbox";
@@ -14,6 +15,7 @@ export const RouteGenerateWizard = () => {
   const navigate = useNavigate();
   const { data: tasks } = useTasks();
   const { data: trucks } = useFleet();
+  const generateRoutes = useGenerateRoutes();
   const [step, setStep] = useState(0);
   const [selectedTasks, setSelectedTasks] = useState<Set<string>>(new Set());
   const [selectedTrucks, setSelectedTrucks] = useState<Set<string>>(new Set());
@@ -37,9 +39,23 @@ export const RouteGenerateWizard = () => {
     });
   };
 
-  const onFinish = () => {
-    toast.success("Routes dispatched (mock)");
-    navigate({ to: "/routes" });
+  const onFinish = async () => {
+    if (selectedTasks.size === 0 || selectedTrucks.size === 0) {
+      toast.error("Select at least one task and one truck");
+      return;
+    }
+    try {
+      const result = await generateRoutes.mutateAsync({
+        taskIds: Array.from(selectedTasks),
+        truckIds: Array.from(selectedTrucks),
+      });
+      toast.success(
+        `Generated ${result.routes.length} route(s), total cost ${result.plan.total_cost_uah.toLocaleString("uk-UA")} ₴`,
+      );
+      navigate({ to: "/routes" });
+    } catch (error) {
+      toast.error(error instanceof Error ? error.message : "Failed to generate routes");
+    }
   };
 
   return (
@@ -103,7 +119,7 @@ export const RouteGenerateWizard = () => {
           <CardContent className="flex flex-col gap-4">
             <div className="flex flex-col gap-2">
               <Label>Optimize for</Label>
-              <p className="text-sm text-muted-foreground">Distance / Time / Fuel (mock)</p>
+              <p className="text-sm text-muted-foreground">Distance / Time / Fuel</p>
             </div>
             <div className="flex items-center justify-between gap-4">
               <Label htmlFor="md">Allow multi-drop</Label>
@@ -127,7 +143,7 @@ export const RouteGenerateWizard = () => {
           </CardHeader>
           <CardContent className="flex flex-col gap-4">
             <div className="rounded-lg border border-dashed border-border p-4 text-sm text-muted-foreground">
-              Map preview with color-coded routes (mock)
+              Map preview with color-coded routes
             </div>
             <div className="flex gap-2">
               <Button type="button" variant="outline" onClick={() => setStep(2)}>
@@ -153,8 +169,8 @@ export const RouteGenerateWizard = () => {
               <Button type="button" variant="outline" onClick={() => setStep(3)}>
                 Back
               </Button>
-              <Button type="button" onClick={onFinish}>
-                Dispatch
+              <Button disabled={generateRoutes.isPending} type="button" onClick={() => void onFinish()}>
+                {generateRoutes.isPending ? "Generating..." : "Dispatch"}
               </Button>
             </div>
           </CardContent>

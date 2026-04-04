@@ -17,12 +17,21 @@ import type { ProfileValues } from "@/features/settings/lib/validation";
 type Props = {
   form: UseFormReturn<ProfileValues>;
   userEmail: string | null | undefined;
+  isSaving?: boolean;
+  onSubmit: (values: ProfileValues) => void | Promise<void>;
 };
 
-export const SettingsProfileTab = ({ form, userEmail }: Props) => (
+export const SettingsProfileTab = ({ form, userEmail, isSaving, onSubmit }: Props) => (
   <form
     className="flex flex-col gap-4"
-    onSubmit={form.handleSubmit(() => toast.success("Profile saved (mock)"))}
+    onSubmit={form.handleSubmit(async (values) => {
+      try {
+        await onSubmit(values);
+        toast.success("Profile saved");
+      } catch (error) {
+        toast.error(error instanceof Error ? error.message : "Failed to save profile");
+      }
+    })}
   >
     <FieldGroup>
       <Field>
@@ -55,6 +64,8 @@ export const SettingsProfileTab = ({ form, userEmail }: Props) => (
         </Select>
       </Field>
     </FieldGroup>
-    <Button type="submit">Save profile</Button>
+    <Button disabled={isSaving} type="submit">
+      {isSaving ? "Saving..." : "Save profile"}
+    </Button>
   </form>
 );

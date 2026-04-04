@@ -1,9 +1,34 @@
 import { useQuery } from "@tanstack/react-query";
 
-import { mockDemand } from "@/features/demand/lib/mock-data";
+import { http } from "@/shared/lib/http";
+import type {
+  DemandRequestDetail,
+  DemandRequestsResponse,
+  DemandStatus,
+} from "@/shared/types/demand";
 
-export const useDemand = () =>
+type ListParams = {
+  page?: number;
+  limit?: number;
+  status?: DemandStatus;
+};
+
+export const useDemand = (params?: ListParams) =>
   useQuery({
-    queryKey: ["demand"],
-    queryFn: async () => mockDemand,
+    queryKey: ["demand", params],
+    queryFn: () => {
+      const search = new URLSearchParams({
+        page: String(params?.page ?? 1),
+        limit: String(params?.limit ?? 20),
+      });
+      if (params?.status) search.set("status", params.status);
+      return http.get<DemandRequestsResponse>(`/api/demand?${search}`);
+    },
+  });
+
+export const useDemandDetail = (requestId: string) =>
+  useQuery({
+    queryKey: ["demand", requestId],
+    queryFn: () => http.get<DemandRequestDetail>(`/api/demand/${requestId}`),
+    enabled: !!requestId,
   });

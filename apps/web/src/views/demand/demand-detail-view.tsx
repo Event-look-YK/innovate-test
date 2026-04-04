@@ -2,15 +2,18 @@ import { Link, useParams } from "@tanstack/react-router";
 import { buttonVariants } from "@innovate-test/ui/components/button";
 import { cn } from "@innovate-test/ui/lib/utils";
 
-import { useDemand } from "@/features/demand/hooks/use-demand";
+import { useDemandDetail } from "@/features/demand/hooks/use-demand";
 import { DemandDetailSummaryCard } from "@/features/demand/ui/demand-detail-summary-card";
 import { DemandFreelancersCard } from "@/features/demand/ui/demand-freelancers-card";
 import { DemandRouteMap } from "@/features/demand/ui/demand-route-map-placeholder";
 
 export const DemandDetailView = () => {
   const { requestId } = useParams({ strict: false }) as { requestId: string };
-  const { data: rows } = useDemand();
-  const row = rows?.find((r) => r.id === requestId);
+  const { data: row, isPending } = useDemandDetail(requestId);
+
+  if (isPending) {
+    return <p className="text-muted-foreground">Loading request...</p>;
+  }
 
   if (!row) {
     return <p className="text-muted-foreground">Request not found.</p>;
@@ -23,7 +26,7 @@ export const DemandDetailView = () => {
       </Link>
       <DemandDetailSummaryCard row={row} />
       <DemandRouteMap row={row} />
-      <DemandFreelancersCard />
+      <DemandFreelancersCard requestId={row.id} />
     </div>
   );
 };
