@@ -15,14 +15,9 @@ export const freightOffer = pgTable(
     freelancerUserId: text("freelancer_user_id")
       .notNull()
       .references(() => user.id),
-    taskTitle: text("task_title").notNull(),
-    originLabel: text("origin_label").notNull(),
-    destinationLabel: text("destination_label").notNull(),
-    distanceKm: real("distance_km").notNull(),
-    cargoType: text("cargo_type").notNull(),
-    weightT: real("weight_t").notNull(),
-    deadline: timestamp("deadline").notNull(),
     offeredPriceUah: real("offered_price_uah").notNull(),
+    estimatedHours: real("estimated_hours"),
+    note: text("note"),
     status: offerStatusEnum("status").default("open").notNull(),
     createdAt: timestamp("created_at").defaultNow().notNull(),
     updatedAt: timestamp("updated_at")

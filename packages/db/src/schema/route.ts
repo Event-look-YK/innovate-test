@@ -9,6 +9,7 @@ import {
   timestamp,
 } from "drizzle-orm/pg-core";
 
+import { user } from "./auth";
 import { company } from "./company";
 import { routeStatusEnum } from "./enums";
 import { task } from "./task";
@@ -24,7 +25,9 @@ export const routePlan = pgTable(
     truckId: text("truck_id")
       .notNull()
       .references(() => truck.id),
-    truckName: text("truck_name").notNull(),
+    driverId: text("driver_id").references(() => user.id, {
+      onDelete: "set null",
+    }),
     distanceKm: real("distance_km").notNull(),
     durationHours: real("duration_hours").notNull(),
     loadT: real("load_t").notNull(),
@@ -39,6 +42,7 @@ export const routePlan = pgTable(
   (table) => [
     index("route_plan_company_id_idx").on(table.companyId),
     index("route_plan_truck_id_idx").on(table.truckId),
+    index("route_plan_driver_id_idx").on(table.driverId),
     index("route_plan_status_idx").on(table.status),
   ],
 );
@@ -51,7 +55,9 @@ export const routeStop = pgTable(
       .notNull()
       .references(() => routePlan.id, { onDelete: "cascade" }),
     label: text("label").notNull(),
-    eta: text("eta").notNull(),
+    lat: real("lat").notNull(),
+    lng: real("lng").notNull(),
+    eta: timestamp("eta").notNull(),
     note: text("note"),
     sortOrder: integer("sort_order").notNull(),
   },
@@ -79,6 +85,10 @@ export const routePlanRelations = relations(routePlan, ({ one, many }) => ({
   truck: one(truck, {
     fields: [routePlan.truckId],
     references: [truck.id],
+  }),
+  driver: one(user, {
+    fields: [routePlan.driverId],
+    references: [user.id],
   }),
   stops: many(routeStop),
   routePlanTasks: many(routePlanTask),
