@@ -90,6 +90,9 @@ importers:
       dotenv:
         specifier: 'catalog:'
         version: 17.4.0
+      drizzle-orm:
+        specifier: ^0.45.2
+        version: 0.45.2(@types/pg@8.20.0)(kysely@0.28.15)(pg@8.20.0)
       fastify:
         specifier: ^5.3.3
         version: 5.8.4
