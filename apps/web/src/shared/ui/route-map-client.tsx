@@ -6,7 +6,6 @@ import { useEffect, useRef } from "react";
 
 import type { RouteMapProps } from "./route-map";
 
-/** Well-known Ukrainian cities → lat/lng */
 const CITY_COORDS: Record<string, [number, number]> = {
   kyiv: [50.4501, 30.5234],
   lviv: [49.8397, 24.0297],

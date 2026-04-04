@@ -25,8 +25,7 @@ export const DevRoleToolbar = () => {
     <div className="fixed right-4 bottom-4 z-50">
       <DropdownMenu>
         <DropdownMenuTrigger>
-          <Button className="gap-2 shadow-md" size="sm" variant="secondary">
-            <FlaskConicalIcon className="size-4" />
+          <Button className="gap-2 shadow-md" icon={<FlaskConicalIcon className="size-4" />} size="sm" variant="secondary">
             Dev role
           </Button>
         </DropdownMenuTrigger>

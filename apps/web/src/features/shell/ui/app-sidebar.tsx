@@ -30,8 +30,13 @@ export const AppSidebar = ({ mainItems, secondaryItems, user, ...props }: Props)
       <SidebarMenu>
         <SidebarMenuItem>
           <SidebarMenuButton size="lg" tooltip="Innovate Logistics">
-            <div className="flex aspect-square size-8 shrink-0 items-center justify-center rounded-xl bg-sidebar-primary/20 ring-1 ring-sidebar-primary/30">
-              <TruckIcon className="size-4 text-sidebar-primary" />
+            <div
+              className="flex aspect-square size-8 shrink-0 items-center justify-center rounded-xl ring-1 ring-white/20"
+              style={{
+                background: "linear-gradient(135deg, oklch(0.540 0.200 267), oklch(0.460 0.220 285))",
+              }}
+            >
+              <TruckIcon className="size-4 text-white" />
             </div>
             <div className="grid flex-1 text-left text-sm leading-tight">
               <span className="truncate font-bold tracking-tight">Innovate</span>

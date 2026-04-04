@@ -5,7 +5,6 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Field, FieldError, FieldGroup, FieldLabel } from "@innovate-test/ui/components/field";
 import { Input } from "@innovate-test/ui/components/input";
 import { Separator } from "@innovate-test/ui/components/separator";
-import { Spinner } from "@innovate-test/ui/components/spinner";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
@@ -70,17 +69,22 @@ export const SignUpCarrierForm = () => {
   };
 
   return (
-    <Card className="border-border/60 bg-card/80 shadow-lg shadow-primary/5 backdrop-blur-sm">
-      <CardHeader className="flex flex-col gap-4 pb-2">
+    <Card className="border-border/60 shadow-xl shadow-primary/8 overflow-hidden">
+      <div
+        aria-hidden
+        className="h-1 w-full"
+        style={{ background: "linear-gradient(90deg, oklch(0.540 0.200 267), oklch(0.580 0.200 300))" }}
+      />
+      <CardHeader className="flex flex-col gap-4 pb-2 pt-6">
         <div className="flex flex-wrap items-center gap-2">
           {steps.map((label, i) => (
             <div key={label} className="flex items-center gap-2">
               <span
                 className={
                   i === step
-                    ? "rounded-full bg-primary px-3 py-1 text-xs font-medium text-primary-foreground"
+                    ? "rounded-full bg-primary px-3 py-1 text-xs font-semibold text-primary-foreground"
                     : i < step
-                      ? "rounded-full bg-muted px-3 py-1 text-xs font-medium text-muted-foreground"
+                      ? "rounded-full bg-emerald-500 px-3 py-1 text-xs font-semibold text-white"
                       : "rounded-full border border-border px-3 py-1 text-xs font-medium text-muted-foreground"
                 }
               >
@@ -90,7 +94,7 @@ export const SignUpCarrierForm = () => {
             </div>
           ))}
         </div>
-        <CardTitle className="text-2xl font-semibold tracking-tight">Carrier registration</CardTitle>
+        <CardTitle className="text-2xl font-bold tracking-tight">Carrier registration</CardTitle>
         <CardDescription>Create your company workspace</CardDescription>
       </CardHeader>
       <CardContent>
@@ -196,8 +200,8 @@ export const SignUpCarrierForm = () => {
               <Button type="button" variant="outline" onClick={() => setStep(1)}>
                 Back
               </Button>
-              <Button disabled={isSubmitting} type="button" onClick={onSubmitFinal}>
-                {isSubmitting ? <Spinner className="size-4" /> : "Create account"}
+              <Button loading={isSubmitting} type="button" onClick={onSubmitFinal}>
+                Create account
               </Button>
             </div>
           </div>

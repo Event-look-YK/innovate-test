@@ -12,7 +12,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@innovate-test/ui/components/select";
-import { Spinner } from "@innovate-test/ui/components/spinner";
 import { useState } from "react";
 import { type Resolver, useForm } from "react-hook-form";
 import { toast } from "sonner";
@@ -61,9 +60,14 @@ export const SignUpFreelanceForm = () => {
   });
 
   return (
-    <Card className="border-border/60 bg-card/80 shadow-lg shadow-primary/5 backdrop-blur-sm">
-      <CardHeader className="pb-2">
-        <CardTitle className="text-2xl font-semibold tracking-tight">Freelance driver</CardTitle>
+    <Card className="border-border/60 shadow-xl shadow-primary/8 overflow-hidden">
+      <div
+        aria-hidden
+        className="h-1 w-full"
+        style={{ background: "linear-gradient(90deg, oklch(0.540 0.200 267), oklch(0.580 0.200 300))" }}
+      />
+      <CardHeader className="pb-2 pt-6">
+        <CardTitle className="text-2xl font-bold tracking-tight">Freelance driver</CardTitle>
         <CardDescription>Register to receive freight offers</CardDescription>
       </CardHeader>
       <CardContent>
@@ -139,8 +143,8 @@ export const SignUpFreelanceForm = () => {
               <FieldError errors={[form.formState.errors.payloadT]} />
             </Field>
           </FieldGroup>
-          <Button className="w-full" disabled={isSubmitting} type="submit">
-            {isSubmitting ? <Spinner className="size-4" /> : "Create account"}
+          <Button className="w-full" loading={isSubmitting} type="submit">
+            Create account
           </Button>
         </form>
       </CardContent>

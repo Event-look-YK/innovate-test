@@ -1,37 +1,48 @@
-import { Card, CardDescription, CardHeader, CardTitle } from "@innovate-test/ui/components/card";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@innovate-test/ui/components/card";
+import { NumberTicker } from "@innovate-test/ui/components/number-ticker";
+import { BriefcaseIcon, SparklesIcon, WalletIcon } from "lucide-react";
 
 import { formatCurrencyUah } from "@/shared/lib/format";
 
 const kpis = [
-  { label: "New offers", value: "3" },
-  { label: "Active jobs", value: "1" },
-  { label: "Earnings", value: formatCurrencyUah(12_400) },
+  { label: "New offers", value: 3, suffix: "", icon: SparklesIcon, color: "bg-violet-50 text-violet-600" },
+  { label: "Active jobs", value: 1, suffix: "", icon: BriefcaseIcon, color: "bg-sky-50 text-sky-600" },
+  { label: "Earnings", value: 12400, suffix: " ₴", icon: WalletIcon, color: "bg-emerald-50 text-emerald-600" },
 ];
 
 export const FreelanceDashboardView = () => (
   <div className="flex flex-col gap-6">
     <div>
-      <h1 className="text-2xl font-semibold tracking-tight">Offers near you</h1>
+      <h1 className="text-2xl font-bold tracking-tight">Offers near you</h1>
       <p className="text-muted-foreground">Freight matching</p>
     </div>
     <div className="grid gap-4 sm:grid-cols-3">
       {kpis.map((k) => (
-        <Card key={k.label}>
-          <CardHeader className="pb-2">
-            <CardDescription>{k.label}</CardDescription>
-            <CardTitle className="text-2xl font-semibold tabular-nums">{k.value}</CardTitle>
+        <Card key={k.label} className="border-border/60 shadow-sm hover:shadow-md transition-shadow">
+          <CardHeader className="pb-2 pt-5">
+            <div className="flex items-center justify-between mb-2">
+              <CardDescription className="font-medium">{k.label}</CardDescription>
+              <div className={`flex size-8 items-center justify-center rounded-xl ${k.color}`}>
+                <k.icon className="size-4" />
+              </div>
+            </div>
+            <CardTitle className="text-3xl font-black tabular-nums">
+              <NumberTicker value={k.value} />{k.suffix}
+            </CardTitle>
           </CardHeader>
         </Card>
       ))}
     </div>
-    <Card>
+    <Card className="border-border/60 shadow-sm">
       <CardHeader>
-        <CardTitle className="text-base">Open offers</CardTitle>
+        <CardTitle className="text-base font-semibold">Open offers</CardTitle>
         <CardDescription>Map + list placeholder</CardDescription>
       </CardHeader>
-      <div className="flex h-48 items-center justify-center rounded-lg border border-dashed border-border bg-muted/30 text-sm text-muted-foreground">
-        Map preview
-      </div>
+      <CardContent>
+        <div className="flex h-48 items-center justify-center rounded-xl border-2 border-dashed border-border bg-muted/30 text-sm text-muted-foreground">
+          Map preview coming soon
+        </div>
+      </CardContent>
     </Card>
   </div>
 );

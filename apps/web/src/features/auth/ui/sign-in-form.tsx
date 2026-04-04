@@ -9,7 +9,6 @@ import {
   FieldLabel,
 } from "@innovate-test/ui/components/field";
 import { Input } from "@innovate-test/ui/components/input";
-import { Spinner } from "@innovate-test/ui/components/spinner";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
@@ -46,20 +45,26 @@ export const SignInForm = () => {
   });
 
   return (
-    <Card className="border-border/60 bg-card/80 shadow-lg shadow-primary/5 backdrop-blur-sm">
-      <CardHeader className="flex flex-col gap-1 pb-2">
-        <CardTitle className="text-2xl font-semibold tracking-tight">Welcome back</CardTitle>
-        <CardDescription>Sign in to your logistics workspace</CardDescription>
+    <Card className="border-border/60 shadow-xl shadow-primary/8 overflow-hidden">
+      <div
+        aria-hidden
+        className="h-1 w-full"
+        style={{ background: "linear-gradient(90deg, oklch(0.540 0.200 267), oklch(0.580 0.200 300))" }}
+      />
+      <CardHeader className="flex flex-col gap-1 pb-2 pt-6">
+        <CardTitle className="text-2xl font-bold tracking-tight">Welcome back</CardTitle>
+        <CardDescription className="text-muted-foreground">Sign in to your logistics workspace</CardDescription>
       </CardHeader>
-      <CardContent>
-        <form className="flex flex-col gap-6" onSubmit={onSubmit}>
+      <CardContent className="pb-7">
+        <form className="flex flex-col gap-5" onSubmit={onSubmit}>
           <FieldGroup>
             <Field data-invalid={!!form.formState.errors.email}>
-              <FieldLabel htmlFor="email">Email</FieldLabel>
+              <FieldLabel htmlFor="email">Email address</FieldLabel>
               <Input
                 id="email"
                 type="email"
                 autoComplete="email"
+                placeholder="you@company.com"
                 aria-invalid={!!form.formState.errors.email}
                 {...form.register("email")}
               />
@@ -71,22 +76,29 @@ export const SignInForm = () => {
                 id="password"
                 type="password"
                 autoComplete="current-password"
+                placeholder="••••••••"
                 aria-invalid={!!form.formState.errors.password}
                 {...form.register("password")}
               />
               <FieldError errors={[form.formState.errors.password]} />
             </Field>
           </FieldGroup>
-          <Button className="w-full" disabled={isSubmitting} type="submit">
-            {isSubmitting ? <Spinner className="size-4" /> : "Sign in"}
+          <Button className="w-full font-semibold" loading={isSubmitting} type="submit" size="lg">
+            Sign in
           </Button>
           <div className="flex flex-col gap-2 text-center text-sm text-muted-foreground">
-            <Link className="text-primary underline-offset-4 hover:underline" to="/auth/sign-up">
-              Create carrier account
-            </Link>
-            <Link className="text-primary underline-offset-4 hover:underline" to="/auth/sign-up/freelance">
-              Join as freelance driver
-            </Link>
+            <p>
+              New carrier?{" "}
+              <Link className="font-semibold text-primary underline-offset-4 hover:underline" to="/auth/sign-up">
+                Create an account
+              </Link>
+            </p>
+            <p>
+              Freelance driver?{" "}
+              <Link className="font-semibold text-primary underline-offset-4 hover:underline" to="/auth/sign-up/freelance">
+                Join here
+              </Link>
+            </p>
           </div>
         </form>
       </CardContent>
