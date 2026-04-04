@@ -82,3 +82,14 @@ export const freelanceVehicleTypeEnum = pgEnum("freelance_vehicle_type", [
   "Van",
   "Refrigerated",
 ]);
+
+export const routeOfferStatusEnum = pgEnum("route_offer_status", [
+  "open",
+  "accepted",
+  "cancelled",
+]);
+
+export const routeOfferTriggerEnum = pgEnum("route_offer_trigger", [
+  "manual",
+  "auto",
+]);
