@@ -8,12 +8,13 @@ import { and, eq, count } from "drizzle-orm";
 import type { FastifyInstance } from "fastify";
 
 import { authPreHandler, requireProfile } from "../lib/auth-middleware";
+import { dashboardSchemas } from "../lib/schemas/dashboard.schemas";
 
 export async function dashboardRoutes(fastify: FastifyInstance) {
   // GET /dashboard/stats
   fastify.get(
     "/dashboard/stats",
-    { preHandler: [authPreHandler, requireProfile()] },
+    { schema: dashboardSchemas.getStats, preHandler: [authPreHandler, requireProfile()] },
     async (request) => {
       const { companyId, role, userId } = request.sessionUser;
 

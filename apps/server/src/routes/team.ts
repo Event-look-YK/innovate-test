@@ -8,13 +8,14 @@ import type { FastifyInstance } from "fastify";
 import { authPreHandler, requireRole } from "../lib/auth-middleware";
 import { badRequest } from "../lib/errors";
 import { genId } from "../lib/id";
+import { teamSchemas } from "../lib/schemas/team.schemas";
 import { inviteSchema, requireCompanyId, validateBody } from "../lib/zod-schemas";
 
 export async function teamRoutes(fastify: FastifyInstance) {
   // GET /team — active members + pending invites
   fastify.get(
     "/team",
-    { preHandler: [authPreHandler, requireRole("CARRIER_ADMIN")] },
+    { schema: teamSchemas.listTeam, preHandler: [authPreHandler, requireRole("CARRIER_ADMIN")] },
     async (request, reply) => {
       const companyId = requireCompanyId(request, reply);
       if (!companyId) return;
@@ -66,7 +67,7 @@ export async function teamRoutes(fastify: FastifyInstance) {
   // POST /team/invite
   fastify.post(
     "/team/invite",
-    { preHandler: [authPreHandler, requireRole("CARRIER_ADMIN")] },
+    { schema: teamSchemas.invite, preHandler: [authPreHandler, requireRole("CARRIER_ADMIN")] },
     async (request, reply) => {
       const companyId = requireCompanyId(request, reply);
       if (!companyId) return;

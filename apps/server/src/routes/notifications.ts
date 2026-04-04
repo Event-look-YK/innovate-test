@@ -6,12 +6,13 @@ import type { FastifyInstance } from "fastify";
 import { authPreHandler } from "../lib/auth-middleware";
 import { notFound } from "../lib/errors";
 import { parsePagination, paginatedResponse } from "../lib/pagination";
+import { notificationSchemas } from "../lib/schemas/notifications.schemas";
 
 export async function notificationRoutes(fastify: FastifyInstance) {
   // GET /notifications — list own notifications (newest first)
   fastify.get(
     "/notifications",
-    { preHandler: [authPreHandler] },
+    { schema: notificationSchemas.list, preHandler: [authPreHandler] },
     async (request) => {
       const userId = request.sessionUser.userId;
       const pagination = parsePagination(request.query as Record<string, unknown>);
@@ -46,7 +47,7 @@ export async function notificationRoutes(fastify: FastifyInstance) {
   // PATCH /notifications/:id/read — mark one as read
   fastify.patch(
     "/notifications/:id/read",
-    { preHandler: [authPreHandler] },
+    { schema: notificationSchemas.markRead, preHandler: [authPreHandler] },
     async (request, reply) => {
       const userId = request.sessionUser.userId;
       const { id } = request.params as { id: string };
@@ -71,7 +72,7 @@ export async function notificationRoutes(fastify: FastifyInstance) {
   // POST /notifications/read-all — mark all as read
   fastify.post(
     "/notifications/read-all",
-    { preHandler: [authPreHandler] },
+    { schema: notificationSchemas.readAll, preHandler: [authPreHandler] },
     async (request) => {
       const userId = request.sessionUser.userId;
 

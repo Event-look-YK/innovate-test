@@ -8,6 +8,7 @@ import { authPreHandler, requireRole } from "../lib/auth-middleware";
 import { badRequest, notFound } from "../lib/errors";
 import { genId } from "../lib/id";
 import { parsePagination, paginatedResponse } from "../lib/pagination";
+import { fleetSchemas } from "../lib/schemas/fleet.schemas";
 import {
   truckCreateSchema,
   truckUpdateSchema,
@@ -21,7 +22,7 @@ export async function fleetRoutes(fastify: FastifyInstance) {
   // GET /fleet
   fastify.get(
     "/fleet",
-    { preHandler: [authPreHandler, requireRole(...fleetRoles)] },
+    { schema: fleetSchemas.listFleet, preHandler: [authPreHandler, requireRole(...fleetRoles)] },
     async (request, reply) => {
       const companyId = requireCompanyId(request, reply);
       if (!companyId) return;
@@ -57,7 +58,7 @@ export async function fleetRoutes(fastify: FastifyInstance) {
   // POST /fleet
   fastify.post(
     "/fleet",
-    { preHandler: [authPreHandler, requireRole(...fleetRoles)] },
+    { schema: fleetSchemas.createTruck, preHandler: [authPreHandler, requireRole(...fleetRoles)] },
     async (request, reply) => {
       const companyId = requireCompanyId(request, reply);
       if (!companyId) return;
@@ -88,7 +89,7 @@ export async function fleetRoutes(fastify: FastifyInstance) {
   // GET /fleet/:truckId
   fastify.get(
     "/fleet/:truckId",
-    { preHandler: [authPreHandler, requireRole(...fleetRoles)] },
+    { schema: fleetSchemas.getTruck, preHandler: [authPreHandler, requireRole(...fleetRoles)] },
     async (request, reply) => {
       const companyId = requireCompanyId(request, reply);
       if (!companyId) return;
@@ -109,7 +110,7 @@ export async function fleetRoutes(fastify: FastifyInstance) {
   // PUT /fleet/:truckId
   fastify.put(
     "/fleet/:truckId",
-    { preHandler: [authPreHandler, requireRole(...fleetRoles)] },
+    { schema: fleetSchemas.updateTruck, preHandler: [authPreHandler, requireRole(...fleetRoles)] },
     async (request, reply) => {
       const companyId = requireCompanyId(request, reply);
       if (!companyId) return;
@@ -153,7 +154,7 @@ export async function fleetRoutes(fastify: FastifyInstance) {
   // DELETE /fleet/:truckId
   fastify.delete(
     "/fleet/:truckId",
-    { preHandler: [authPreHandler, requireRole("CARRIER_ADMIN")] },
+    { schema: fleetSchemas.deleteTruck, preHandler: [authPreHandler, requireRole("CARRIER_ADMIN")] },
     async (request, reply) => {
       const companyId = requireCompanyId(request, reply);
       if (!companyId) return;

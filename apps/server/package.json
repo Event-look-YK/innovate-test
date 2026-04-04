@@ -12,6 +12,8 @@
   "dependencies": {
     "@ai-sdk/google": "^3.0.58",
     "@fastify/cors": "^11.0.1",
+    "@fastify/swagger": "^9.7.0",
+    "@fastify/swagger-ui": "^5.2.5",
     "@innovate-test/auth": "workspace:*",
     "@innovate-test/db": "workspace:*",
     "@innovate-test/env": "workspace:*",
@@ -20,7 +22,8 @@
     "dotenv": "catalog:",
     "drizzle-orm": "^0.45.2",
     "fastify": "^5.3.3",
-    "zod": "catalog:"
+    "zod": "catalog:",
+    "zod-to-json-schema": "^3.25.2"
   },
   "devDependencies": {
     "@innovate-test/config": "workspace:*",

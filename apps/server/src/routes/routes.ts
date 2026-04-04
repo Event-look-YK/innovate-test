@@ -10,6 +10,7 @@ import { badRequest, notFound } from "../lib/errors";
 import { genId } from "../lib/id";
 import { parsePagination, paginatedResponse } from "../lib/pagination";
 import { createRouteOffer } from "../lib/route-offer-helpers";
+import { routeSchemas } from "../lib/schemas/routes.schemas";
 import {
   routeGenerateSchema,
   routeStatusSchema,
@@ -24,7 +25,7 @@ export async function routeRoutes(fastify: FastifyInstance) {
   // GET /routes
   fastify.get(
     "/routes",
-    { preHandler: [authPreHandler, requireRole(...viewRoles)] },
+    { schema: routeSchemas.listRoutes, preHandler: [authPreHandler, requireRole(...viewRoles)] },
     async (request, reply) => {
       const companyId = requireCompanyId(request, reply);
       if (!companyId) return;
@@ -73,10 +74,10 @@ export async function routeRoutes(fastify: FastifyInstance) {
     },
   );
 
-  // POST /routes/generate — greedy route generation
+  // POST /routes/generate — LLM route optimization
   fastify.post(
     "/routes/generate",
-    { preHandler: [authPreHandler, requireRole("CARRIER_ADMIN", "CARRIER_MANAGER")] },
+    { schema: routeSchemas.generateRoutes, preHandler: [authPreHandler, requireRole("CARRIER_ADMIN", "CARRIER_MANAGER")] },
     async (request, reply) => {
       const companyId = requireCompanyId(request, reply);
       if (!companyId) return;
@@ -255,7 +256,7 @@ export async function routeRoutes(fastify: FastifyInstance) {
   // GET /routes/:routeId
   fastify.get(
     "/routes/:routeId",
-    { preHandler: [authPreHandler, requireRole(...viewRoles)] },
+    { schema: routeSchemas.getRoute, preHandler: [authPreHandler, requireRole(...viewRoles)] },
     async (request, reply) => {
       const companyId = requireCompanyId(request, reply);
       if (!companyId) return;
@@ -311,7 +312,7 @@ export async function routeRoutes(fastify: FastifyInstance) {
   // PATCH /routes/:routeId/status
   fastify.patch(
     "/routes/:routeId/status",
-    { preHandler: [authPreHandler, requireRole("CARRIER_ADMIN", "CARRIER_MANAGER")] },
+    { schema: routeSchemas.updateRouteStatus, preHandler: [authPreHandler, requireRole("CARRIER_ADMIN", "CARRIER_MANAGER")] },
     async (request, reply) => {
       const companyId = requireCompanyId(request, reply);
       if (!companyId) return;

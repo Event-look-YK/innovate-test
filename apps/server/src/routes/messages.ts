@@ -8,6 +8,7 @@ import type { FastifyInstance } from "fastify";
 import { authPreHandler } from "../lib/auth-middleware";
 import { badRequest, forbidden } from "../lib/errors";
 import { genId } from "../lib/id";
+import { messageSchemas } from "../lib/schemas/messages.schemas";
 import {
   threadCreateSchema,
   messageCreateSchema,
@@ -18,7 +19,7 @@ export async function messageRoutes(fastify: FastifyInstance) {
   // GET /messages/threads
   fastify.get(
     "/messages/threads",
-    { preHandler: [authPreHandler] },
+    { schema: messageSchemas.listThreads, preHandler: [authPreHandler] },
     async (request) => {
       const { userId } = request.sessionUser;
 
@@ -42,7 +43,7 @@ export async function messageRoutes(fastify: FastifyInstance) {
   // POST /messages/threads
   fastify.post(
     "/messages/threads",
-    { preHandler: [authPreHandler] },
+    { schema: messageSchemas.createThread, preHandler: [authPreHandler] },
     async (request, reply) => {
       const data = validateBody(threadCreateSchema, request.body, reply);
       if (!data) return;
@@ -101,7 +102,7 @@ export async function messageRoutes(fastify: FastifyInstance) {
   // GET /messages/threads/:threadId
   fastify.get(
     "/messages/threads/:threadId",
-    { preHandler: [authPreHandler] },
+    { schema: messageSchemas.getThread, preHandler: [authPreHandler] },
     async (request, reply) => {
       const { threadId } = request.params as { threadId: string };
       const { userId } = request.sessionUser;
@@ -142,7 +143,7 @@ export async function messageRoutes(fastify: FastifyInstance) {
   // POST /messages
   fastify.post(
     "/messages",
-    { preHandler: [authPreHandler] },
+    { schema: messageSchemas.sendMessage, preHandler: [authPreHandler] },
     async (request, reply) => {
       const data = validateBody(messageCreateSchema, request.body, reply);
       if (!data) return;
