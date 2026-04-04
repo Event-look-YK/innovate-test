@@ -3,9 +3,21 @@ import { auth } from "@innovate-test/auth";
 import { env } from "@innovate-test/env/server";
 import Fastify from "fastify";
 
+import { registerAuthDecorator } from "./lib/auth-middleware";
+import { profileRoutes } from "./routes/profile";
+import { companyRoutes } from "./routes/company";
+import { fleetRoutes } from "./routes/fleet";
+import { taskRoutes } from "./routes/tasks";
+import { dashboardRoutes } from "./routes/dashboard";
+import { routeRoutes } from "./routes/routes";
+import { teamRoutes } from "./routes/team";
+import { demandRoutes } from "./routes/demand";
+import { offerRoutes } from "./routes/offers";
+import { messageRoutes } from "./routes/messages";
+
 const baseCorsConfig = {
   origin: env.CORS_ORIGIN,
-  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+  methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
   allowedHeaders: ["Content-Type", "Authorization", "X-Requested-With"],
   credentials: true,
   maxAge: 86400,
@@ -16,6 +28,19 @@ const fastify = Fastify({
 });
 
 fastify.register(fastifyCors, baseCorsConfig);
+
+registerAuthDecorator(fastify);
+
+fastify.register(profileRoutes, { prefix: "/api" });
+fastify.register(companyRoutes, { prefix: "/api" });
+fastify.register(fleetRoutes, { prefix: "/api" });
+fastify.register(taskRoutes, { prefix: "/api" });
+fastify.register(dashboardRoutes, { prefix: "/api" });
+fastify.register(routeRoutes, { prefix: "/api" });
+fastify.register(teamRoutes, { prefix: "/api" });
+fastify.register(demandRoutes, { prefix: "/api" });
+fastify.register(offerRoutes, { prefix: "/api" });
+fastify.register(messageRoutes, { prefix: "/api" });
 
 fastify.route({
   method: ["GET", "POST"],
