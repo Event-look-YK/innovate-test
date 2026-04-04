@@ -90,6 +90,9 @@ importers:
       dotenv:
         specifier: 'catalog:'
         version: 17.4.0
+      drizzle-orm:
+        specifier: ^0.45.2
+        version: 0.45.2(@types/pg@8.20.0)(kysely@0.28.15)(pg@8.20.0)
       fastify:
         specifier: ^5.3.3
         version: 5.8.4
@@ -263,6 +266,9 @@ importers:
       '@innovate-test/env':
         specifier: workspace:*
         version: link:../env
+      better-auth:
+        specifier: 'catalog:'
+        version: 1.5.5(@tanstack/react-start@1.167.16(react-dom@19.2.4(react@19.2.4))(react@19.2.4)(vite@7.3.1(@types/node@25.5.0)(jiti@2.6.1)(lightningcss@1.32.0)(tsx@4.21.0)))(drizzle-kit@0.31.10)(drizzle-orm@0.45.2(@types/pg@8.20.0)(kysely@0.28.15)(pg@8.20.0))(mongodb@7.1.1)(pg@8.20.0)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
       dotenv:
         specifier: 'catalog:'
         version: 17.4.0
@@ -285,6 +291,9 @@ importers:
       drizzle-kit:
         specifier: ^0.31.8
         version: 0.31.10
+      tsx:
+        specifier: ^4.19.2
+        version: 4.21.0
       typescript:
         specifier: ^5
         version: 5.9.3

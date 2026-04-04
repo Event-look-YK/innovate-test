@@ -13,10 +13,12 @@
     "db:push": "drizzle-kit push",
     "db:generate": "drizzle-kit generate",
     "db:studio": "drizzle-kit studio",
-    "db:migrate": "drizzle-kit migrate"
+    "db:migrate": "drizzle-kit migrate",
+    "db:seed": "tsx src/seed.ts"
   },
   "dependencies": {
     "@innovate-test/env": "workspace:*",
+    "better-auth": "catalog:",
     "dotenv": "catalog:",
     "drizzle-orm": "^0.45.1",
     "pg": "^8.17.1",
@@ -26,6 +28,7 @@
     "@innovate-test/config": "workspace:*",
     "@types/pg": "^8.16.0",
     "drizzle-kit": "^0.31.8",
+    "tsx": "^4.19.2",
     "typescript": "^5"
   }
 }
