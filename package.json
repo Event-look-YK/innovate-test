@@ -15,7 +15,8 @@
     "db:push": "turbo -F @innovate-test/db db:push",
     "db:studio": "turbo -F @innovate-test/db db:studio",
     "db:generate": "turbo -F @innovate-test/db db:generate",
-    "db:migrate": "turbo -F @innovate-test/db db:migrate"
+    "db:migrate": "turbo -F @innovate-test/db db:migrate",
+    "db:seed": "turbo -F @innovate-test/db db:seed"
   },
   "dependencies": {
     "@innovate-test/env": "workspace:*",
