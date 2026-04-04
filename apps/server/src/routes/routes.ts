@@ -15,6 +15,7 @@ import {
   requireCompanyId,
   validateBody,
 } from "../lib/zod-schemas";
+import { optimizeRoutes, type OptimizationInput } from "../services/llm-route-optimizer";
 
 export async function routeRoutes(fastify: FastifyInstance) {
   const viewRoles = ["CARRIER_ADMIN", "CARRIER_MANAGER", "CARRIER_DRIVER"] as const;
@@ -112,38 +113,44 @@ export async function routeRoutes(fastify: FastifyInstance) {
         return badRequest(reply, "No valid trucks found");
       }
 
-      // Greedy assignment: assign tasks to trucks based on capacity
-      const assignments: Map<string, typeof tasks> = new Map();
-      const truckLoads: Map<string, number> = new Map();
+      // Build LLM input
+      const optimizationInput: OptimizationInput = {
+        tasks: tasks.map((t) => ({
+          id: t.id,
+          title: t.title,
+          cargo_type: t.cargoType,
+          weight_t: t.weightT,
+          pickup: { address: t.originLabel, lat: t.originLat, lng: t.originLng },
+          delivery: { address: t.destinationLabel, lat: t.destinationLat, lng: t.destinationLng },
+          distance_km: t.distanceKm,
+          priority: t.priority,
+          deadline: t.deadline.toISOString(),
+        })),
+        trucks: trucks.map((tr) => ({
+          id: tr.id,
+          name: tr.name,
+          type: tr.type,
+          payload_t: tr.payloadT,
+          current_location: {
+            address: tr.locationLabel,
+            lat: tr.locationLat,
+            lng: tr.locationLng,
+          },
+        })),
+        generated_at: new Date().toISOString(),
+      };
 
-      for (const t of trucks) {
-        assignments.set(t.id, []);
-        truckLoads.set(t.id, 0);
+      // Run LLM optimization
+      let optimizationResult;
+      try {
+        optimizationResult = await optimizeRoutes(optimizationInput);
+      } catch (err) {
+        const message = err instanceof Error ? err.message : "LLM optimization failed";
+        return reply.status(502).send({ error: message });
       }
 
-      const sortedTasks = [...tasks].sort((a, b) => b.weightT - a.weightT);
-
-      for (const t of sortedTasks) {
-        // Find truck with most remaining capacity
-        let bestTruck: string | null = null;
-        let bestRemaining = -1;
-
-        for (const tr of trucks) {
-          const currentLoad = truckLoads.get(tr.id) ?? 0;
-          const remaining = tr.payloadT - currentLoad;
-          if (remaining >= t.weightT && remaining > bestRemaining) {
-            bestTruck = tr.id;
-            bestRemaining = remaining;
-          }
-        }
-
-        if (bestTruck) {
-          assignments.get(bestTruck)!.push(t);
-          truckLoads.set(bestTruck, (truckLoads.get(bestTruck) ?? 0) + t.weightT);
-        }
-      }
-
-      // Create route plans
+      // Persist routes
+      const truckMap = new Map(trucks.map((tr) => [tr.id, tr]));
       const createdRoutes: Array<{
         id: string;
         truckName: string;
@@ -157,13 +164,9 @@ export async function routeRoutes(fastify: FastifyInstance) {
       }> = [];
 
       await db.transaction(async (tx) => {
-        for (const tr of trucks) {
-          const assignedTasks = assignments.get(tr.id) ?? [];
-          if (assignedTasks.length === 0) continue;
-
-          const totalDistance = assignedTasks.reduce((s, t) => s + t.distanceKm, 0);
-          const totalWeight = assignedTasks.reduce((s, t) => s + t.weightT, 0);
-          const durationHours = Math.round((totalDistance / 60) * 10) / 10;
+        for (const route of optimizationResult.routes) {
+          const tr = truckMap.get(route.truck_id);
+          if (!tr) continue;
 
           const routeId = genId();
           const now = new Date();
@@ -173,75 +176,53 @@ export async function routeRoutes(fastify: FastifyInstance) {
             companyId,
             truckId: tr.id,
             driverId: tr.assignedDriverId,
-            distanceKm: totalDistance,
-            durationHours,
-            loadT: totalWeight,
+            distanceKm: route.total_distance_km,
+            durationHours: route.total_duration_hours,
+            loadT: route.total_weight_t,
             capacityT: tr.payloadT,
             status: "draft",
           });
 
-          // Create stops from task origins + destinations
+          // Create stops from legs (each leg's destination is a stop)
           const stops: Array<{ id: string; label: string; eta: Date; note: string | null; sortOrder: number }> = [];
-          let order = 0;
-          for (const t of assignedTasks) {
-            const pickupId = genId();
+          for (const leg of route.legs) {
+            const stopId = genId();
+            const eta = new Date(leg.estimated_arrival);
             stops.push({
-              id: pickupId,
-              label: t.originLabel,
-              eta: t.deadline,
-              note: `Pickup: ${t.title}`,
-              sortOrder: order++,
+              id: stopId,
+              label: leg.to.address,
+              eta,
+              note: leg.action,
+              sortOrder: leg.leg_index,
             });
             await tx.insert(routeStop).values({
-              id: pickupId,
+              id: stopId,
               routePlanId: routeId,
-              label: t.originLabel,
-              lat: t.originLat,
-              lng: t.originLng,
-              eta: t.deadline,
-              note: `Pickup: ${t.title}`,
-              sortOrder: stops.length - 1,
+              label: leg.to.address,
+              lat: leg.to.lat,
+              lng: leg.to.lng,
+              eta,
+              note: leg.action,
+              sortOrder: leg.leg_index,
             });
+          }
 
-            const deliveryId = genId();
-            stops.push({
-              id: deliveryId,
-              label: t.destinationLabel,
-              eta: t.deadline,
-              note: `Deliver: ${t.title}`,
-              sortOrder: order++,
-            });
-            await tx.insert(routeStop).values({
-              id: deliveryId,
-              routePlanId: routeId,
-              label: t.destinationLabel,
-              lat: t.destinationLat,
-              lng: t.destinationLng,
-              eta: t.deadline,
-              note: `Deliver: ${t.title}`,
-              sortOrder: stops.length - 1,
-            });
-
-            // Link task to route
-            await tx.insert(routePlanTask).values({
-              routePlanId: routeId,
-              taskId: t.id,
-            });
-
-            // Update task status
+          // Link tasks
+          for (const taskId of route.task_ids) {
+            await tx.insert(routePlanTask).values({ routePlanId: routeId, taskId });
             await tx
               .update(task)
               .set({ status: "Assigned", assignedTruckId: tr.id })
-              .where(eq(task.id, t.id));
+              .where(eq(task.id, taskId));
           }
 
           createdRoutes.push({
             id: routeId,
             truckName: tr.name,
             stops,
-            distanceKm: totalDistance,
-            durationHours,
-            loadT: totalWeight,
+            distanceKm: route.total_distance_km,
+            durationHours: route.total_duration_hours,
+            loadT: route.total_weight_t,
             capacityT: tr.payloadT,
             status: "draft",
             createdAt: now,
@@ -249,7 +230,12 @@ export async function routeRoutes(fastify: FastifyInstance) {
         }
       });
 
-      return createdRoutes;
+      return reply.send({
+        plan: optimizationResult.plan,
+        routes: createdRoutes,
+        unassigned: optimizationResult.unassigned_tasks,
+        warnings: optimizationResult.warnings,
+      });
     },
   );
 
