@@ -17,11 +17,11 @@ import { BellIcon } from "lucide-react";
 import { useEffect, useState } from "react";
 import { Button } from "@innovate-test/ui/components/button";
 
+import { AppSidebar } from "@/features/shell/ui/app-sidebar";
 import { filterNavByRole } from "@/shared/lib/nav-config";
 import { useCurrentUser } from "@/shared/hooks/use-current-user";
 import { ConnectivityBadge } from "@/shared/ui/connectivity-badge";
 import { DevRoleToolbar } from "@/shared/ui/dev-role-toolbar";
-import { AppSidebar } from "@/views/shell/app-sidebar";
 
 export const AuthenticatedShell = () => {
   const navigate = useNavigate();
@@ -53,12 +53,10 @@ export const AuthenticatedShell = () => {
         />
 
         <SidebarInset className="min-h-0 flex-1 overflow-hidden">
-          {/* Topbar */}
           <header className="flex h-14 shrink-0 items-center gap-3 border-b border-border/60 px-4">
             <SidebarTrigger className="-ml-1 text-muted-foreground hover:text-foreground" />
             <Separator className="h-5 opacity-40" orientation="vertical" />
 
-            {/* Search */}
             <Button
               className="hidden h-8 max-w-56 flex-1 justify-start gap-2 rounded-lg bg-muted/60 text-xs text-muted-foreground hover:bg-muted md:flex"
               type="button"

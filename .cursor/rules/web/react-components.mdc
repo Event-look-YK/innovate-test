@@ -1,6 +1,6 @@
 ---
-description: Conventions for structuring React/React Native TSX components (props, styling helpers, handlers, and component splitting)
-globs: **/*.tsx
+description: Conventions for structuring React TSX components in the web app and shared UI package
+globs: apps/web/**/*.tsx,packages/ui/**/*.tsx
 alwaysApply: false
 ---
 

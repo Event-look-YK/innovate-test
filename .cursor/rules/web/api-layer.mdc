@@ -1,8 +1,12 @@
 ---
 description: HTTP API and TanStack Query conventions for the web app (apps/web)
-globs: apps/web/src/shared/lib/http.ts
+globs: apps/web/**/*.{ts,tsx}
 alwaysApply: false
 ---
+
+# Scope
+
+Applies only under **`apps/web`** (client that talks to the Fastify API).
 
 # Web API layer (HTTP + TanStack Query)
 

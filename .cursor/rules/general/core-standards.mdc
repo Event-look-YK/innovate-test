@@ -5,6 +5,8 @@ alwaysApply: true
 
 # Core Standards
 
+- **Rule scope:** This file applies across the monorepo. Frontend-specific guidance (FSD layout, shadcn/Tailwind, TanStack Query usage, web env, Zustand stores in the web app) lives under **`.cursor/rules/web/`** and is attached only when paths match each rule’s **`globs`** (mainly **`apps/web/**`** and **`packages/ui/**`**).
+
 - Write concise, technical TypeScript with accurate examples.
 - Use functional and declarative patterns; avoid classes.
 - Prefer iteration and modularization over duplication.
@@ -20,7 +22,7 @@ alwaysApply: true
 ## Modules and imports
 
 - Avoid **barrel** `index.ts` files that re-export entire folders; import concrete modules (e.g. `@/shared/lib/http`, `@/features/auth/ui/login-form`).
-- Within `apps/web/src/`, use paths under `@/shared/...`, `@/features/<domain>/...`, `@/views/<domain>/...` pointing at real files.
+- In the **web app** (`apps/web`), use `@/shared/...`, `@/features/<domain>/...`, `@/views/<domain>/...` (alias maps to `apps/web/src/*`).
 - Shared packages:
   - `@innovate-test/ui/components/<name>` — shadcn/Radix UI components
   - `@innovate-test/env/web` — typed web env vars

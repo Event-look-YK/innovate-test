@@ -1,9 +1,9 @@
 import { ROLES } from "@/shared/constants/roles";
 import { useCurrentUser } from "@/shared/hooks/use-current-user";
-import { AdminManagerDashboardView } from "@/views/dashboard/admin-manager-dashboard-view";
-import { DriverDashboardView } from "@/views/dashboard/driver-dashboard-view";
-import { FreelanceDashboardView } from "@/views/dashboard/freelance-dashboard-view";
-import { WarehouseDashboardView } from "@/views/dashboard/warehouse-dashboard-view";
+import { AdminManagerDashboardView } from "@/features/dashboard/ui/admin-manager-dashboard-view";
+import { DriverDashboardView } from "@/features/dashboard/ui/driver-dashboard-view";
+import { FreelanceDashboardView } from "@/features/dashboard/ui/freelance-dashboard-view";
+import { WarehouseDashboardView } from "@/features/dashboard/ui/warehouse-dashboard-view";
 
 export const DashboardView = () => {
   const { user } = useCurrentUser();

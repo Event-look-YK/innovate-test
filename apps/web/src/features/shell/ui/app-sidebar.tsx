@@ -10,10 +10,10 @@ import {
 } from "@innovate-test/ui/components/sidebar";
 import { TruckIcon } from "lucide-react";
 
-import { NavMain } from "@/views/shell/nav-main";
-import { NavSecondary } from "@/views/shell/nav-secondary";
-import { NavUser } from "@/views/shell/nav-user";
 import type { NavItem } from "@/shared/lib/nav-config";
+import { NavMain } from "@/features/shell/ui/nav-main";
+import { NavSecondary } from "@/features/shell/ui/nav-secondary";
+import { NavUser } from "@/features/shell/ui/nav-user";
 
 type Props = ComponentProps<typeof Sidebar> & {
   mainItems: NavItem[];

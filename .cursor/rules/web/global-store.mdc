@@ -1,12 +1,16 @@
 ---
-description: Global Zustand store patterns for shared stores
-globs: src/shared/stores/*.ts
+description: Global Zustand store patterns for the web app shared stores
+globs: apps/web/src/shared/stores/**/*.ts
 alwaysApply: false
 ---
 
+## Scope
+
+Applies to **`apps/web/src/shared/stores/**`** only.
+
 ## Global store conventions for shared stores
 
-Follow these patterns when creating or updating global Zustand stores in `src/shared/stores/`.
+Follow these patterns when creating or updating global Zustand stores in `apps/web/src/shared/stores/`.
 Most stores should be consumed via the exported hook (`useXStore`) in React components.
 
 ## Shape and separation of concerns

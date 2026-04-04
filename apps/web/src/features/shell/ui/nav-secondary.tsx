@@ -1,3 +1,4 @@
+import type { ComponentPropsWithoutRef } from "react";
 import { Link, useRouterState } from "@tanstack/react-router";
 import {
   SidebarGroup,
@@ -12,7 +13,7 @@ import type { NavItem } from "@/shared/lib/nav-config";
 
 type Props = {
   items: NavItem[];
-} & React.ComponentPropsWithoutRef<typeof SidebarGroup>;
+} & ComponentPropsWithoutRef<typeof SidebarGroup>;
 
 export const NavSecondary = ({ items, ...props }: Props) => {
   const pathname = useRouterState({ select: (s) => s.location.pathname });

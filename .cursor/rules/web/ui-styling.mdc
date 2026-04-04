@@ -1,8 +1,12 @@
 ---
-description: UI components and styling with shadcn, Radix, Tailwind
-globs: "**/*.tsx"
+description: UI components and styling with shadcn, Radix, Tailwind (web app and packages/ui)
+globs: apps/web/**/*.tsx,packages/ui/**/*.tsx
 alwaysApply: false
 ---
+
+# Scope
+
+Use these guidelines in **`apps/web`** and **`packages/ui`** only.
 
 # UI and Styling
 

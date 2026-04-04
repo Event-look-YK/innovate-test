@@ -1,7 +1,12 @@
 ---
-description: Preferred folder structure and placement of logic for the main web app (apps/web)
-alwaysApply: true
+description: Preferred folder structure and placement of logic for the web app and shared UI package
+globs: apps/web/**/*.{ts,tsx},packages/ui/**/*.{ts,tsx}
+alwaysApply: false
 ---
+
+# Scope
+
+These conventions apply when working in **`apps/web`** or **`packages/ui`** (frontend app and shared UI). They do not apply to `apps/server`, `packages/db`, `packages/auth`, etc.
 
 # Monorepo overview
 
@@ -51,13 +56,15 @@ The web app (`apps/web/src/`) follows **Feature-Sliced Design**:
 ## Features (domain slices)
 
 - Each domain lives under `src/features/<domain>/`.
-- Inside a domain, use **segments**: `ui/`, `lib/`, `hooks/` as needed.
+- Inside a domain, use **segments**: **`ui/`** (components for that domain), **`lib/`** (only **`validation.ts`**, **`utils.ts`**, **`constants.ts`**, **`mock-data.ts`** — no other filenames), **`hooks/`** (data hooks) as needed.
+- Any feature that powers screens should include **`ui/`** with small, composable pieces (rows, cards, form sections, wizards). **`views/`** only wires hooks + feature `ui/` + page title/outlet.
 - **Do not** add `index.ts` at the feature root to re-export the slice; import from the file that defines the symbol.
 - When adding new behavior, **extend the feature** instead of putting code directly in routes.
 
 ## Views
 
-- Use `src/views/**` for view/container components that wire features together.
+- Use `src/views/**` only for **page-level views**: one primary exported `*View` per file that routes compose (e.g. `fleet-view.tsx`, `dashboard-view.tsx`).
+- Put reusable UI for a domain (sidebars, nav blocks, split layouts, role-specific dashboard panels) in **`src/features/<domain>/ui/`**, not under `views/`.
 - Naming: `<name>-view.tsx` exporting `<Name>View` (e.g. `sign-in-view.tsx` → `SignInView`).
 - Prefer grouping by domain: `src/views/<domain>/<name>-view.tsx`.
 - **Do not** add per-domain or root `index.ts` barrels under `views/`; routes import explicit view paths.
@@ -66,7 +73,7 @@ The web app (`apps/web/src/`) follows **Feature-Sliced Design**:
 
 - `src/routes/**` — routing and layout composition only.
 - `routeTree.gen.ts` is auto-generated; never edit it manually.
-- Route files delegate domain logic to `features` and page composition to `views`.
+- Route files delegate domain logic to `features`, page composition to `views`, and may import layout UI from `features` (e.g. `AuthenticatedShell` from `@/features/shell/ui/authenticated-shell`).
 
 ## Path aliases
 
