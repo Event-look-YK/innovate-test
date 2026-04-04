@@ -9,6 +9,7 @@ import { authPreHandler, requireRole } from "../lib/auth-middleware";
 import { badRequest, notFound } from "../lib/errors";
 import { genId } from "../lib/id";
 import { parsePagination, paginatedResponse } from "../lib/pagination";
+import { createRouteOffer } from "../lib/route-offer-helpers";
 import {
   routeGenerateSchema,
   routeStatusSchema,
@@ -229,6 +230,18 @@ export async function routeRoutes(fastify: FastifyInstance) {
           });
         }
       });
+
+      // Auto-offer to freelancers if all company trucks are now busy
+      const idleTrucks = await db
+        .select({ count: count() })
+        .from(truck)
+        .where(and(eq(truck.companyId, companyId), eq(truck.status, "idle")));
+
+      if ((idleTrucks[0]?.count ?? 0) === 0 && createdRoutes.length > 0) {
+        for (const route of createdRoutes) {
+          await createRouteOffer(route.id, companyId, "auto");
+        }
+      }
 
       return reply.send({
         plan: optimizationResult.plan,

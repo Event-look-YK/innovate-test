@@ -10,10 +10,13 @@ import { fleetRoutes } from "./routes/fleet";
 import { taskRoutes } from "./routes/tasks";
 import { dashboardRoutes } from "./routes/dashboard";
 import { routeRoutes } from "./routes/routes";
+import { routeOfferRoutes } from "./routes/route-offers";
 import { teamRoutes } from "./routes/team";
 import { demandRoutes } from "./routes/demand";
 import { offerRoutes } from "./routes/offers";
 import { messageRoutes } from "./routes/messages";
+import { marketplaceRoutes } from "./routes/marketplace";
+import { notificationRoutes } from "./routes/notifications";
 
 const baseCorsConfig = {
   origin: env.CORS_ORIGIN,
@@ -41,6 +44,9 @@ fastify.register(teamRoutes, { prefix: "/api" });
 fastify.register(demandRoutes, { prefix: "/api" });
 fastify.register(offerRoutes, { prefix: "/api" });
 fastify.register(messageRoutes, { prefix: "/api" });
+fastify.register(routeOfferRoutes, { prefix: "/api" });
+fastify.register(marketplaceRoutes, { prefix: "/api" });
+fastify.register(notificationRoutes, { prefix: "/api" });
 
 fastify.route({
   method: ["GET", "POST"],
