@@ -1,7 +1,5 @@
-import { createFileRoute } from "@tanstack/react-router";
-
-import { TasksView } from "@/views/tasks/tasks-view";
+import { Outlet, createFileRoute } from "@tanstack/react-router";
 
 export const Route = createFileRoute("/_authenticated/tasks")({
-  component: TasksView,
+  component: () => <Outlet />,
 });

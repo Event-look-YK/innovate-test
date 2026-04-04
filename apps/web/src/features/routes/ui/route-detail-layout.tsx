@@ -1,16 +1,16 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@innovate-test/ui/components/card";
 
 import type { RoutePlan } from "@/shared/types/route";
+import { RouteMap } from "@/shared/ui/route-map";
 
 type Props = {
   route: RoutePlan;
 };
 
-export const RouteDetailMapPlaceholder = () => (
-  <div className="flex min-h-[360px] items-center justify-center rounded-xl border border-dashed border-border bg-muted/30 text-sm text-muted-foreground">
-    Full-screen map placeholder
-  </div>
-);
+export const RouteDetailMap = ({ route }: Props) => {
+  const locations = route.stops.map((s) => s.label);
+  return <RouteMap locations={locations} className="min-h-[360px]" />;
+};
 
 export const RouteDetailStopsCard = ({ route }: Props) => (
   <Card>

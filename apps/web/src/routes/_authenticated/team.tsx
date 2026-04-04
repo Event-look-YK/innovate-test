@@ -1,7 +1,5 @@
-import { createFileRoute } from "@tanstack/react-router";
-
-import { TeamView } from "@/views/team/team-view";
+import { Outlet, createFileRoute } from "@tanstack/react-router";
 
 export const Route = createFileRoute("/_authenticated/team")({
-  component: TeamView,
+  component: () => <Outlet />,
 });

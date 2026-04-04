@@ -3,7 +3,7 @@ import { buttonVariants } from "@innovate-test/ui/components/button";
 import { cn } from "@innovate-test/ui/lib/utils";
 
 import { useRoutes } from "@/features/routes/hooks/use-routes";
-import { RouteDetailMapPlaceholder, RouteDetailStopsCard } from "@/features/routes/ui/route-detail-layout";
+import { RouteDetailMap, RouteDetailStopsCard } from "@/features/routes/ui/route-detail-layout";
 
 export const RouteDetailView = () => {
   const { routeId } = useParams({ strict: false }) as { routeId: string };
@@ -23,7 +23,7 @@ export const RouteDetailView = () => {
         {route.truckName} · {route.id}
       </h1>
       <div className="grid gap-4 lg:grid-cols-[1fr_320px]">
-        <RouteDetailMapPlaceholder />
+        <RouteDetailMap route={route} />
         <RouteDetailStopsCard route={route} />
       </div>
     </div>

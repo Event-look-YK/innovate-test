@@ -31,7 +31,7 @@ export const TruckDetailView = () => {
           </p>
         </div>
       </div>
-      <TruckGpsCard />
+      <TruckGpsCard locationLabel={truck.locationLabel} />
       <TruckTaskHistoryCard tasks={history} />
     </div>
   );

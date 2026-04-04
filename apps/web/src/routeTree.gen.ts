@@ -23,7 +23,13 @@ import { Route as AuthenticatedDemandRouteImport } from './routes/_authenticated
 import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
 import { Route as AuthenticatedRoutesRouteRouteImport } from './routes/_authenticated/routes_/route'
 import { Route as AuthenticatedMessagesRouteRouteImport } from './routes/_authenticated/messages/route'
+import { Route as AuthenticatedTeamIndexRouteImport } from './routes/_authenticated/team/index'
+import { Route as AuthenticatedTasksIndexRouteImport } from './routes/_authenticated/tasks/index'
+import { Route as AuthenticatedRoutesIndexRouteImport } from './routes/_authenticated/routes_/index'
+import { Route as AuthenticatedOffersIndexRouteImport } from './routes/_authenticated/offers/index'
 import { Route as AuthenticatedMessagesIndexRouteImport } from './routes/_authenticated/messages/index'
+import { Route as AuthenticatedFleetIndexRouteImport } from './routes/_authenticated/fleet/index'
+import { Route as AuthenticatedDemandIndexRouteImport } from './routes/_authenticated/demand/index'
 import { Route as AuthSignUpFreelanceRouteImport } from './routes/auth/sign-up.freelance'
 import { Route as AuthenticatedTeamInviteRouteImport } from './routes/_authenticated/team/invite'
 import { Route as AuthenticatedTasksNewRouteImport } from './routes/_authenticated/tasks/new'
@@ -106,11 +112,44 @@ const AuthenticatedMessagesRouteRoute =
     path: '/messages',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
+const AuthenticatedTeamIndexRoute = AuthenticatedTeamIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => AuthenticatedTeamRoute,
+} as any)
+const AuthenticatedTasksIndexRoute = AuthenticatedTasksIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => AuthenticatedTasksRoute,
+} as any)
+const AuthenticatedRoutesIndexRoute =
+  AuthenticatedRoutesIndexRouteImport.update({
+    id: '/',
+    path: '/',
+    getParentRoute: () => AuthenticatedRoutesRouteRoute,
+  } as any)
+const AuthenticatedOffersIndexRoute =
+  AuthenticatedOffersIndexRouteImport.update({
+    id: '/',
+    path: '/',
+    getParentRoute: () => AuthenticatedOffersRoute,
+  } as any)
 const AuthenticatedMessagesIndexRoute =
   AuthenticatedMessagesIndexRouteImport.update({
     id: '/',
     path: '/',
     getParentRoute: () => AuthenticatedMessagesRouteRoute,
+  } as any)
+const AuthenticatedFleetIndexRoute = AuthenticatedFleetIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => AuthenticatedFleetRoute,
+} as any)
+const AuthenticatedDemandIndexRoute =
+  AuthenticatedDemandIndexRouteImport.update({
+    id: '/',
+    path: '/',
+    getParentRoute: () => AuthenticatedDemandRoute,
   } as any)
 const AuthSignUpFreelanceRoute = AuthSignUpFreelanceRouteImport.update({
   id: '/freelance',
@@ -194,19 +233,19 @@ export interface FileRoutesByFullPath {
   '/tasks/new': typeof AuthenticatedTasksNewRoute
   '/team/invite': typeof AuthenticatedTeamInviteRoute
   '/auth/sign-up/freelance': typeof AuthSignUpFreelanceRoute
+  '/demand/': typeof AuthenticatedDemandIndexRoute
+  '/fleet/': typeof AuthenticatedFleetIndexRoute
   '/messages/': typeof AuthenticatedMessagesIndexRoute
+  '/offers/': typeof AuthenticatedOffersIndexRoute
+  '/routes/': typeof AuthenticatedRoutesIndexRoute
+  '/tasks/': typeof AuthenticatedTasksIndexRoute
+  '/team/': typeof AuthenticatedTeamIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/auth': typeof AuthRouteRouteWithChildren
-  '/routes': typeof AuthenticatedRoutesRouteRouteWithChildren
   '/dashboard': typeof AuthenticatedDashboardRoute
-  '/demand': typeof AuthenticatedDemandRouteWithChildren
-  '/fleet': typeof AuthenticatedFleetRouteWithChildren
-  '/offers': typeof AuthenticatedOffersRouteWithChildren
   '/settings': typeof AuthenticatedSettingsRoute
-  '/tasks': typeof AuthenticatedTasksRouteWithChildren
-  '/team': typeof AuthenticatedTeamRouteWithChildren
   '/auth/sign-in': typeof AuthSignInRoute
   '/auth/sign-up': typeof AuthSignUpRouteWithChildren
   '/demand/$requestId': typeof AuthenticatedDemandRequestIdRoute
@@ -219,7 +258,13 @@ export interface FileRoutesByTo {
   '/tasks/new': typeof AuthenticatedTasksNewRoute
   '/team/invite': typeof AuthenticatedTeamInviteRoute
   '/auth/sign-up/freelance': typeof AuthSignUpFreelanceRoute
+  '/demand': typeof AuthenticatedDemandIndexRoute
+  '/fleet': typeof AuthenticatedFleetIndexRoute
   '/messages': typeof AuthenticatedMessagesIndexRoute
+  '/offers': typeof AuthenticatedOffersIndexRoute
+  '/routes': typeof AuthenticatedRoutesIndexRoute
+  '/tasks': typeof AuthenticatedTasksIndexRoute
+  '/team': typeof AuthenticatedTeamIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -247,7 +292,13 @@ export interface FileRoutesById {
   '/_authenticated/tasks/new': typeof AuthenticatedTasksNewRoute
   '/_authenticated/team/invite': typeof AuthenticatedTeamInviteRoute
   '/auth/sign-up/freelance': typeof AuthSignUpFreelanceRoute
+  '/_authenticated/demand/': typeof AuthenticatedDemandIndexRoute
+  '/_authenticated/fleet/': typeof AuthenticatedFleetIndexRoute
   '/_authenticated/messages/': typeof AuthenticatedMessagesIndexRoute
+  '/_authenticated/offers/': typeof AuthenticatedOffersIndexRoute
+  '/_authenticated/routes_/': typeof AuthenticatedRoutesIndexRoute
+  '/_authenticated/tasks/': typeof AuthenticatedTasksIndexRoute
+  '/_authenticated/team/': typeof AuthenticatedTeamIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -275,19 +326,19 @@ export interface FileRouteTypes {
     | '/tasks/new'
     | '/team/invite'
     | '/auth/sign-up/freelance'
+    | '/demand/'
+    | '/fleet/'
     | '/messages/'
+    | '/offers/'
+    | '/routes/'
+    | '/tasks/'
+    | '/team/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
     | '/auth'
-    | '/routes'
     | '/dashboard'
-    | '/demand'
-    | '/fleet'
-    | '/offers'
     | '/settings'
-    | '/tasks'
-    | '/team'
     | '/auth/sign-in'
     | '/auth/sign-up'
     | '/demand/$requestId'
@@ -300,7 +351,13 @@ export interface FileRouteTypes {
     | '/tasks/new'
     | '/team/invite'
     | '/auth/sign-up/freelance'
+    | '/demand'
+    | '/fleet'
     | '/messages'
+    | '/offers'
+    | '/routes'
+    | '/tasks'
+    | '/team'
   id:
     | '__root__'
     | '/'
@@ -327,7 +384,13 @@ export interface FileRouteTypes {
     | '/_authenticated/tasks/new'
     | '/_authenticated/team/invite'
     | '/auth/sign-up/freelance'
+    | '/_authenticated/demand/'
+    | '/_authenticated/fleet/'
     | '/_authenticated/messages/'
+    | '/_authenticated/offers/'
+    | '/_authenticated/routes_/'
+    | '/_authenticated/tasks/'
+    | '/_authenticated/team/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -436,12 +499,54 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedMessagesRouteRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/team/': {
+      id: '/_authenticated/team/'
+      path: '/'
+      fullPath: '/team/'
+      preLoaderRoute: typeof AuthenticatedTeamIndexRouteImport
+      parentRoute: typeof AuthenticatedTeamRoute
+    }
+    '/_authenticated/tasks/': {
+      id: '/_authenticated/tasks/'
+      path: '/'
+      fullPath: '/tasks/'
+      preLoaderRoute: typeof AuthenticatedTasksIndexRouteImport
+      parentRoute: typeof AuthenticatedTasksRoute
+    }
+    '/_authenticated/routes_/': {
+      id: '/_authenticated/routes_/'
+      path: '/'
+      fullPath: '/routes/'
+      preLoaderRoute: typeof AuthenticatedRoutesIndexRouteImport
+      parentRoute: typeof AuthenticatedRoutesRouteRoute
+    }
+    '/_authenticated/offers/': {
+      id: '/_authenticated/offers/'
+      path: '/'
+      fullPath: '/offers/'
+      preLoaderRoute: typeof AuthenticatedOffersIndexRouteImport
+      parentRoute: typeof AuthenticatedOffersRoute
+    }
     '/_authenticated/messages/': {
       id: '/_authenticated/messages/'
       path: '/'
       fullPath: '/messages/'
       preLoaderRoute: typeof AuthenticatedMessagesIndexRouteImport
       parentRoute: typeof AuthenticatedMessagesRouteRoute
+    }
+    '/_authenticated/fleet/': {
+      id: '/_authenticated/fleet/'
+      path: '/'
+      fullPath: '/fleet/'
+      preLoaderRoute: typeof AuthenticatedFleetIndexRouteImport
+      parentRoute: typeof AuthenticatedFleetRoute
+    }
+    '/_authenticated/demand/': {
+      id: '/_authenticated/demand/'
+      path: '/'
+      fullPath: '/demand/'
+      preLoaderRoute: typeof AuthenticatedDemandIndexRouteImport
+      parentRoute: typeof AuthenticatedDemandRoute
     }
     '/auth/sign-up/freelance': {
       id: '/auth/sign-up/freelance'
@@ -535,12 +640,14 @@ const AuthenticatedMessagesRouteRouteWithChildren =
 interface AuthenticatedRoutesRouteRouteChildren {
   AuthenticatedRoutesRouteIdRoute: typeof AuthenticatedRoutesRouteIdRoute
   AuthenticatedRoutesGenerateRoute: typeof AuthenticatedRoutesGenerateRoute
+  AuthenticatedRoutesIndexRoute: typeof AuthenticatedRoutesIndexRoute
 }
 
 const AuthenticatedRoutesRouteRouteChildren: AuthenticatedRoutesRouteRouteChildren =
   {
     AuthenticatedRoutesRouteIdRoute: AuthenticatedRoutesRouteIdRoute,
     AuthenticatedRoutesGenerateRoute: AuthenticatedRoutesGenerateRoute,
+    AuthenticatedRoutesIndexRoute: AuthenticatedRoutesIndexRoute,
   }
 
 const AuthenticatedRoutesRouteRouteWithChildren =
@@ -550,10 +657,12 @@ const AuthenticatedRoutesRouteRouteWithChildren =
 
 interface AuthenticatedDemandRouteChildren {
   AuthenticatedDemandRequestIdRoute: typeof AuthenticatedDemandRequestIdRoute
+  AuthenticatedDemandIndexRoute: typeof AuthenticatedDemandIndexRoute
 }
 
 const AuthenticatedDemandRouteChildren: AuthenticatedDemandRouteChildren = {
   AuthenticatedDemandRequestIdRoute: AuthenticatedDemandRequestIdRoute,
+  AuthenticatedDemandIndexRoute: AuthenticatedDemandIndexRoute,
 }
 
 const AuthenticatedDemandRouteWithChildren =
@@ -561,10 +670,12 @@ const AuthenticatedDemandRouteWithChildren =
 
 interface AuthenticatedFleetRouteChildren {
   AuthenticatedFleetTruckIdRoute: typeof AuthenticatedFleetTruckIdRoute
+  AuthenticatedFleetIndexRoute: typeof AuthenticatedFleetIndexRoute
 }
 
 const AuthenticatedFleetRouteChildren: AuthenticatedFleetRouteChildren = {
   AuthenticatedFleetTruckIdRoute: AuthenticatedFleetTruckIdRoute,
+  AuthenticatedFleetIndexRoute: AuthenticatedFleetIndexRoute,
 }
 
 const AuthenticatedFleetRouteWithChildren =
@@ -572,10 +683,12 @@ const AuthenticatedFleetRouteWithChildren =
 
 interface AuthenticatedOffersRouteChildren {
   AuthenticatedOffersOfferIdRoute: typeof AuthenticatedOffersOfferIdRoute
+  AuthenticatedOffersIndexRoute: typeof AuthenticatedOffersIndexRoute
 }
 
 const AuthenticatedOffersRouteChildren: AuthenticatedOffersRouteChildren = {
   AuthenticatedOffersOfferIdRoute: AuthenticatedOffersOfferIdRoute,
+  AuthenticatedOffersIndexRoute: AuthenticatedOffersIndexRoute,
 }
 
 const AuthenticatedOffersRouteWithChildren =
@@ -584,11 +697,13 @@ const AuthenticatedOffersRouteWithChildren =
 interface AuthenticatedTasksRouteChildren {
   AuthenticatedTasksTaskIdRoute: typeof AuthenticatedTasksTaskIdRoute
   AuthenticatedTasksNewRoute: typeof AuthenticatedTasksNewRoute
+  AuthenticatedTasksIndexRoute: typeof AuthenticatedTasksIndexRoute
 }
 
 const AuthenticatedTasksRouteChildren: AuthenticatedTasksRouteChildren = {
   AuthenticatedTasksTaskIdRoute: AuthenticatedTasksTaskIdRoute,
   AuthenticatedTasksNewRoute: AuthenticatedTasksNewRoute,
+  AuthenticatedTasksIndexRoute: AuthenticatedTasksIndexRoute,
 }
 
 const AuthenticatedTasksRouteWithChildren =
@@ -596,10 +711,12 @@ const AuthenticatedTasksRouteWithChildren =
 
 interface AuthenticatedTeamRouteChildren {
   AuthenticatedTeamInviteRoute: typeof AuthenticatedTeamInviteRoute
+  AuthenticatedTeamIndexRoute: typeof AuthenticatedTeamIndexRoute
 }
 
 const AuthenticatedTeamRouteChildren: AuthenticatedTeamRouteChildren = {
   AuthenticatedTeamInviteRoute: AuthenticatedTeamInviteRoute,
+  AuthenticatedTeamIndexRoute: AuthenticatedTeamIndexRoute,
 }
 
 const AuthenticatedTeamRouteWithChildren =

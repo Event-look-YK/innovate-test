@@ -1,7 +1,5 @@
-import { createFileRoute } from "@tanstack/react-router";
-
-import { FleetView } from "@/views/fleet/fleet-view";
+import { Outlet, createFileRoute } from "@tanstack/react-router";
 
 export const Route = createFileRoute("/_authenticated/fleet")({
-  component: FleetView,
+  component: () => <Outlet />,
 });
