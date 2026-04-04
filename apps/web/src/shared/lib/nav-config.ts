@@ -16,6 +16,7 @@ export type NavItem = {
   label: string;
   icon: typeof LayoutDashboardIcon;
   roles: readonly Role[];
+  secondary?: boolean;
 };
 
 export const NAV_ITEMS: NavItem[] = [
@@ -51,8 +52,8 @@ export const NAV_ITEMS: NavItem[] = [
     roles: [ROLES.CARRIER_ADMIN, ROLES.CARRIER_MANAGER],
   },
   { to: "/offers", label: "Offers", icon: PackageIcon, roles: [ROLES.FREELANCE_DRIVER] },
-  { to: "/messages", label: "Messages", icon: MessageSquareIcon, roles: Object.values(ROLES) },
-  { to: "/settings", label: "Settings", icon: SettingsIcon, roles: Object.values(ROLES) },
+  { to: "/messages", label: "Messages", icon: MessageSquareIcon, roles: Object.values(ROLES), secondary: true },
+  { to: "/settings", label: "Settings", icon: SettingsIcon, roles: Object.values(ROLES), secondary: true },
 ];
 
 export const filterNavByRole = (role: Role | null | undefined) =>

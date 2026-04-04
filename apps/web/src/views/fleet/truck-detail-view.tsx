@@ -1,18 +1,13 @@
 import { Link, useParams } from "@tanstack/react-router";
 import { buttonVariants } from "@innovate-test/ui/components/button";
-import { cn } from "@innovate-test/ui/lib/utils";
 import { Card, CardContent, CardHeader, CardTitle } from "@innovate-test/ui/components/card";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@innovate-test/ui/components/table";
+import { cn } from "@innovate-test/ui/lib/utils";
 
 import { useFleet } from "@/features/fleet/hooks/use-fleet";
 import { useTasks } from "@/features/tasks/hooks/use-tasks";
+import { ListRowLink } from "@/shared/ui/list-row-link";
+import { PriorityBadge } from "@/shared/ui/priority-badge";
+import { StatusBadge } from "@/shared/ui/status-badge";
 
 export const TruckDetailView = () => {
   const { truckId } = useParams({ strict: false }) as { truckId: string };
@@ -27,14 +22,14 @@ export const TruckDetailView = () => {
 
   return (
     <div className="flex flex-col gap-6">
-      <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+      <div className="flex flex-col gap-3">
+        <Link className={cn(buttonVariants({ size: "sm", variant: "ghost" }), "w-fit -ml-2")} to="/fleet">
+          ← Fleet
+        </Link>
         <div>
-          <Link className={cn(buttonVariants({ size: "sm", variant: "ghost" }))} to="/fleet">
-            ← Fleet
-          </Link>
-          <h1 className="text-2xl font-semibold tracking-tight">{truck.name}</h1>
-          <p className="text-muted-foreground">
-            {truck.type} · {truck.payloadT} t · {truck.status}
+          <h1 className="text-2xl font-bold tracking-tight">{truck.name}</h1>
+          <p className="text-sm text-muted-foreground">
+            {truck.type} · {truck.payloadT} t · {truck.status.replace("_", " ")}
           </p>
         </div>
       </div>
@@ -43,7 +38,7 @@ export const TruckDetailView = () => {
           <CardTitle className="text-base">GPS trail</CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="flex h-56 items-center justify-center rounded-lg border border-dashed border-border bg-muted/30 text-sm text-muted-foreground">
+          <div className="flex min-h-48 items-center justify-center rounded-xl border border-dashed border-border bg-muted/30 px-4 text-center text-sm text-muted-foreground">
             Last 24h path (Mapbox placeholder)
           </div>
         </CardContent>
@@ -52,25 +47,26 @@ export const TruckDetailView = () => {
         <CardHeader>
           <CardTitle className="text-base">Task history</CardTitle>
         </CardHeader>
-        <CardContent className="px-0">
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>Title</TableHead>
-                <TableHead>Status</TableHead>
-                <TableHead>Priority</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {history.map((t) => (
-                <TableRow key={t.id}>
-                  <TableCell className="font-medium">{t.title}</TableCell>
-                  <TableCell>{t.status}</TableCell>
-                  <TableCell>{t.priority}</TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
+        <CardContent className="flex flex-col gap-2 pt-0">
+          {history.length === 0 ? (
+            <p className="py-6 text-center text-sm text-muted-foreground">No tasks assigned to this truck yet.</p>
+          ) : (
+            history.map((t) => (
+              <ListRowLink
+                key={t.id}
+                badges={
+                  <span className="flex flex-wrap gap-1.5">
+                    <PriorityBadge priority={t.priority} />
+                    <StatusBadge status={t.status} />
+                  </span>
+                }
+                routeParams={{ taskId: t.id }}
+                subtitle={`${t.originLabel} → ${t.destinationLabel}`}
+                title={t.title}
+                to="/tasks/$taskId"
+              />
+            ))
+          )}
         </CardContent>
       </Card>
     </div>

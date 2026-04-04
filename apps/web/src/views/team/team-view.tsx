@@ -1,17 +1,10 @@
 import { Link } from "@tanstack/react-router";
 import { buttonVariants } from "@innovate-test/ui/components/button";
 import { cn } from "@innovate-test/ui/lib/utils";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@innovate-test/ui/components/table";
 
 import { useTeam } from "@/features/team/hooks/use-team";
 import { ROLE_LABELS } from "@/shared/constants/roles";
+import { ListRowCard } from "@/shared/ui/list-row-link";
 
 const getInitials = (name: string) =>
   name
@@ -50,74 +43,58 @@ export const TeamView = () => {
           <h1 className="text-2xl font-bold tracking-tight">Team</h1>
           <p className="text-sm text-muted-foreground">Members and invites</p>
         </div>
-        <Link className={cn(buttonVariants())} to="/team/invite">
+        <Link className={cn(buttonVariants(), "w-full shrink-0 sm:w-auto")} to="/team/invite">
           Invite
         </Link>
       </div>
 
-      <div className="overflow-hidden rounded-xl border border-border/60 bg-card shadow-sm">
-        <Table>
-          <TableHeader>
-            <TableRow>
-              <TableHead className="pl-5">Name</TableHead>
-              <TableHead>Email</TableHead>
-              <TableHead>Role</TableHead>
-              <TableHead>Status</TableHead>
-              <TableHead className="pr-5">Invited</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {isPending ? (
-              <TableRow>
-                <TableCell className="pl-5 text-muted-foreground" colSpan={5}>
-                  Loading…
-                </TableCell>
-              </TableRow>
-            ) : (
-              members?.map((m) => {
-                const sc = memberStatusConfig[m.status];
-                return (
-                  <TableRow key={m.id}>
-                    <TableCell className="pl-5 font-medium">
-                      <div className="flex items-center gap-2.5">
-                        <div
-                          className={cn(
-                            "flex size-7 shrink-0 items-center justify-center rounded-full text-[10px] font-bold",
-                            nameColor(m.name),
-                          )}
-                        >
-                          {getInitials(m.name)}
-                        </div>
-                        <span>{m.name}</span>
-                      </div>
-                    </TableCell>
-                    <TableCell className="text-sm text-muted-foreground">{m.email}</TableCell>
-                    <TableCell>
-                      <span className="inline-flex items-center rounded-md border border-border/60 bg-muted/50 px-2 py-0.5 text-[11px] font-medium text-foreground/70">
-                        {ROLE_LABELS[m.role]}
-                      </span>
-                    </TableCell>
-                    <TableCell>
-                      <div className="flex items-center gap-1.5">
-                        <span
-                          className={cn(
-                            "size-1.5 shrink-0 rounded-full",
-                            sc?.dot ?? "bg-muted-foreground",
-                          )}
-                        />
-                        <span className="text-sm">{sc?.label ?? m.status}</span>
-                      </div>
-                    </TableCell>
-                    <TableCell className="pr-5 text-sm text-muted-foreground">
-                      {m.invitedAt}
-                    </TableCell>
-                  </TableRow>
-                );
-              })
-            )}
-          </TableBody>
-        </Table>
-      </div>
+      {isPending ? (
+        <div className="rounded-xl border border-border/60 bg-card p-10 text-center text-sm text-muted-foreground shadow-sm">
+          Loading team…
+        </div>
+      ) : members?.length === 0 ? (
+        <div className="rounded-xl border border-dashed border-border/80 bg-muted/20 p-10 text-center">
+          <p className="font-medium text-foreground">No team members yet</p>
+          <p className="mt-1 text-sm text-muted-foreground">Invite colleagues to collaborate on fleet and tasks.</p>
+        </div>
+      ) : (
+        <div className="flex flex-col gap-2 lg:grid lg:grid-cols-2 lg:gap-3">
+          {members?.map((m) => {
+            const sc = memberStatusConfig[m.status];
+            return (
+              <ListRowCard
+                key={m.id}
+                badges={
+                  <span className="inline-flex items-center rounded-md border border-border/60 bg-muted/50 px-2 py-0.5 text-[11px] font-medium text-foreground/80">
+                    {ROLE_LABELS[m.role]}
+                  </span>
+                }
+                footer={
+                  <>
+                    <span className="inline-flex items-center gap-1.5">
+                      <span className={cn("size-1.5 shrink-0 rounded-full", sc?.dot)} />
+                      {sc?.label ?? m.status}
+                    </span>
+                    <span>Invited {m.invitedAt}</span>
+                  </>
+                }
+                leading={
+                  <div
+                    className={cn(
+                      "flex size-11 items-center justify-center rounded-full text-xs font-bold",
+                      nameColor(m.name),
+                    )}
+                  >
+                    {getInitials(m.name)}
+                  </div>
+                }
+                subtitle={m.email}
+                title={m.name}
+              />
+            );
+          })}
+        </div>
+      )}
     </div>
   );
 };
