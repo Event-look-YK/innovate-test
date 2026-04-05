@@ -86,10 +86,30 @@ const GeneratedRoute = {
   },
 };
 
+const PlanStats = {
+  type: "object" as const,
+  properties: {
+    total_distance_km: { type: "number" },
+    total_cost_uah: { type: "number" },
+    total_empty_km: { type: "number" },
+    trucks_used: { type: "number" },
+    trucks_idle: { type: "number" },
+    avg_utilization_pct: { type: "number" },
+  },
+  required: [
+    "total_distance_km",
+    "total_cost_uah",
+    "total_empty_km",
+    "trucks_used",
+    "trucks_idle",
+    "avg_utilization_pct",
+  ] as const,
+};
+
 const RouteGenerateResponse = {
   type: "object" as const,
   properties: {
-    plan: { type: "string", description: "LLM-generated optimization plan description" },
+    plan: PlanStats,
     routes: { type: "array" as const, items: GeneratedRoute },
     unassigned: {
       type: "array" as const,

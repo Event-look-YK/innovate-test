@@ -14,7 +14,7 @@ export const FleetTruckRow = ({ truck: t }: Props) => {
   return (
     <ListRowLink
       badges={
-        <span className="inline-flex items-center gap-1.5 rounded-full bg-muted/70 px-2 py-0.5 text-[10px] font-semibold text-foreground/85 ring-1 ring-border/50">
+        <span className="inline-flex h-4 items-center gap-1.5 rounded-full bg-muted/70 px-2 text-[10px] font-semibold text-foreground/85 ring-1 ring-border/50">
           <span className={cn("size-1.5 shrink-0 rounded-full", sc?.dot)} />
           {sc?.label ?? t.status}
         </span>
@@ -25,17 +25,6 @@ export const FleetTruckRow = ({ truck: t }: Props) => {
           <span className="tabular-nums">{t.payloadT} t payload</span>
           <span className="min-w-0 truncate">{t.locationLabel}</span>
         </>
-      }
-      leading={
-        <div
-          className={cn(
-            "flex size-11 items-center justify-center rounded-xl text-xs font-bold",
-            tc.bg,
-            tc.text,
-          )}
-        >
-          {tc.abbr}
-        </div>
       }
       routeParams={{ truckId: t.id }}
       subtitle={`Tracker ${t.trackerId}`}

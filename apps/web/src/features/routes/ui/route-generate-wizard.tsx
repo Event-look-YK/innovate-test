@@ -10,7 +10,7 @@ import {
   SparklesIcon,
   TruckIcon,
 } from "lucide-react";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 
 import { useFleet } from "@/features/fleet/hooks/use-fleet";
 import { useTasks } from "@/features/tasks/hooks/use-tasks";
@@ -20,6 +20,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@innovate-test/ui/comp
 import { Checkbox } from "@innovate-test/ui/components/checkbox";
 import { Label } from "@innovate-test/ui/components/label";
 import { Switch } from "@innovate-test/ui/components/switch";
+import { RouteMap } from "@/shared/ui/route-map";
 import { toast } from "sonner";
 
 const STEP_META = [
@@ -39,6 +40,11 @@ export const RouteGenerateWizard = () => {
   const [selectedTasks, setSelectedTasks] = useState<Set<string>>(new Set());
   const [selectedTrucks, setSelectedTrucks] = useState<Set<string>>(new Set());
   const [multiDrop, setMultiDrop] = useState(true);
+
+  const previewLocations = useMemo(() => {
+    if (!tasks?.length) return [];
+    return tasks.filter((t) => selectedTasks.has(t.id)).flatMap((t) => [t.originLabel, t.destinationLabel]);
+  }, [tasks, selectedTasks]);
 
   const toggleTask = (id: string) => {
     setSelectedTasks((prev) => {
@@ -68,9 +74,13 @@ export const RouteGenerateWizard = () => {
         taskIds: Array.from(selectedTasks),
         truckIds: Array.from(selectedTrucks),
       });
-      toast.success(
-        `Generated ${result.routes.length} route(s), total cost ${result.plan.total_cost_uah.toLocaleString("uk-UA")} ₴`,
-      );
+      const routeCount = result.routes?.length ?? 0;
+      const costUah = result.plan?.total_cost_uah;
+      const costSuffix =
+        typeof costUah === "number" && !Number.isNaN(costUah)
+          ? `, total cost ${costUah.toLocaleString("uk-UA")} ₴`
+          : "";
+      toast.success(`Generated ${routeCount} route(s)${costSuffix}`);
       navigate({ to: "/routes" });
     } catch (error) {
       toast.error(error instanceof Error ? error.message : "Failed to generate routes");
@@ -195,10 +205,14 @@ export const RouteGenerateWizard = () => {
               </CardTitle>
             </CardHeader>
             <CardContent className="flex flex-col gap-4">
-              <div className="flex flex-col items-center gap-2 rounded-lg border border-dashed border-border p-6 text-center text-sm text-muted-foreground">
-                <MapIcon aria-hidden className="size-8 text-muted-foreground/50" />
-                Map preview with color-coded routes
-              </div>
+              {previewLocations.length > 0 ? (
+                <RouteMap locations={previewLocations} className="min-h-[260px] w-full overflow-hidden rounded-lg border border-border" />
+              ) : (
+                <div className="flex flex-col items-center gap-2 rounded-lg border border-dashed border-border p-6 text-center text-sm text-muted-foreground">
+                  <MapIcon aria-hidden className="size-8 text-muted-foreground/50" />
+                  Select tasks in step 1 to preview their routes on the map
+                </div>
+              )}
               <div className="flex w-full gap-2">
                 <Button className="flex-1" icon={<ChevronLeftIcon />} size="lg" type="button" variant="outline" onClick={() => setStep(2)}>
                   Back
@@ -234,16 +248,11 @@ export const RouteGenerateWizard = () => {
                   loading={generateRoutes.isPending}
                   size="lg"
                   type="button"
+
                   onClick={() => void onFinish()}
                 >
-                  {generateRoutes.isPending ? (
-                    "Generating..."
-                  ) : (
-                    <>
-                      Dispatch
-                      <SendIcon aria-hidden className="size-4" />
-                    </>
-                  )}
+                  Dispatch
+                  <SendIcon aria-hidden className="size-4" />
                 </Button>
               </div>
             </CardContent>
