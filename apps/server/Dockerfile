@@ -19,7 +19,7 @@ COPY apps/server/ ./apps/server/
 
 RUN pnpm --filter=server build
 
-RUN pnpm --filter=server deploy --prod /standalone
+RUN pnpm --filter=server deploy --prod --legacy /standalone
 
 FROM node:22-alpine AS runner
 WORKDIR /app
