@@ -186,7 +186,7 @@ az ad app federated-credential create \
   --id "$APP_ID" \
   --parameters "{
     \"name\": \"github-main\",
-    \"issuer\": \"https://token.actions.githubusercontent.com\",
+    \"issuer\": \"https://token.actions.githubusercontent.com/\",
     \"subject\": \"repo:${GITHUB_REPO}:ref:refs/heads/main\",
     \"audiences\": [\"api://AzureADTokenExchange\"]
   }" \
@@ -202,7 +202,7 @@ cat <<EOF
 
   Values (UI or paste into gh):
 
-  AZURE_CLIENT_ID        = ${APP_ID}
+  AZURE_CLIENT_ID        = ${APP_ID}   (App registration Application ID, not Object ID)
   AZURE_TENANT_ID        = ${TENANT_ID}
   AZURE_SUBSCRIPTION_ID  = ${SUBSCRIPTION_ID}
   AZURE_RESOURCE_GROUP   = ${RESOURCE_GROUP}
@@ -215,6 +215,9 @@ cat <<EOF
   DATABASE_URL           = <production postgres URL>
   BETTER_AUTH_SECRET     = <32+ characters>
   GEMINI_API_KEY         = <Gemini API key>
+
+  OIDC federated credential subject (Entra must match exactly):
+    repo:${GITHUB_REPO}:ref:refs/heads/main
 
   Deployed URLs:
     Server: https://${SERVER_FQDN}
