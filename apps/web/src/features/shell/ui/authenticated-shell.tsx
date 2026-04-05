@@ -73,7 +73,7 @@ export const AuthenticatedShell = () => {
         </SidebarInset>
       </SidebarProvider>
 
-      <DevRoleToolbar />
+      {/* <DevRoleToolbar /> */}
     </>
   );
 };

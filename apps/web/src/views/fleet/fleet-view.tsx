@@ -1,11 +1,12 @@
+import { Link } from "@tanstack/react-router";
 import { useState } from "react";
 
-import { TruckFormDialog } from "@/features/fleet/ui/truck-form-dialog";
 import { FleetFilters } from "@/features/fleet/ui/fleet-filters";
 import { FleetListEmpty, FleetListLoading } from "@/features/fleet/ui/fleet-list-states";
 import { FleetTruckRow } from "@/features/fleet/ui/fleet-truck-row";
 import { useFleet } from "@/features/fleet/hooks/use-fleet";
-import { Button } from "@innovate-test/ui/components/button";
+import { buttonVariants } from "@innovate-test/ui/components/button";
+import { cn } from "@innovate-test/ui/lib/utils";
 import type { TruckStatus, TruckType } from "@/shared/types/truck";
 
 export const FleetView = () => {
@@ -13,8 +14,6 @@ export const FleetView = () => {
   const [typeFilter, setTypeFilter] = useState<TruckType | "all">("all");
   const [statusFilter, setStatusFilter] = useState<TruckStatus | "all">("all");
   const [q, setQ] = useState("");
-  const [dialogOpen, setDialogOpen] = useState(false);
-
   const filtered =
     trucks?.filter((t) => {
       const okType = typeFilter === "all" || t.type === typeFilter;
@@ -33,9 +32,9 @@ export const FleetView = () => {
           <h1 className="text-2xl font-bold tracking-tight">Fleet</h1>
           <p className="text-sm text-muted-foreground">Trucks and trailers</p>
         </div>
-        <Button className="w-full shrink-0 sm:w-auto" type="button" onClick={() => setDialogOpen(true)}>
+        <Link className={cn(buttonVariants(), "w-full shrink-0 sm:w-auto")} to="/fleet/new">
           Add truck
-        </Button>
+        </Link>
       </div>
 
       <FleetFilters
@@ -58,7 +57,6 @@ export const FleetView = () => {
           ))}
         </div>
       )}
-      <TruckFormDialog onOpenChange={setDialogOpen} open={dialogOpen} />
     </div>
   );
 };

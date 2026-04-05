@@ -38,6 +38,7 @@ import { Route as AuthenticatedRoutesGenerateRouteImport } from './routes/_authe
 import { Route as AuthenticatedRoutesRouteIdRouteImport } from './routes/_authenticated/routes_/$routeId'
 import { Route as AuthenticatedOffersOfferIdRouteImport } from './routes/_authenticated/offers/$offerId'
 import { Route as AuthenticatedMessagesThreadIdRouteImport } from './routes/_authenticated/messages/$threadId'
+import { Route as AuthenticatedFleetNewRouteImport } from './routes/_authenticated/fleet/new'
 import { Route as AuthenticatedFleetTruckIdRouteImport } from './routes/_authenticated/fleet/$truckId'
 import { Route as AuthenticatedDemandRequestIdRouteImport } from './routes/_authenticated/demand/$requestId'
 
@@ -196,6 +197,11 @@ const AuthenticatedMessagesThreadIdRoute =
     path: '/$threadId',
     getParentRoute: () => AuthenticatedMessagesRouteRoute,
   } as any)
+const AuthenticatedFleetNewRoute = AuthenticatedFleetNewRouteImport.update({
+  id: '/new',
+  path: '/new',
+  getParentRoute: () => AuthenticatedFleetRoute,
+} as any)
 const AuthenticatedFleetTruckIdRoute =
   AuthenticatedFleetTruckIdRouteImport.update({
     id: '/$truckId',
@@ -225,6 +231,7 @@ export interface FileRoutesByFullPath {
   '/auth/sign-up': typeof AuthSignUpRouteWithChildren
   '/demand/$requestId': typeof AuthenticatedDemandRequestIdRoute
   '/fleet/$truckId': typeof AuthenticatedFleetTruckIdRoute
+  '/fleet/new': typeof AuthenticatedFleetNewRoute
   '/messages/$threadId': typeof AuthenticatedMessagesThreadIdRoute
   '/offers/$offerId': typeof AuthenticatedOffersOfferIdRoute
   '/routes/$routeId': typeof AuthenticatedRoutesRouteIdRoute
@@ -250,6 +257,7 @@ export interface FileRoutesByTo {
   '/auth/sign-up': typeof AuthSignUpRouteWithChildren
   '/demand/$requestId': typeof AuthenticatedDemandRequestIdRoute
   '/fleet/$truckId': typeof AuthenticatedFleetTruckIdRoute
+  '/fleet/new': typeof AuthenticatedFleetNewRoute
   '/messages/$threadId': typeof AuthenticatedMessagesThreadIdRoute
   '/offers/$offerId': typeof AuthenticatedOffersOfferIdRoute
   '/routes/$routeId': typeof AuthenticatedRoutesRouteIdRoute
@@ -284,6 +292,7 @@ export interface FileRoutesById {
   '/auth/sign-up': typeof AuthSignUpRouteWithChildren
   '/_authenticated/demand/$requestId': typeof AuthenticatedDemandRequestIdRoute
   '/_authenticated/fleet/$truckId': typeof AuthenticatedFleetTruckIdRoute
+  '/_authenticated/fleet/new': typeof AuthenticatedFleetNewRoute
   '/_authenticated/messages/$threadId': typeof AuthenticatedMessagesThreadIdRoute
   '/_authenticated/offers/$offerId': typeof AuthenticatedOffersOfferIdRoute
   '/_authenticated/routes_/$routeId': typeof AuthenticatedRoutesRouteIdRoute
@@ -318,6 +327,7 @@ export interface FileRouteTypes {
     | '/auth/sign-up'
     | '/demand/$requestId'
     | '/fleet/$truckId'
+    | '/fleet/new'
     | '/messages/$threadId'
     | '/offers/$offerId'
     | '/routes/$routeId'
@@ -343,6 +353,7 @@ export interface FileRouteTypes {
     | '/auth/sign-up'
     | '/demand/$requestId'
     | '/fleet/$truckId'
+    | '/fleet/new'
     | '/messages/$threadId'
     | '/offers/$offerId'
     | '/routes/$routeId'
@@ -376,6 +387,7 @@ export interface FileRouteTypes {
     | '/auth/sign-up'
     | '/_authenticated/demand/$requestId'
     | '/_authenticated/fleet/$truckId'
+    | '/_authenticated/fleet/new'
     | '/_authenticated/messages/$threadId'
     | '/_authenticated/offers/$offerId'
     | '/_authenticated/routes_/$routeId'
@@ -604,6 +616,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedMessagesThreadIdRouteImport
       parentRoute: typeof AuthenticatedMessagesRouteRoute
     }
+    '/_authenticated/fleet/new': {
+      id: '/_authenticated/fleet/new'
+      path: '/new'
+      fullPath: '/fleet/new'
+      preLoaderRoute: typeof AuthenticatedFleetNewRouteImport
+      parentRoute: typeof AuthenticatedFleetRoute
+    }
     '/_authenticated/fleet/$truckId': {
       id: '/_authenticated/fleet/$truckId'
       path: '/$truckId'
@@ -670,11 +689,13 @@ const AuthenticatedDemandRouteWithChildren =
 
 interface AuthenticatedFleetRouteChildren {
   AuthenticatedFleetTruckIdRoute: typeof AuthenticatedFleetTruckIdRoute
+  AuthenticatedFleetNewRoute: typeof AuthenticatedFleetNewRoute
   AuthenticatedFleetIndexRoute: typeof AuthenticatedFleetIndexRoute
 }
 
 const AuthenticatedFleetRouteChildren: AuthenticatedFleetRouteChildren = {
   AuthenticatedFleetTruckIdRoute: AuthenticatedFleetTruckIdRoute,
+  AuthenticatedFleetNewRoute: AuthenticatedFleetNewRoute,
   AuthenticatedFleetIndexRoute: AuthenticatedFleetIndexRoute,
 }
 

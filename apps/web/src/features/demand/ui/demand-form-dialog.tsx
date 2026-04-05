@@ -127,31 +127,40 @@ export const DemandFormDialog = ({ open, onOpenChange }: Props) => {
 
             <Field data-invalid={!!form.formState.errors.payloadT}>
               <FieldLabel htmlFor="dm-payload">Payload (t)</FieldLabel>
-              <Input id="dm-payload" type="number" {...form.register("payloadT")} />
+              <Input id="dm-payload" placeholder="12.5" step="0.1" type="number" {...form.register("payloadT")} />
               <FieldError errors={[form.formState.errors.payloadT]} />
             </Field>
 
             <Field data-invalid={!!form.formState.errors.originLabel}>
               <FieldLabel htmlFor="dm-origin">Origin</FieldLabel>
-              <Input id="dm-origin" {...form.register("originLabel")} />
+              <Input id="dm-origin" placeholder="e.g. Kyiv, warehouse north gate" {...form.register("originLabel")} />
               <FieldError errors={[form.formState.errors.originLabel]} />
             </Field>
 
             <Field data-invalid={!!form.formState.errors.destinationLabel}>
               <FieldLabel htmlFor="dm-destination">Destination</FieldLabel>
-              <Input id="dm-destination" {...form.register("destinationLabel")} />
+              <Input
+                id="dm-destination"
+                placeholder="e.g. Lviv, distribution hub"
+                {...form.register("destinationLabel")}
+              />
               <FieldError errors={[form.formState.errors.destinationLabel]} />
             </Field>
 
             <Field data-invalid={!!form.formState.errors.deadline}>
               <FieldLabel htmlFor="dm-deadline">Deadline</FieldLabel>
-              <Input id="dm-deadline" type="datetime-local" {...form.register("deadline")} />
+              <Input
+                id="dm-deadline"
+                placeholder="Latest pickup or delivery window"
+                type="datetime-local"
+                {...form.register("deadline")}
+              />
               <FieldError errors={[form.formState.errors.deadline]} />
             </Field>
 
             <Field data-invalid={!!form.formState.errors.budgetUah}>
               <FieldLabel htmlFor="dm-budget">Budget (UAH)</FieldLabel>
-              <Input id="dm-budget" type="number" {...form.register("budgetUah")} />
+              <Input id="dm-budget" placeholder="25000" type="number" {...form.register("budgetUah")} />
               <FieldError errors={[form.formState.errors.budgetUah]} />
             </Field>
           </FieldGroup>

@@ -116,7 +116,12 @@ export const MessagesLayout = () => {
                 onValueChange={(v) => setThreadType(v as MessageThreadType)}
               >
                 <SelectTrigger id="thread-type" className="w-full">
-                  <SelectValue placeholder="Select type" />
+                  <SelectValue placeholder="Select type">
+                    {(value: string | null) => {
+                      const labels: Record<string, string> = { direct: "Direct", group: "Group", task: "Task" };
+                      return value ? labels[value] ?? value : null;
+                    }}
+                  </SelectValue>
                 </SelectTrigger>
                 <SelectContent>
                   <SelectGroup>
