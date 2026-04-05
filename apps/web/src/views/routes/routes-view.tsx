@@ -1,8 +1,8 @@
 import { Link } from "@tanstack/react-router";
-import { buttonVariants } from "@innovate-test/ui/components/button";
-import { cn } from "@innovate-test/ui/lib/utils";
+import { Button } from "@innovate-test/ui/components/button";
 
 import { useRoutes } from "@/features/routes/hooks/use-routes";
+import { SparklesIcon } from "lucide-react";
 import { RoutePlanRow } from "@/features/routes/ui/route-plan-row";
 import { RoutesListEmpty, RoutesListLoading } from "@/features/routes/ui/routes-list-states";
 
@@ -16,9 +16,14 @@ export const RoutesView = () => {
           <h1 className="text-2xl font-bold tracking-tight">Routes</h1>
           <p className="text-sm text-muted-foreground">Generated delivery plans</p>
         </div>
-        <Link className={cn(buttonVariants(), "w-full shrink-0 sm:w-auto")} to="/routes/generate">
+        <Button
+          className="w-full shrink-0 sm:w-auto"
+          icon={<SparklesIcon />}
+          nativeButton={false}
+          render={<Link to="/routes/generate" />}
+        >
           Generate route
-        </Link>
+        </Button>
       </div>
 
       {isPending ? (

@@ -1,4 +1,15 @@
 import { useNavigate } from "@tanstack/react-router";
+import {
+  ChevronLeftIcon,
+  ChevronRightIcon,
+  CircleCheckIcon,
+  ListChecksIcon,
+  MapIcon,
+  SendIcon,
+  SlidersHorizontalIcon,
+  SparklesIcon,
+  TruckIcon,
+} from "lucide-react";
 import { useState } from "react";
 
 import { useFleet } from "@/features/fleet/hooks/use-fleet";
@@ -10,6 +21,14 @@ import { Checkbox } from "@innovate-test/ui/components/checkbox";
 import { Label } from "@innovate-test/ui/components/label";
 import { Switch } from "@innovate-test/ui/components/switch";
 import { toast } from "sonner";
+
+const STEP_META = [
+  { title: "1 — Select tasks", Icon: ListChecksIcon },
+  { title: "2 — Select trucks", Icon: TruckIcon },
+  { title: "3 — Configure", Icon: SlidersHorizontalIcon },
+  { title: "4 — Review", Icon: MapIcon },
+  { title: "5 — Confirm", Icon: CircleCheckIcon },
+] as const;
 
 export const RouteGenerateWizard = () => {
   const navigate = useNavigate();
@@ -61,14 +80,32 @@ export const RouteGenerateWizard = () => {
   return (
     <div className="flex min-h-[60vh] flex-col items-center justify-center">
       <div className="flex w-full max-w-md flex-col items-center gap-6">
-        <div className="text-center">
-          <h1 className="text-2xl font-semibold tracking-tight">Route generation</h1>
+        <div className="flex flex-col items-center gap-3 text-center">
+          <div className="flex items-center justify-center gap-2">
+            <SparklesIcon aria-hidden className="size-7 text-primary" />
+            <h1 className="text-2xl font-semibold tracking-tight">Route generation</h1>
+          </div>
           <p className="text-muted-foreground">Step {step + 1} of 5</p>
+          <div className="flex w-full justify-center gap-1.5 sm:gap-2" role="list" aria-label="Wizard steps">
+            {STEP_META.map(({ title, Icon }, i) => (
+              <Button
+                icon={<Icon aria-hidden className="size-4 sm:size-[18px]" />}
+                key={title}
+                variant={i === step ? "default" : "outline"}
+                onClick={() => setStep(i)}
+                role="listitem"
+                title={title}
+              />
+            ))}
+          </div>
         </div>
         {step === 0 ? (
           <Card className="w-full">
             <CardHeader className="text-center">
-              <CardTitle className="text-base">1 — Select tasks</CardTitle>
+              <CardTitle className="flex items-center justify-center gap-2 text-base">
+                <ListChecksIcon aria-hidden className="size-5 shrink-0 text-muted-foreground" />
+                1 — Select tasks
+              </CardTitle>
             </CardHeader>
             <CardContent className="flex flex-col items-center gap-3">
               {tasks?.map((t) => (
@@ -81,6 +118,7 @@ export const RouteGenerateWizard = () => {
               ))}
               <Button className="w-full" size="lg" type="button" onClick={() => setStep(1)}>
                 Next
+                <ChevronRightIcon aria-hidden className="size-4" />
               </Button>
             </CardContent>
           </Card>
@@ -88,7 +126,10 @@ export const RouteGenerateWizard = () => {
         {step === 1 ? (
           <Card className="w-full">
             <CardHeader className="text-center">
-              <CardTitle className="text-base">2 — Select trucks</CardTitle>
+              <CardTitle className="flex items-center justify-center gap-2 text-base">
+                <TruckIcon aria-hidden className="size-5 shrink-0 text-muted-foreground" />
+                2 — Select trucks
+              </CardTitle>
             </CardHeader>
             <CardContent className="flex flex-col items-center gap-3">
               {trucks
@@ -102,11 +143,12 @@ export const RouteGenerateWizard = () => {
                   </label>
                 ))}
               <div className="flex w-full gap-2">
-                <Button className="flex-1" size="lg" type="button" variant="outline" onClick={() => setStep(0)}>
+                <Button className="flex-1" icon={<ChevronLeftIcon />} size="lg" type="button" variant="outline" onClick={() => setStep(0)}>
                   Back
                 </Button>
                 <Button className="flex-1" size="lg" type="button" onClick={() => setStep(2)}>
                   Next
+                  <ChevronRightIcon aria-hidden className="size-4" />
                 </Button>
               </div>
             </CardContent>
@@ -115,11 +157,17 @@ export const RouteGenerateWizard = () => {
         {step === 2 ? (
           <Card className="w-full">
             <CardHeader className="text-center">
-              <CardTitle className="text-base">3 — Configure</CardTitle>
+              <CardTitle className="flex items-center justify-center gap-2 text-base">
+                <SlidersHorizontalIcon aria-hidden className="size-5 shrink-0 text-muted-foreground" />
+                3 — Configure
+              </CardTitle>
             </CardHeader>
             <CardContent className="flex flex-col gap-4">
               <div className="flex flex-col gap-2">
-                <Label>Optimize for</Label>
+                <Label className="flex items-center gap-2">
+                  <SlidersHorizontalIcon aria-hidden className="size-4 text-muted-foreground" />
+                  Optimize for
+                </Label>
                 <p className="text-sm text-muted-foreground">Distance / Time / Fuel</p>
               </div>
               <div className="flex items-center justify-between gap-4">
@@ -127,11 +175,12 @@ export const RouteGenerateWizard = () => {
                 <Switch checked={multiDrop} id="md" onCheckedChange={setMultiDrop} />
               </div>
               <div className="flex w-full gap-2">
-                <Button className="flex-1" size="lg" type="button" variant="outline" onClick={() => setStep(1)}>
+                <Button className="flex-1" icon={<ChevronLeftIcon />} size="lg" type="button" variant="outline" onClick={() => setStep(1)}>
                   Back
                 </Button>
                 <Button className="flex-1" size="lg" type="button" onClick={() => setStep(3)}>
                   Next
+                  <ChevronRightIcon aria-hidden className="size-4" />
                 </Button>
               </div>
             </CardContent>
@@ -140,18 +189,23 @@ export const RouteGenerateWizard = () => {
         {step === 3 ? (
           <Card className="w-full">
             <CardHeader className="text-center">
-              <CardTitle className="text-base">4 — Review</CardTitle>
+              <CardTitle className="flex items-center justify-center gap-2 text-base">
+                <MapIcon aria-hidden className="size-5 shrink-0 text-muted-foreground" />
+                4 — Review
+              </CardTitle>
             </CardHeader>
             <CardContent className="flex flex-col gap-4">
-              <div className="rounded-lg border border-dashed border-border p-4 text-sm text-muted-foreground">
+              <div className="flex flex-col items-center gap-2 rounded-lg border border-dashed border-border p-6 text-center text-sm text-muted-foreground">
+                <MapIcon aria-hidden className="size-8 text-muted-foreground/50" />
                 Map preview with color-coded routes
               </div>
               <div className="flex w-full gap-2">
-                <Button className="flex-1" size="lg" type="button" variant="outline" onClick={() => setStep(2)}>
+                <Button className="flex-1" icon={<ChevronLeftIcon />} size="lg" type="button" variant="outline" onClick={() => setStep(2)}>
                   Back
                 </Button>
                 <Button className="flex-1" size="lg" type="button" onClick={() => setStep(4)}>
                   Next
+                  <ChevronRightIcon aria-hidden className="size-4" />
                 </Button>
               </div>
             </CardContent>
@@ -160,18 +214,36 @@ export const RouteGenerateWizard = () => {
         {step === 4 ? (
           <Card className="w-full">
             <CardHeader className="text-center">
-              <CardTitle className="text-base">5 — Confirm</CardTitle>
+              <CardTitle className="flex items-center justify-center gap-2 text-base">
+                <CircleCheckIcon aria-hidden className="size-5 shrink-0 text-muted-foreground" />
+                5 — Confirm
+              </CardTitle>
             </CardHeader>
             <CardContent className="flex flex-col gap-4">
-              <p className="text-center text-sm text-muted-foreground">
+              <p className="flex items-center justify-center gap-2 text-center text-sm text-muted-foreground">
+                <ListChecksIcon aria-hidden className="size-4 shrink-0" />
                 {selectedTasks.size} tasks · {selectedTrucks.size} trucks
               </p>
               <div className="flex w-full gap-2">
-                <Button className="flex-1" size="lg" type="button" variant="outline" onClick={() => setStep(3)}>
+                <Button className="flex-1" icon={<ChevronLeftIcon />} size="lg" type="button" variant="outline" onClick={() => setStep(3)}>
                   Back
                 </Button>
-                <Button className="flex-1" disabled={generateRoutes.isPending} size="lg" type="button" onClick={() => void onFinish()}>
-                  {generateRoutes.isPending ? "Generating..." : "Dispatch"}
+                <Button
+                  className="flex-1"
+                  disabled={generateRoutes.isPending}
+                  loading={generateRoutes.isPending}
+                  size="lg"
+                  type="button"
+                  onClick={() => void onFinish()}
+                >
+                  {generateRoutes.isPending ? (
+                    "Generating..."
+                  ) : (
+                    <>
+                      Dispatch
+                      <SendIcon aria-hidden className="size-4" />
+                    </>
+                  )}
                 </Button>
               </div>
             </CardContent>

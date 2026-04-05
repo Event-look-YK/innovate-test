@@ -128,10 +128,16 @@ jobs:
 
       - name: Deploy web container app
         run: |
+          SERVER_FQDN=$(az containerapp show \
+            --name ${{ secrets.SERVER_APP_NAME }} \
+            --resource-group ${{ secrets.AZURE_RESOURCE_GROUP }} \
+            --query 'properties.configuration.ingress.fqdn' --output tsv)
           az containerapp update \
             --name ${{ secrets.WEB_APP_NAME }} \
             --resource-group ${{ secrets.AZURE_RESOURCE_GROUP }} \
-            --image ${{ env.ACR_LOGIN_SERVER }}/web:${{ github.sha }}
+            --image ${{ env.ACR_LOGIN_SERVER }}/web:${{ github.sha }} \
+            --set-env-vars \
+              VITE_SERVER_URL=https://${SERVER_FQDN}
 
       - name: Print deployed URLs
         run: |
