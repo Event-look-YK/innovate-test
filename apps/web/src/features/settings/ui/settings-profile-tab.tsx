@@ -1,14 +1,6 @@
 import { Button } from "@innovate-test/ui/components/button";
-import { Field, FieldGroup, FieldLabel } from "@innovate-test/ui/components/field";
+import { Field, FieldLabel } from "@innovate-test/ui/components/field";
 import { Input } from "@innovate-test/ui/components/input";
-import {
-  Select,
-  SelectContent,
-  SelectGroup,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@innovate-test/ui/components/select";
 import type { UseFormReturn } from "react-hook-form";
 import { toast } from "sonner";
 
@@ -33,38 +25,21 @@ export const SettingsProfileTab = ({ form, userEmail, isSaving, onSubmit }: Prop
       }
     })}
   >
-    <FieldGroup>
+    <div className="grid gap-4 sm:grid-cols-2">
       <Field>
         <FieldLabel htmlFor="pf-name">Full name</FieldLabel>
-        <Input id="pf-name" {...form.register("fullName")} />
+        <Input id="pf-name" placeholder="John Smith" {...form.register("fullName")} />
       </Field>
       <Field>
         <FieldLabel htmlFor="pf-email">Email</FieldLabel>
-        <Input id="pf-email" disabled readOnly value={userEmail ?? ""} />
+        <Input id="pf-email" disabled readOnly placeholder="john@company.com" value={userEmail ?? ""} />
       </Field>
       <Field>
         <FieldLabel htmlFor="pf-phone">Phone</FieldLabel>
-        <Input id="pf-phone" {...form.register("phone")} />
+        <Input id="pf-phone" placeholder="+1 234 567 8900" {...form.register("phone")} />
       </Field>
-      <Field>
-        <FieldLabel>Language</FieldLabel>
-        <Select
-          onValueChange={(v) => form.setValue("language", v as ProfileValues["language"])}
-          value={form.watch("language")}
-        >
-          <SelectTrigger className="w-full">
-            <SelectValue />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectGroup>
-              <SelectItem value="en">English</SelectItem>
-              <SelectItem value="uk">Українська</SelectItem>
-            </SelectGroup>
-          </SelectContent>
-        </Select>
-      </Field>
-    </FieldGroup>
-    <Button disabled={isSaving} type="submit">
+    </div>
+    <Button className="w-fit" disabled={isSaving} type="submit">
       {isSaving ? "Saving..." : "Save profile"}
     </Button>
   </form>

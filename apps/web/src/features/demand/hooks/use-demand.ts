@@ -1,8 +1,9 @@
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 import { http } from "@/shared/lib/http";
 import type {
   DemandRequestDetail,
+  DemandRequestListItem,
   DemandRequestsResponse,
   DemandStatus,
 } from "@/shared/types/demand";
@@ -25,6 +26,28 @@ export const useDemand = (params?: ListParams) =>
       return http.get<DemandRequestsResponse>(`/api/demand?${search}`);
     },
   });
+
+type CreateDemandPayload = {
+  taskId?: string;
+  requiredTruckType: "Truck" | "Semi" | "Refrigerated" | "Flatbed";
+  cargoType: "General" | "Refrigerated" | "Hazardous" | "Oversized" | "Fragile";
+  payloadT: number;
+  originLabel: string;
+  destinationLabel: string;
+  deadline: string;
+  budgetUah: number;
+};
+
+export const useCreateDemand = () => {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: (body: CreateDemandPayload) =>
+      http.post<DemandRequestListItem>("/api/demand", body),
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ["demand"] });
+    },
+  });
+};
 
 export const useDemandDetail = (requestId: string) =>
   useQuery({

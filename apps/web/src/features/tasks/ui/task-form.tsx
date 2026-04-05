@@ -1,7 +1,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useNavigate } from "@tanstack/react-router";
 import { Button } from "@innovate-test/ui/components/button";
-import { Field, FieldError, FieldGroup, FieldLabel } from "@innovate-test/ui/components/field";
+import { Field, FieldError, FieldLabel } from "@innovate-test/ui/components/field";
 import { Input } from "@innovate-test/ui/components/input";
 import {
   Select,
@@ -62,16 +62,16 @@ export const TaskForm = () => {
   });
 
   return (
-    <form className="mx-auto flex max-w-xl flex-col gap-6" onSubmit={onSubmit}>
-      <FieldGroup>
-        <Field data-invalid={!!form.formState.errors.title}>
+    <form className="flex flex-col gap-6" onSubmit={onSubmit}>
+      <div className="grid gap-4 sm:grid-cols-2">
+        <Field className="sm:col-span-2" data-invalid={!!form.formState.errors.title}>
           <FieldLabel htmlFor="tf-title">Title</FieldLabel>
-          <Input id="tf-title" {...form.register("title")} />
+          <Input id="tf-title" placeholder="Deliver refrigerated goods to Lviv" {...form.register("title")} />
           <FieldError errors={[form.formState.errors.title]} />
         </Field>
-        <Field data-invalid={!!form.formState.errors.cargoDescription}>
+        <Field className="sm:col-span-2" data-invalid={!!form.formState.errors.cargoDescription}>
           <FieldLabel htmlFor="tf-cargo">Cargo description</FieldLabel>
-          <Textarea id="tf-cargo" rows={3} {...form.register("cargoDescription")} />
+          <Textarea id="tf-cargo" rows={3} placeholder="Describe the cargo contents, packaging, and handling requirements…" {...form.register("cargoDescription")} />
           <FieldError errors={[form.formState.errors.cargoDescription]} />
         </Field>
         <Field data-invalid={!!form.formState.errors.cargoType}>
@@ -97,17 +97,17 @@ export const TaskForm = () => {
         </Field>
         <Field data-invalid={!!form.formState.errors.weightT}>
           <FieldLabel htmlFor="tf-weight">Weight (t)</FieldLabel>
-          <Input id="tf-weight" step="0.1" type="number" {...form.register("weightT")} />
+          <Input id="tf-weight" step="0.1" type="number" placeholder="5.0" {...form.register("weightT")} />
           <FieldError errors={[form.formState.errors.weightT]} />
         </Field>
         <Field data-invalid={!!form.formState.errors.originLabel}>
           <FieldLabel htmlFor="tf-a">Point A (origin)</FieldLabel>
-          <Input id="tf-a" {...form.register("originLabel")} />
+          <Input id="tf-a" placeholder="Kyiv, Ukraine" {...form.register("originLabel")} />
           <FieldError errors={[form.formState.errors.originLabel]} />
         </Field>
         <Field data-invalid={!!form.formState.errors.destinationLabel}>
           <FieldLabel htmlFor="tf-b">Point B (destination)</FieldLabel>
-          <Input id="tf-b" {...form.register("destinationLabel")} />
+          <Input id="tf-b" placeholder="Lviv, Ukraine" {...form.register("destinationLabel")} />
           <FieldError errors={[form.formState.errors.destinationLabel]} />
         </Field>
         <Field data-invalid={!!form.formState.errors.deadline}>
@@ -158,11 +158,11 @@ export const TaskForm = () => {
             </SelectContent>
           </Select>
         </Field>
-        <Field>
+        <Field className="sm:col-span-2">
           <FieldLabel htmlFor="tf-notes">Notes</FieldLabel>
-          <Textarea id="tf-notes" rows={2} {...form.register("notes")} />
+          <Textarea id="tf-notes" rows={2} placeholder="Any special instructions or remarks…" {...form.register("notes")} />
         </Field>
-      </FieldGroup>
+      </div>
       <div className="flex gap-2">
         <Button disabled={createTask.isPending} type="submit">
           {createTask.isPending ? "Creating..." : "Create task"}

@@ -43,3 +43,43 @@ export const useCreateTruck = () => {
     },
   });
 };
+
+export const useTruck = (truckId: string) =>
+  useQuery({
+    queryKey: ["fleet", truckId],
+    queryFn: () => http.get<Truck>(`/api/fleet/${truckId}`),
+    enabled: !!truckId,
+  });
+
+type UpdateTruckPayload = Partial<{
+  name: string;
+  type: Truck["type"];
+  payloadT: number;
+  trailerId: string | null;
+  trackerId: string;
+  status: Truck["status"];
+  locationLabel: string;
+  assignedDriverId: string | null;
+}> & { truckId: string };
+
+export const useUpdateTruck = () => {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: ({ truckId, ...body }: UpdateTruckPayload) =>
+      http.put<Truck>(`/api/fleet/${truckId}`, body),
+    onSuccess: (_data, variables) => {
+      qc.invalidateQueries({ queryKey: ["fleet"] });
+      qc.invalidateQueries({ queryKey: ["fleet", variables.truckId] });
+    },
+  });
+};
+
+export const useDeleteTruck = () => {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: (truckId: string) => http.del<{ success: boolean }>(`/api/fleet/${truckId}`),
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ["fleet"] });
+    },
+  });
+};
