@@ -1,13 +1,62 @@
-import { Link, Outlet, useRouterState } from "@tanstack/react-router";
+import { Link, Outlet, useNavigate, useRouterState } from "@tanstack/react-router";
+import { Button } from "@innovate-test/ui/components/button";
+import {
+  Dialog,
+  DialogContent,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@innovate-test/ui/components/dialog";
+import { Input } from "@innovate-test/ui/components/input";
+import { Label } from "@innovate-test/ui/components/label";
 import { ScrollArea } from "@innovate-test/ui/components/scroll-area";
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@innovate-test/ui/components/select";
 import { cn } from "@innovate-test/ui/lib/utils";
+import { Plus } from "lucide-react";
+import { useState } from "react";
+import { toast } from "sonner";
 
-import { useThreads } from "@/features/messages/hooks/use-messages";
+import { useCreateThread, useThreads } from "@/features/messages/hooks/use-messages";
+import type { MessageThreadType } from "@/shared/types/message";
 
 export const MessagesLayout = () => {
   const { data: threads } = useThreads();
   const pathname = useRouterState({ select: (s) => s.location.pathname });
   const activeId = pathname.startsWith("/messages/") ? pathname.split("/messages/")[1]?.split("/")[0] : undefined;
+
+  const navigate = useNavigate();
+  const createThread = useCreateThread();
+
+  const [dialogOpen, setDialogOpen] = useState(false);
+  const [threadType, setThreadType] = useState<MessageThreadType>("direct");
+  const [threadTitle, setThreadTitle] = useState("");
+
+  const handleCreate = async () => {
+    if (!threadTitle.trim()) {
+      toast.error("Title is required");
+      return;
+    }
+    try {
+      const newThread = await createThread.mutateAsync({
+        type: threadType,
+        title: threadTitle.trim(),
+      });
+      setDialogOpen(false);
+      setThreadTitle("");
+      setThreadType("direct");
+      toast.success("Thread created");
+      await navigate({ to: "/messages/$threadId", params: { threadId: newThread.id } });
+    } catch {
+      toast.error("Failed to create thread");
+    }
+  };
 
   return (
     <div className="flex flex-col gap-4">
@@ -18,9 +67,19 @@ export const MessagesLayout = () => {
       <div className="grid min-h-[480px] gap-0 overflow-hidden rounded-2xl border border-border/60 shadow-sm md:grid-cols-[280px_1fr]">
         <ScrollArea className="border-border/60 md:border-r bg-muted/20">
           <div className="p-3">
-            <p className="mb-2 px-2 text-[10px] font-bold uppercase tracking-[0.15em] text-muted-foreground">
-              Threads
-            </p>
+            <div className="mb-2 flex items-center justify-between px-2">
+              <p className="text-[10px] font-bold uppercase tracking-[0.15em] text-muted-foreground">
+                Threads
+              </p>
+              <Button
+                size="icon"
+                variant="ghost"
+                className="h-6 w-6"
+                onClick={() => setDialogOpen(true)}
+              >
+                <Plus className="h-4 w-4" />
+              </Button>
+            </div>
             <div className="flex flex-col gap-0.5">
               {threads?.map((t) => (
                 <Link
@@ -43,6 +102,57 @@ export const MessagesLayout = () => {
         </ScrollArea>
         <Outlet />
       </div>
+
+      <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
+        <DialogContent className="sm:max-w-[400px]">
+          <DialogHeader>
+            <DialogTitle>New thread</DialogTitle>
+          </DialogHeader>
+          <div className="flex flex-col gap-4 py-2">
+            <div className="flex flex-col gap-2">
+              <Label htmlFor="thread-type">Type</Label>
+              <Select
+                value={threadType}
+                onValueChange={(v) => setThreadType(v as MessageThreadType)}
+              >
+                <SelectTrigger id="thread-type" className="w-full">
+                  <SelectValue placeholder="Select type" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectGroup>
+                    <SelectItem value="direct">Direct</SelectItem>
+                    <SelectItem value="group">Group</SelectItem>
+                    <SelectItem value="task">Task</SelectItem>
+                  </SelectGroup>
+                </SelectContent>
+              </Select>
+            </div>
+            <div className="flex flex-col gap-2">
+              <Label htmlFor="thread-title">Title</Label>
+              <Input
+                id="thread-title"
+                placeholder="Thread title"
+                value={threadTitle}
+                onChange={(e) => setThreadTitle(e.target.value)}
+              />
+            </div>
+          </div>
+          <DialogFooter>
+            <Button
+              variant="outline"
+              onClick={() => setDialogOpen(false)}
+            >
+              Cancel
+            </Button>
+            <Button
+              loading={createThread.isPending}
+              onClick={handleCreate}
+            >
+              Create
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };

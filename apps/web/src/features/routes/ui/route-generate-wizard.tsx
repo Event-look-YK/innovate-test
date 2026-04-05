@@ -59,123 +59,125 @@ export const RouteGenerateWizard = () => {
   };
 
   return (
-    <div className="mx-auto flex max-w-2xl flex-col gap-6">
-      <div>
-        <h1 className="text-2xl font-semibold tracking-tight">Route generation</h1>
-        <p className="text-muted-foreground">Step {step + 1} of 5</p>
-      </div>
-      {step === 0 ? (
-        <Card>
-          <CardHeader>
-            <CardTitle className="text-base">1 — Select tasks</CardTitle>
-          </CardHeader>
-          <CardContent className="flex flex-col gap-3">
-            {tasks?.map((t) => (
-              <label key={t.id} className="flex cursor-pointer items-center gap-3 rounded-lg border border-border p-3">
-                <Checkbox checked={selectedTasks.has(t.id)} onCheckedChange={() => toggleTask(t.id)} />
-                <span className="text-sm">
-                  {t.title} · {t.originLabel} → {t.destinationLabel}
-                </span>
-              </label>
-            ))}
-            <Button type="button" onClick={() => setStep(1)}>
-              Next
-            </Button>
-          </CardContent>
-        </Card>
-      ) : null}
-      {step === 1 ? (
-        <Card>
-          <CardHeader>
-            <CardTitle className="text-base">2 — Select trucks</CardTitle>
-          </CardHeader>
-          <CardContent className="flex flex-col gap-3">
-            {trucks
-              ?.filter((t) => t.status === "idle")
-              .map((t) => (
-                <label key={t.id} className="flex cursor-pointer items-center gap-3 rounded-lg border border-border p-3">
-                  <Checkbox checked={selectedTrucks.has(t.id)} onCheckedChange={() => toggleTruck(t.id)} />
+    <div className="flex min-h-[60vh] flex-col items-center justify-center">
+      <div className="flex w-full max-w-md flex-col items-center gap-6">
+        <div className="text-center">
+          <h1 className="text-2xl font-semibold tracking-tight">Route generation</h1>
+          <p className="text-muted-foreground">Step {step + 1} of 5</p>
+        </div>
+        {step === 0 ? (
+          <Card className="w-full">
+            <CardHeader className="text-center">
+              <CardTitle className="text-base">1 — Select tasks</CardTitle>
+            </CardHeader>
+            <CardContent className="flex flex-col items-center gap-3">
+              {tasks?.map((t) => (
+                <label key={t.id} className="flex w-full cursor-pointer items-center gap-3 rounded-lg border border-border p-4">
+                  <Checkbox checked={selectedTasks.has(t.id)} onCheckedChange={() => toggleTask(t.id)} />
                   <span className="text-sm">
-                    {t.name} · {t.type} · {t.locationLabel}
+                    {t.title} · {t.originLabel} → {t.destinationLabel}
                   </span>
                 </label>
               ))}
-            <div className="flex gap-2">
-              <Button type="button" variant="outline" onClick={() => setStep(0)}>
-                Back
-              </Button>
-              <Button type="button" onClick={() => setStep(2)}>
+              <Button className="w-full" size="lg" type="button" onClick={() => setStep(1)}>
                 Next
               </Button>
-            </div>
-          </CardContent>
-        </Card>
-      ) : null}
-      {step === 2 ? (
-        <Card>
-          <CardHeader>
-            <CardTitle className="text-base">3 — Configure</CardTitle>
-          </CardHeader>
-          <CardContent className="flex flex-col gap-4">
-            <div className="flex flex-col gap-2">
-              <Label>Optimize for</Label>
-              <p className="text-sm text-muted-foreground">Distance / Time / Fuel</p>
-            </div>
-            <div className="flex items-center justify-between gap-4">
-              <Label htmlFor="md">Allow multi-drop</Label>
-              <Switch checked={multiDrop} id="md" onCheckedChange={setMultiDrop} />
-            </div>
-            <div className="flex gap-2">
-              <Button type="button" variant="outline" onClick={() => setStep(1)}>
-                Back
-              </Button>
-              <Button type="button" onClick={() => setStep(3)}>
-                Next
-              </Button>
-            </div>
-          </CardContent>
-        </Card>
-      ) : null}
-      {step === 3 ? (
-        <Card>
-          <CardHeader>
-            <CardTitle className="text-base">4 — Review</CardTitle>
-          </CardHeader>
-          <CardContent className="flex flex-col gap-4">
-            <div className="rounded-lg border border-dashed border-border p-4 text-sm text-muted-foreground">
-              Map preview with color-coded routes
-            </div>
-            <div className="flex gap-2">
-              <Button type="button" variant="outline" onClick={() => setStep(2)}>
-                Back
-              </Button>
-              <Button type="button" onClick={() => setStep(4)}>
-                Next
-              </Button>
-            </div>
-          </CardContent>
-        </Card>
-      ) : null}
-      {step === 4 ? (
-        <Card>
-          <CardHeader>
-            <CardTitle className="text-base">5 — Confirm</CardTitle>
-          </CardHeader>
-          <CardContent className="flex flex-col gap-4">
-            <p className="text-sm text-muted-foreground">
-              {selectedTasks.size} tasks · {selectedTrucks.size} trucks
-            </p>
-            <div className="flex gap-2">
-              <Button type="button" variant="outline" onClick={() => setStep(3)}>
-                Back
-              </Button>
-              <Button disabled={generateRoutes.isPending} type="button" onClick={() => void onFinish()}>
-                {generateRoutes.isPending ? "Generating..." : "Dispatch"}
-              </Button>
-            </div>
-          </CardContent>
-        </Card>
-      ) : null}
+            </CardContent>
+          </Card>
+        ) : null}
+        {step === 1 ? (
+          <Card className="w-full">
+            <CardHeader className="text-center">
+              <CardTitle className="text-base">2 — Select trucks</CardTitle>
+            </CardHeader>
+            <CardContent className="flex flex-col items-center gap-3">
+              {trucks
+                ?.filter((t) => t.status === "idle")
+                .map((t) => (
+                  <label key={t.id} className="flex w-full cursor-pointer items-center gap-3 rounded-lg border border-border p-4">
+                    <Checkbox checked={selectedTrucks.has(t.id)} onCheckedChange={() => toggleTruck(t.id)} />
+                    <span className="text-sm">
+                      {t.name} · {t.type} · {t.locationLabel}
+                    </span>
+                  </label>
+                ))}
+              <div className="flex w-full gap-2">
+                <Button className="flex-1" size="lg" type="button" variant="outline" onClick={() => setStep(0)}>
+                  Back
+                </Button>
+                <Button className="flex-1" size="lg" type="button" onClick={() => setStep(2)}>
+                  Next
+                </Button>
+              </div>
+            </CardContent>
+          </Card>
+        ) : null}
+        {step === 2 ? (
+          <Card className="w-full">
+            <CardHeader className="text-center">
+              <CardTitle className="text-base">3 — Configure</CardTitle>
+            </CardHeader>
+            <CardContent className="flex flex-col gap-4">
+              <div className="flex flex-col gap-2">
+                <Label>Optimize for</Label>
+                <p className="text-sm text-muted-foreground">Distance / Time / Fuel</p>
+              </div>
+              <div className="flex items-center justify-between gap-4">
+                <Label htmlFor="md">Allow multi-drop</Label>
+                <Switch checked={multiDrop} id="md" onCheckedChange={setMultiDrop} />
+              </div>
+              <div className="flex w-full gap-2">
+                <Button className="flex-1" size="lg" type="button" variant="outline" onClick={() => setStep(1)}>
+                  Back
+                </Button>
+                <Button className="flex-1" size="lg" type="button" onClick={() => setStep(3)}>
+                  Next
+                </Button>
+              </div>
+            </CardContent>
+          </Card>
+        ) : null}
+        {step === 3 ? (
+          <Card className="w-full">
+            <CardHeader className="text-center">
+              <CardTitle className="text-base">4 — Review</CardTitle>
+            </CardHeader>
+            <CardContent className="flex flex-col gap-4">
+              <div className="rounded-lg border border-dashed border-border p-4 text-sm text-muted-foreground">
+                Map preview with color-coded routes
+              </div>
+              <div className="flex w-full gap-2">
+                <Button className="flex-1" size="lg" type="button" variant="outline" onClick={() => setStep(2)}>
+                  Back
+                </Button>
+                <Button className="flex-1" size="lg" type="button" onClick={() => setStep(4)}>
+                  Next
+                </Button>
+              </div>
+            </CardContent>
+          </Card>
+        ) : null}
+        {step === 4 ? (
+          <Card className="w-full">
+            <CardHeader className="text-center">
+              <CardTitle className="text-base">5 — Confirm</CardTitle>
+            </CardHeader>
+            <CardContent className="flex flex-col gap-4">
+              <p className="text-center text-sm text-muted-foreground">
+                {selectedTasks.size} tasks · {selectedTrucks.size} trucks
+              </p>
+              <div className="flex w-full gap-2">
+                <Button className="flex-1" size="lg" type="button" variant="outline" onClick={() => setStep(3)}>
+                  Back
+                </Button>
+                <Button className="flex-1" disabled={generateRoutes.isPending} size="lg" type="button" onClick={() => void onFinish()}>
+                  {generateRoutes.isPending ? "Generating..." : "Dispatch"}
+                </Button>
+              </div>
+            </CardContent>
+          </Card>
+        ) : null}
+      </div>
     </div>
   );
 };

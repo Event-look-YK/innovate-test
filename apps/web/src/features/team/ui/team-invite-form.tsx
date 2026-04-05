@@ -1,7 +1,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useNavigate } from "@tanstack/react-router";
 import { Button } from "@innovate-test/ui/components/button";
-import { Field, FieldError, FieldGroup, FieldLabel } from "@innovate-test/ui/components/field";
+import { Field, FieldError, FieldLabel } from "@innovate-test/ui/components/field";
 import { Input } from "@innovate-test/ui/components/input";
 import {
   Select,
@@ -16,7 +16,7 @@ import { toast } from "sonner";
 
 import { useInviteTeammate } from "@/features/team/hooks/use-team";
 import { inviteSchema, type InviteValues } from "@/features/team/lib/validation";
-import { ROLES } from "@/shared/constants/roles";
+import { ROLE_LABELS, ROLES } from "@/shared/constants/roles";
 
 export const TeamInviteForm = () => {
   const navigate = useNavigate();
@@ -38,25 +38,27 @@ export const TeamInviteForm = () => {
 
   return (
     <form className="flex flex-col gap-6" onSubmit={onSubmit}>
-      <FieldGroup>
+      <div className="grid gap-4 sm:grid-cols-2">
         <Field data-invalid={!!form.formState.errors.email}>
           <FieldLabel htmlFor="inv-email">Email</FieldLabel>
-          <Input id="inv-email" type="email" {...form.register("email")} />
+          <Input id="inv-email" type="email" placeholder="john@company.com" {...form.register("email")} />
           <FieldError errors={[form.formState.errors.email]} />
         </Field>
         <Field data-invalid={!!form.formState.errors.fullName}>
           <FieldLabel htmlFor="inv-name">Full name</FieldLabel>
-          <Input id="inv-name" {...form.register("fullName")} />
+          <Input id="inv-name" placeholder="John Smith" {...form.register("fullName")} />
           <FieldError errors={[form.formState.errors.fullName]} />
         </Field>
-        <Field>
+        <Field className="sm:col-span-2">
           <FieldLabel>Role</FieldLabel>
           <Select
             onValueChange={(v) => form.setValue("role", v as InviteValues["role"])}
             value={form.watch("role")}
           >
-            <SelectTrigger className="w-full">
-              <SelectValue />
+            <SelectTrigger className="w-full sm:max-w-xs">
+              <SelectValue>
+                {ROLE_LABELS[form.watch("role") as keyof typeof ROLE_LABELS] ?? "Select a role"}
+              </SelectValue>
             </SelectTrigger>
             <SelectContent>
               <SelectGroup>
@@ -67,7 +69,7 @@ export const TeamInviteForm = () => {
             </SelectContent>
           </Select>
         </Field>
-      </FieldGroup>
+      </div>
       <div className="flex gap-2">
         <Button disabled={inviteMutation.isPending} type="submit">
           {inviteMutation.isPending ? "Sending..." : "Send invite"}

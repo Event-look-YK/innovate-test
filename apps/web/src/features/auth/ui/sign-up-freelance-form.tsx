@@ -16,6 +16,7 @@ import { useState } from "react";
 import { type Resolver, useForm } from "react-hook-form";
 import { toast } from "sonner";
 
+import { useOnboard } from "@/features/auth/hooks/use-onboard";
 import {
   signUpFreelanceSchema,
   type SignUpFreelanceValues,
@@ -24,6 +25,7 @@ import { authClient } from "@/shared/lib/auth-client";
 
 export const SignUpFreelanceForm = () => {
   const navigate = useNavigate();
+  const onboard = useOnboard();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const form = useForm<SignUpFreelanceValues>({
     resolver: zodResolver(signUpFreelanceSchema) as Resolver<SignUpFreelanceValues>,
@@ -50,6 +52,13 @@ export const SignUpFreelanceForm = () => {
         toast.error(error.message ?? "Registration failed");
         return;
       }
+      await onboard.mutateAsync({
+        role: "FREELANCE_DRIVER",
+        phone: values.phone || undefined,
+        licenseNumber: values.licenseNumber,
+        vehicleType: values.vehicleType,
+        payloadT: Number(values.payloadT),
+      });
       toast.success("Welcome, driver");
       await navigate({ to: "/offers", replace: true });
     } catch {

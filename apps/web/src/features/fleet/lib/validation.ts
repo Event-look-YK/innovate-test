@@ -10,3 +10,9 @@ export const truckFormSchema = z.object({
 });
 
 export type TruckFormValues = z.infer<typeof truckFormSchema>;
+
+export const truckEditSchema = truckFormSchema.extend({
+  status: z.enum(["idle", "on_road", "maintenance"]),
+});
+
+export type TruckEditValues = z.infer<typeof truckEditSchema>;

@@ -59,3 +59,84 @@ export const useDemandOffers = (demandRequestId: string) =>
       ),
     enabled: !!demandRequestId,
   });
+
+export const useCreateFreightOffer = () => {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: (body: {
+      demandRequestId: string;
+      offeredPriceUah: number;
+      estimatedHours?: number;
+      note?: string;
+    }) => http.post<FreightOfferListItem>("/api/offers", body),
+    onSuccess: (_data, variables) => {
+      toast.success("Offer sent");
+      qc.invalidateQueries({
+        queryKey: ["demand", variables.demandRequestId, "offers"],
+      });
+      qc.invalidateQueries({ queryKey: ["demand"] });
+    },
+  });
+};
+
+export const useFreightOffer = (offerId: string) =>
+  useQuery({
+    queryKey: ["offers", offerId],
+    queryFn: () => http.get<FreightOfferListItem>(`/api/offers/${offerId}`),
+    enabled: !!offerId,
+  });
+
+export const useAcceptFreightOffer = () => {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: (offerId: string) =>
+      http.post<{ id: string; status: string }>(
+        `/api/offers/${offerId}/accept`,
+        {},
+      ),
+    onSuccess: () => {
+      toast.success("Offer accepted");
+      qc.invalidateQueries({ queryKey: ["demand"] });
+      qc.invalidateQueries({ queryKey: ["offers"] });
+    },
+  });
+};
+
+export const useDeclineFreightOffer = () => {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: (offerId: string) =>
+      http.post<{ id: string; status: string }>(
+        `/api/offers/${offerId}/decline`,
+        {},
+      ),
+    onSuccess: () => {
+      toast.success("Offer declined");
+      qc.invalidateQueries({ queryKey: ["demand"] });
+      qc.invalidateQueries({ queryKey: ["offers"] });
+    },
+  });
+};
+
+export const useCounterFreightOffer = () => {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: ({
+      offerId,
+      ...body
+    }: {
+      offerId: string;
+      offeredPriceUah: number;
+      note?: string;
+    }) =>
+      http.post<FreightOfferListItem>(
+        `/api/offers/${offerId}/counter`,
+        body,
+      ),
+    onSuccess: () => {
+      toast.success("Counter-offer sent");
+      qc.invalidateQueries({ queryKey: ["demand"] });
+      qc.invalidateQueries({ queryKey: ["offers"] });
+    },
+  });
+};

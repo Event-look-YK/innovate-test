@@ -55,3 +55,29 @@ export const useCreateTask = () => {
     },
   });
 };
+
+type UpdateTaskPayload = Partial<CreateTaskPayload> & { taskId: string };
+
+export const useUpdateTask = () => {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: ({ taskId, ...body }: UpdateTaskPayload) =>
+      http.put<Task>(`/api/tasks/${taskId}`, body),
+    onSuccess: (_data, variables) => {
+      qc.invalidateQueries({ queryKey: ["tasks"] });
+      qc.invalidateQueries({ queryKey: ["tasks", variables.taskId] });
+    },
+  });
+};
+
+export const useUpdateTaskStatus = () => {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: ({ taskId, status }: { taskId: string; status: string }) =>
+      http.patch<{ id: string; status: string }>(`/api/tasks/${taskId}/status`, { status }),
+    onSuccess: (_data, variables) => {
+      qc.invalidateQueries({ queryKey: ["tasks"] });
+      qc.invalidateQueries({ queryKey: ["tasks", variables.taskId] });
+    },
+  });
+};

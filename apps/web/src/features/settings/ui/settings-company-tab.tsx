@@ -1,5 +1,5 @@
 import { Button } from "@innovate-test/ui/components/button";
-import { Field, FieldGroup, FieldLabel } from "@innovate-test/ui/components/field";
+import { Field, FieldLabel } from "@innovate-test/ui/components/field";
 import { Input } from "@innovate-test/ui/components/input";
 import type { UseFormReturn } from "react-hook-form";
 import { toast } from "sonner";
@@ -24,25 +24,25 @@ export const SettingsCompanyTab = ({ form, isSaving, onSubmit }: Props) => (
       }
     })}
   >
-    <FieldGroup>
+    <div className="grid gap-4 sm:grid-cols-2">
       <Field>
         <FieldLabel htmlFor="co-name">Company name</FieldLabel>
-        <Input id="co-name" {...form.register("companyName")} />
+        <Input id="co-name" placeholder="Acme Logistics LLC" {...form.register("companyName")} />
       </Field>
       <Field>
         <FieldLabel htmlFor="co-tax">Tax ID</FieldLabel>
-        <Input id="co-tax" {...form.register("taxId")} />
+        <Input id="co-tax" placeholder="123456789" {...form.register("taxId")} />
       </Field>
       <Field>
         <FieldLabel htmlFor="co-country">Country</FieldLabel>
-        <Input id="co-country" {...form.register("country")} />
+        <Input id="co-country" placeholder="Ukraine" {...form.register("country")} />
       </Field>
       <Field>
         <FieldLabel htmlFor="co-city">City</FieldLabel>
-        <Input id="co-city" {...form.register("city")} />
+        <Input id="co-city" placeholder="Kyiv" {...form.register("city")} />
       </Field>
-    </FieldGroup>
-    <Button disabled={isSaving} type="submit">
+    </div>
+    <Button className="w-fit" disabled={isSaving} type="submit">
       {isSaving ? "Saving..." : "Save company"}
     </Button>
   </form>

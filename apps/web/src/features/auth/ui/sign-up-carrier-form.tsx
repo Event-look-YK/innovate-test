@@ -9,6 +9,7 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 
+import { useOnboard } from "@/features/auth/hooks/use-onboard";
 import {
   signUpCarrierStep1Schema,
   signUpCarrierStep2Schema,
@@ -21,6 +22,7 @@ const steps = ["Account", "Company", "Confirm"] as const;
 
 export const SignUpCarrierForm = () => {
   const navigate = useNavigate();
+  const onboard = useOnboard();
   const [step, setStep] = useState(0);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [s1, setS1] = useState<SignUpCarrierStep1Values | null>(null);
@@ -59,6 +61,13 @@ export const SignUpCarrierForm = () => {
         toast.error(error.message ?? "Registration failed");
         return;
       }
+      await onboard.mutateAsync({
+        role: "CARRIER_ADMIN",
+        companyName: s2.companyName,
+        taxId: s2.taxId,
+        country: s2.country,
+        city: s2.city,
+      });
       toast.success("Account created");
       await navigate({ to: "/dashboard", replace: true });
     } catch {
