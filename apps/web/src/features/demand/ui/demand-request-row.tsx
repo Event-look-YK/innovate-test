@@ -39,11 +39,6 @@ export const DemandRequestRow = ({ row: r }: Props) => (
         <span className="font-semibold tabular-nums text-foreground">{formatCurrencyUah(r.budgetUah)}</span>
       </>
     }
-    leading={
-      <div className="flex size-11 flex-col items-center justify-center rounded-xl bg-muted/70 font-mono text-[10px] font-bold leading-tight text-muted-foreground">
-        {r.id}
-      </div>
-    }
     routeParams={{ requestId: r.id }}
     subtitle={
       <span className="line-clamp-2">

@@ -12,7 +12,7 @@ export const WarehouseDashboardView = () => {
   ];
 
   return (
-    <div className="flex flex-col gap-6">
+    <div className="flex flex-col gap-4">
       <div>
         <h1 className="text-2xl font-bold tracking-tight">Warehouse</h1>
         <p className="text-muted-foreground">Today&apos;s cargo flow</p>

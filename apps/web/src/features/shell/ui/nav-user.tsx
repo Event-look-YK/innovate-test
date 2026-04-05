@@ -95,15 +95,6 @@ export const NavUser = ({ user }: Props) => {
               <SettingsIcon />
               Settings
             </DropdownMenuItem>
-            <DropdownMenuItem onClick={() => toast.info("No new notifications")}>
-              <BellIcon />
-              Notifications
-            </DropdownMenuItem>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem onClick={() => toast.info("Support: support@innovate-logistics.test")}>
-              <LifeBuoyIcon />
-              Help & support
-            </DropdownMenuItem>
             <DropdownMenuSeparator />
             <DropdownMenuItem className="text-destructive focus:text-destructive" onClick={onSignOut}>
               <LogOutIcon />

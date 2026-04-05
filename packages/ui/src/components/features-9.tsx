@@ -23,9 +23,12 @@ export const FeaturesSection = () => {
                         <div className="absolute inset-0 z-10 m-auto size-fit">
                             <div className="rounded-(--radius) bg-background z-1 dark:bg-muted relative flex size-fit w-fit items-center gap-2 border px-3 py-1 text-xs font-medium shadow-md shadow-zinc-950/5">
                                 <TruckIcon className="size-3.5 text-primary" />
-                                Truck #TRK-4821 · En route to Kyiv
+                                Truck #TRK-4821 · En route to Lviv
                             </div>
-                            <div className="rounded-(--radius) bg-background absolute inset-2 -bottom-2 mx-auto border px-3 py-4 text-xs font-medium shadow-md shadow-zinc-950/5 dark:bg-zinc-900" />
+                            <div className="rounded-(--radius) bg-background flex flex-row gap-2 justify-center text-[10px] absolute inset-2 mx-auto border px-3 font-medium shadow-md shadow-zinc-950/5 dark:bg-zinc-900">
+                            <TruckIcon className="size-3 text-primary" />
+                            Truck #TRK-4821 · En route to Lviv
+                            </div>
                         </div>
 
                         <div className="relative overflow-hidden">

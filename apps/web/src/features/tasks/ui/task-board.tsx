@@ -19,7 +19,7 @@ export const TaskBoard = ({ tasks }: Props) => (
     {TASK_STATUSES.map((status) => {
       const col = tasks.filter((t) => t.status === status);
       return (
-        <div key={status} className="flex w-72 min-w-72 shrink-0 flex-col gap-3">
+        <div key={status} className="flex w-72 min-w-72 shrink-0 flex-col gap-3 px-1">
           <div className="flex items-center justify-between rounded-lg border border-border bg-muted/40 px-3 py-2">
             <span className="text-sm font-medium">{columnTitle[status]}</span>
             <span className="text-xs text-muted-foreground">{col.length}</span>

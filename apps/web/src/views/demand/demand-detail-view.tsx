@@ -20,8 +20,8 @@ export const DemandDetailView = () => {
   }
 
   return (
-    <div className="flex flex-col gap-6">
-      <Link className={cn(buttonVariants({ size: "sm", variant: "ghost" }))} to="/demand">
+    <div className="flex flex-col gap-4">
+      <Link className={cn("self-start", buttonVariants({ size: "sm", variant: "ghost" }))} to="/demand">
         ← Demand
       </Link>
       <DemandDetailSummaryCard row={row} />

@@ -8,7 +8,7 @@ export const DriverDashboardView = () => {
   const upcoming = tasks?.filter((t) => t.status !== "Completed" && t.status !== "Delivered").slice(0, 6) ?? [];
 
   return (
-    <div className="flex flex-col gap-6">
+    <div className="flex flex-col gap-4">
       <div>
         <h1 className="text-2xl font-bold tracking-tight">My route</h1>
         <p className="text-muted-foreground">Next stop and assignments</p>
