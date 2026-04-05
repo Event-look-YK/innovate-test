@@ -18,7 +18,7 @@ const TanStackRouterDevtools = import.meta.env.PROD
 export interface RouterAppContext {}
 
 const RootDocument = () => (
-  <html lang="en" suppressHydrationWarning>
+  <html lang="en" suppressHydrationWarning className="scroll-smooth">
     <head>
       <HeadContent />
       <link
@@ -26,7 +26,7 @@ const RootDocument = () => (
         rel="stylesheet"
       />
     </head>
-    <body>
+    <body className="antialiased">
       <ThemeProvider>
         <QueryProvider>
           <TooltipProvider>
