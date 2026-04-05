@@ -9,6 +9,7 @@ import {
 } from "@innovate-test/ui/components/dialog";
 import { Field, FieldError, FieldGroup, FieldLabel } from "@innovate-test/ui/components/field";
 import { Input } from "@innovate-test/ui/components/input";
+import { PlusIcon } from "lucide-react";
 import {
   Select,
   SelectContent,
@@ -169,7 +170,7 @@ export const DemandFormDialog = ({ open, onOpenChange }: Props) => {
             <Button type="button" variant="outline" onClick={() => onOpenChange(false)}>
               Cancel
             </Button>
-            <Button disabled={createDemand.isPending} type="submit">
+            <Button disabled={createDemand.isPending} icon={<PlusIcon />} type="submit">
               {createDemand.isPending ? "Creating..." : "Create"}
             </Button>
           </DialogFooter>

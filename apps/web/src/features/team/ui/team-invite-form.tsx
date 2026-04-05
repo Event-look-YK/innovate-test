@@ -1,6 +1,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useNavigate } from "@tanstack/react-router";
 import { Button } from "@innovate-test/ui/components/button";
+import { PlusIcon } from "lucide-react";
 import { Field, FieldError, FieldLabel } from "@innovate-test/ui/components/field";
 import { Input } from "@innovate-test/ui/components/input";
 import {
@@ -71,7 +72,7 @@ export const TeamInviteForm = () => {
         </Field>
       </div>
       <div className="flex gap-2">
-        <Button disabled={inviteMutation.isPending} type="submit">
+        <Button disabled={inviteMutation.isPending} icon={<PlusIcon />} type="submit">
           {inviteMutation.isPending ? "Sending..." : "Send invite"}
         </Button>
         <Button type="button" variant="outline" onClick={() => navigate({ to: "/team" })}>

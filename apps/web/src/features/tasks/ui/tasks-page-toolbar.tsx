@@ -1,6 +1,6 @@
 import { Link } from "@tanstack/react-router";
-import { Button, buttonVariants } from "@innovate-test/ui/components/button";
-import { cn } from "@innovate-test/ui/lib/utils";
+import { Button } from "@innovate-test/ui/components/button";
+import { PlusIcon } from "lucide-react";
 
 type Props = {
   mode: "board" | "list";
@@ -33,9 +33,14 @@ export const TasksPageToolbar = ({ mode, onModeChange }: Props) => (
           List
         </Button>
       </div>
-      <Link className={cn(buttonVariants(), "min-h-10 w-full justify-center sm:w-auto")} to="/tasks/new">
+      <Button
+        className="min-h-10 w-full justify-center sm:w-auto"
+        icon={<PlusIcon />}
+        nativeButton={false}
+        render={<Link to="/tasks/new" />}
+      >
         New task
-      </Link>
+      </Button>
     </div>
   </div>
 );

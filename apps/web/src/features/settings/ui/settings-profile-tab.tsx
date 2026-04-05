@@ -1,4 +1,5 @@
 import { Button } from "@innovate-test/ui/components/button";
+import { SaveIcon } from "lucide-react";
 import { Field, FieldLabel } from "@innovate-test/ui/components/field";
 import { Input } from "@innovate-test/ui/components/input";
 import type { UseFormReturn } from "react-hook-form";
@@ -39,7 +40,7 @@ export const SettingsProfileTab = ({ form, userEmail, isSaving, onSubmit }: Prop
         <Input id="pf-phone" placeholder="+1 234 567 8900" {...form.register("phone")} />
       </Field>
     </div>
-    <Button className="w-fit" disabled={isSaving} type="submit">
+    <Button className="w-fit" disabled={isSaving} icon={<SaveIcon />} type="submit">
       {isSaving ? "Saving..." : "Save profile"}
     </Button>
   </form>

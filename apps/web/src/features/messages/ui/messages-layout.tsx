@@ -19,7 +19,7 @@ import {
   SelectValue,
 } from "@innovate-test/ui/components/select";
 import { cn } from "@innovate-test/ui/lib/utils";
-import { Plus } from "lucide-react";
+import { PlusIcon } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
 
@@ -64,7 +64,7 @@ export const MessagesLayout = () => {
         <h1 className="text-2xl font-bold tracking-tight">Messages</h1>
         <p className="text-sm text-muted-foreground">Team conversations</p>
       </div>
-      <div className="grid min-h-[480px] gap-0 overflow-hidden rounded-2xl border border-border/60 shadow-sm md:grid-cols-[280px_1fr]">
+      <div className="grid min-h-[480px] gap-0 overflow-hidden h-full rounded-2xl border border-border/60 shadow-sm md:grid-cols-[280px_1fr]">
         <ScrollArea className="border-border/60 md:border-r bg-muted/20">
           <div className="p-3">
             <div className="mb-2 flex items-center justify-between px-2">
@@ -72,13 +72,12 @@ export const MessagesLayout = () => {
                 Threads
               </p>
               <Button
+                className="h-6 w-6"
+                icon={<PlusIcon className="size-4" />}
                 size="icon"
                 variant="ghost"
-                className="h-6 w-6"
                 onClick={() => setDialogOpen(true)}
-              >
-                <Plus className="h-4 w-4" />
-              </Button>
+              />
             </div>
             <div className="flex flex-col gap-0.5">
               {threads?.map((t) => (
@@ -149,10 +148,7 @@ export const MessagesLayout = () => {
             >
               Cancel
             </Button>
-            <Button
-              loading={createThread.isPending}
-              onClick={handleCreate}
-            >
+            <Button icon={<PlusIcon />} loading={createThread.isPending} onClick={handleCreate}>
               Create
             </Button>
           </DialogFooter>

@@ -1,6 +1,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useNavigate } from "@tanstack/react-router";
 import { Button } from "@innovate-test/ui/components/button";
+import { PlusIcon } from "lucide-react";
 import { Field, FieldError, FieldLabel } from "@innovate-test/ui/components/field";
 import { Input } from "@innovate-test/ui/components/input";
 import {
@@ -164,7 +165,7 @@ export const TaskForm = () => {
         </Field>
       </div>
       <div className="flex gap-2">
-        <Button disabled={createTask.isPending} type="submit">
+        <Button disabled={createTask.isPending} icon={<PlusIcon />} type="submit">
           {createTask.isPending ? "Creating..." : "Create task"}
         </Button>
         <Button type="button" variant="outline" onClick={() => navigate({ to: "/tasks" })}>
