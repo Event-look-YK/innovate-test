@@ -19,7 +19,7 @@ import {
   SelectValue,
 } from "@innovate-test/ui/components/select";
 import { cn } from "@innovate-test/ui/lib/utils";
-import { PlusIcon } from "lucide-react";
+import { ChevronLeftIcon, PlusIcon } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
 
@@ -29,7 +29,8 @@ import type { MessageThreadType } from "@/shared/types/message";
 export const MessagesLayout = () => {
   const { data: threads } = useThreads();
   const pathname = useRouterState({ select: (s) => s.location.pathname });
-  const activeId = pathname.startsWith("/messages/") ? pathname.split("/messages/")[1]?.split("/")[0] : undefined;
+  const activeIdRaw = pathname.startsWith("/messages/") ? pathname.split("/messages/")[1]?.split("/")[0] : undefined;
+  const activeId = activeIdRaw?.length ? activeIdRaw : undefined;
 
   const navigate = useNavigate();
   const createThread = useCreateThread();
@@ -59,13 +60,19 @@ export const MessagesLayout = () => {
   };
 
   return (
-    <div className="flex flex-col gap-4">
-      <div>
+    <div className="flex min-h-0 flex-1 flex-col gap-4">
+      <div className="shrink-0">
         <h1 className="text-2xl font-bold tracking-tight">Messages</h1>
         <p className="text-sm text-muted-foreground">Team conversations</p>
       </div>
-      <div className="grid min-h-[480px] gap-0 overflow-hidden h-full rounded-2xl border border-border/60 shadow-sm md:grid-cols-[280px_1fr]">
-        <ScrollArea className="border-border/60 md:border-r bg-muted/20">
+      <div className="flex min-h-0 flex-1 flex-col overflow-hidden rounded-2xl border border-border/60 shadow-sm md:grid md:grid-cols-[280px_minmax(0,1fr)] md:grid-rows-1">
+        <ScrollArea
+          className={cn(
+            "h-full min-h-0 border-border/60 bg-muted/20 md:border-r",
+            "max-md:min-h-0 max-md:flex-1",
+            activeId && "max-md:hidden",
+          )}
+        >
           <div className="p-3">
             <div className="mb-2 flex items-center justify-between px-2">
               <p className="text-[10px] font-bold uppercase tracking-[0.15em] text-muted-foreground">
@@ -99,7 +106,26 @@ export const MessagesLayout = () => {
             </div>
           </div>
         </ScrollArea>
-        <Outlet />
+        <div
+          className={cn(
+            "flex h-full min-h-0 min-w-0 flex-col overflow-hidden bg-background",
+            activeId ? "max-md:flex-1" : "max-md:hidden",
+          )}
+        >
+          <div className="flex shrink-0 items-center gap-1 border-b border-border/60 px-1 md:hidden">
+            <Button
+              className="gap-1 text-muted-foreground"
+              icon={<ChevronLeftIcon />}
+              nativeButton={false}
+              render={<Link to="/messages" />}
+              size="sm"
+              variant="ghost"
+            >
+              Threads
+            </Button>
+          </div>
+          <Outlet />
+        </div>
       </div>
 
       <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
