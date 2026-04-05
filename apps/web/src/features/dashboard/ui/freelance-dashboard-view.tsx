@@ -13,7 +13,7 @@ export const FreelanceDashboardView = () => {
   ];
 
   return (
-    <div className="flex flex-col gap-6">
+    <div className="flex flex-col gap-4">
       <div>
         <h1 className="text-2xl font-bold tracking-tight">Offers near you</h1>
         <p className="text-muted-foreground">Freight matching</p>

@@ -18,8 +18,8 @@ export const RouteDetailView = () => {
   }
 
   return (
-    <div className="flex flex-col gap-6">
-      <Link className={cn(buttonVariants({ size: "sm", variant: "ghost" }))} to="/routes">
+    <div className="flex flex-col gap-4">
+      <Link className={cn("self-start", buttonVariants({ size: "sm", variant: "ghost" }))} to="/routes">
         ← Routes
       </Link>
       <h1 className="text-2xl font-semibold tracking-tight">

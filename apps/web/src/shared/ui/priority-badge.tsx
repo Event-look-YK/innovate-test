@@ -11,6 +11,7 @@ type Props = {
 export const PriorityBadge = ({ priority, className }: Props) => (
   <Badge
     className={cn(
+      "inline-flex h-6 items-center rounded-full px-2.5 text-[10px] font-bold tracking-wide",
       priority === "EMERGENCY" && "animate-pulse border-destructive bg-destructive text-destructive-foreground",
       priority === "HIGH" && "border-destructive/50 bg-destructive/15 text-destructive",
       priority === "MEDIUM" && "border-amber-500/40 bg-amber-500/15 text-amber-900 dark:text-amber-400",

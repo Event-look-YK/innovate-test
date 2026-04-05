@@ -1,10 +1,27 @@
 import "leaflet/dist/leaflet.css";
 
+import { useQuery } from "@tanstack/react-query";
 import L from "leaflet";
 import { MapContainer, Marker, Polyline, TileLayer, Tooltip } from "react-leaflet";
-import { useEffect, useRef } from "react";
+import { useEffect, useMemo, useRef } from "react";
 
 import type { RouteMapProps } from "./route-map";
+
+type OsrmRouteResponse = {
+  code: string;
+  routes?: { geometry: { coordinates: [number, number][] } }[];
+};
+
+const fetchDrivingRoute = async (latLngs: [number, number][]): Promise<[number, number][]> => {
+  if (latLngs.length < 2) return latLngs;
+  const path = latLngs.map(([lat, lng]) => `${lng},${lat}`).join(";");
+  const url = `https://router.project-osrm.org/route/v1/driving/${path}?overview=full&geometries=geojson`;
+  const res = await fetch(url);
+  if (!res.ok) throw new Error("routing failed");
+  const data = (await res.json()) as OsrmRouteResponse;
+  if (data.code !== "Ok" || !data.routes?.[0]?.geometry.coordinates.length) throw new Error("no route");
+  return data.routes[0].geometry.coordinates.map(([lng, lat]) => [lat, lng] as [number, number]);
+};
 
 const CITY_COORDS: Record<string, [number, number]> = {
   kyiv: [50.4501, 30.5234],
@@ -29,8 +46,33 @@ const CITY_COORDS: Record<string, [number, number]> = {
   kropyvnytskyi: [48.5079, 32.2623],
 };
 
+const UKRAINIAN_TO_CITY_KEY: Record<string, keyof typeof CITY_COORDS> = {
+  київ: "kyiv",
+  львів: "lviv",
+  одеса: "odesa",
+  умань: "uman",
+  житомир: "zhytomyr",
+  харків: "kharkiv",
+  дніпро: "dnipro",
+  запоріжжя: "zaporizhzhia",
+  вінниця: "vinnytsia",
+  полтава: "poltava",
+  чернігів: "chernihiv",
+  черкаси: "cherkasy",
+  суми: "sumy",
+  рівне: "rivne",
+  тернопіль: "ternopil",
+  луцьк: "lutsk",
+  івано_франківськ: "ivano_frankivsk",
+  ужгород: "uzhhorod",
+  миколаїв: "mykolaiv",
+  кропивницький: "kropyvnytskyi",
+};
+
 function resolveCoords(label: string): [number, number] | null {
   const key = label.trim().toLowerCase().replace(/[-\s]/g, "_");
+  const fromUk = UKRAINIAN_TO_CITY_KEY[key];
+  if (fromUk) return CITY_COORDS[fromUk];
   if (CITY_COORDS[key]) return CITY_COORDS[key];
   for (const [k, v] of Object.entries(CITY_COORDS)) {
     if (key.includes(k) || k.includes(key)) return v;
@@ -49,19 +91,25 @@ const markerIcon = new L.Icon({
 
 type Point = { label: string; coords: [number, number] };
 
-function FitBounds({ points }: { points: Point[] }) {
+type FitBoundsProps = {
+  points: Point[];
+  linePositions: [number, number][];
+  isRoadGeometry: boolean;
+};
+
+function FitBounds({ points, linePositions, isRoadGeometry }: FitBoundsProps) {
   const mapRef = useRef<L.Map | null>(null);
 
   useEffect(() => {
-    if (!mapRef.current || points.length === 0) return;
-    const bounds = L.latLngBounds(points.map((p) => p.coords));
+    if (!mapRef.current || linePositions.length === 0) return;
+    const bounds = L.latLngBounds(linePositions);
     mapRef.current.fitBounds(bounds, { padding: [40, 40], maxZoom: 10 });
-  }, [points]);
+  }, [linePositions]);
 
   return (
     <MapContainer
       ref={mapRef}
-      className="size-full rounded-xl"
+      className="z-0 size-full rounded-xl"
       center={points[0]?.coords ?? [49.0, 31.0]}
       zoom={6}
       scrollWheelZoom={false}
@@ -78,10 +126,14 @@ function FitBounds({ points }: { points: Point[] }) {
           </Tooltip>
         </Marker>
       ))}
-      {points.length > 1 && (
+      {linePositions.length > 1 && (
         <Polyline
-          positions={points.map((p) => p.coords)}
-          pathOptions={{ color: "#3b82f6", weight: 3, dashArray: "8 6" }}
+          positions={linePositions}
+          pathOptions={{
+            color: "#3b82f6",
+            weight: 3,
+            ...(isRoadGeometry ? {} : { dashArray: "8 6" }),
+          }}
         />
       )}
     </MapContainer>
@@ -89,9 +141,31 @@ function FitBounds({ points }: { points: Point[] }) {
 }
 
 export default function RouteMapClient({ locations, className }: RouteMapProps) {
-  const points: Point[] = locations
-    .map((l) => ({ label: l, coords: resolveCoords(l) }))
-    .filter((p): p is Point => p.coords !== null);
+  const points = useMemo(
+    () =>
+      locations
+        .map((l) => ({ label: l, coords: resolveCoords(l) }))
+        .filter((p): p is Point => p.coords !== null),
+    [locations],
+  );
+
+  const waypointKey = useMemo(
+    () => points.map((p) => `${p.coords[0].toFixed(5)},${p.coords[1].toFixed(5)}`).join("|"),
+    [points],
+  );
+
+  const straightLine = useMemo(() => points.map((p) => p.coords), [points]);
+
+  const { data: roadLine } = useQuery({
+    queryKey: ["osrm-driving-route", waypointKey],
+    queryFn: () => fetchDrivingRoute(points.map((p) => p.coords)),
+    enabled: points.length >= 2,
+    staleTime: 60 * 60 * 1000,
+    retry: 1,
+  });
+
+  const linePositions = roadLine ?? straightLine;
+  const isRoadGeometry = Boolean(roadLine);
 
   if (points.length === 0) {
     return (
@@ -103,7 +177,7 @@ export default function RouteMapClient({ locations, className }: RouteMapProps) 
 
   return (
     <div className={className ?? "min-h-[240px]"}>
-      <FitBounds points={points} />
+      <FitBounds points={points} linePositions={linePositions} isRoadGeometry={isRoadGeometry} />
     </div>
   );
 }

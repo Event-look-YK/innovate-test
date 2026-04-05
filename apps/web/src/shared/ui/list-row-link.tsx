@@ -1,5 +1,5 @@
 import { Link } from "@tanstack/react-router";
-import { ChevronRightIcon } from "lucide-react";
+import { ChevronRightIcon, TruckIcon } from "lucide-react";
 import type { ComponentProps, ReactNode } from "react";
 
 import { cn } from "@innovate-test/ui/lib/utils";
@@ -8,7 +8,6 @@ type Props = {
   to: string;
   routeParams?: Record<string, string | undefined>;
   search?: Record<string, unknown>;
-  leading?: ReactNode;
   title: ReactNode;
   subtitle?: ReactNode;
   badges?: ReactNode;
@@ -20,7 +19,6 @@ export const ListRowLink = ({
   to,
   routeParams,
   search,
-  leading,
   title,
   subtitle,
   badges,
@@ -37,7 +35,12 @@ export const ListRowLink = ({
     )}
     {...({ params: routeParams, search, to } as ComponentProps<typeof Link>)}
   >
-    {leading ? <div className="shrink-0 pt-0.5">{leading}</div> : null}
+    <div className="flex size-11 items-center justify-center rounded-xl bg-primary/10 text-sm font-bold text-primary">
+      <TruckIcon
+        className="size-5 shrink-0 text-muted-foreground/45"
+        aria-hidden
+      />
+    </div>
     <div className="flex min-w-0 flex-1 flex-col gap-1">
       <div className="flex flex-wrap items-center gap-x-2 gap-y-1">
         <span className="font-medium text-foreground">{title}</span>
@@ -59,14 +62,19 @@ type StaticProps = {
   className?: string;
 };
 
-export const ListRowCard = ({ leading, title, subtitle, badges, footer, className }: StaticProps) => (
+export const ListRowCard = ({ title, subtitle, badges, footer, className }: StaticProps) => (
   <div
     className={cn(
       "flex min-h-14 items-start gap-3 rounded-xl border border-border/60 bg-card p-3 shadow-sm",
       className,
     )}
   >
-    {leading ? <div className="shrink-0 pt-0.5">{leading}</div> : null}
+    <div className="flex size-11 items-center justify-center rounded-xl bg-primary/10 text-sm font-bold text-primary">
+      <TruckIcon
+        className="size-5 shrink-0 text-muted-foreground/45"
+        aria-hidden
+      />
+    </div>
     <div className="flex min-w-0 flex-1 flex-col gap-1">
       <div className="flex flex-wrap items-center gap-x-2 gap-y-1">
         <span className="font-medium text-foreground">{title}</span>

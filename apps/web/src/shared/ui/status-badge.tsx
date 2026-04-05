@@ -19,7 +19,7 @@ const statusStyles: Record<string, string> = {
 export const StatusBadge = ({ status, className }: Props) => (
   <span
     className={cn(
-      "inline-flex items-center rounded-full px-2.5 py-0.5 text-[10px] font-bold tracking-wide ring-1",
+      "inline-flex h-6 items-center rounded-full px-2.5 text-[10px] font-bold tracking-wide ring-1",
       statusStyles[status] ?? "bg-muted text-muted-foreground ring-border",
       className,
     )}

@@ -16,6 +16,8 @@ import { demandRequest } from "./schema/demand";
 import { freightOffer } from "./schema/offer";
 import { thread, threadParticipant, message } from "./schema/message";
 import { teamInvite } from "./schema/team-invite";
+import { routeOffer } from "./schema/route-offer";
+import { notification } from "./schema/notification";
 
 const db = drizzle(process.env.DATABASE_URL!, { schema });
 const id = () => randomUUID();
@@ -128,6 +130,7 @@ async function main() {
     await tx.delete(threadParticipant);
     await tx.delete(thread);
     await tx.delete(freightOffer);
+    await tx.delete(routeOffer);
     await tx.delete(routePlanTask);
     await tx.delete(routeStop);
     await tx.delete(routePlan);
@@ -136,6 +139,7 @@ async function main() {
     await tx.delete(truck);
     await tx.delete(teamInvite);
     await tx.delete(userProfile);
+    await tx.delete(notification);
     await tx.delete(session);
     await tx.delete(account);
     await tx.delete(verification);

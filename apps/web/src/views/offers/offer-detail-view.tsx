@@ -17,7 +17,7 @@ export const OfferDetailView = () => {
 
   if (isPending) {
     return (
-      <div className="flex flex-col gap-6">
+      <div className="flex flex-col gap-4">
         <Skeleton className="h-8 w-48" />
         <Skeleton className="h-40 w-full rounded-xl" />
       </div>
@@ -29,7 +29,7 @@ export const OfferDetailView = () => {
   }
 
   return (
-    <div className="flex flex-col gap-6">
+    <div className="flex flex-col gap-4">
       <Link className={cn(buttonVariants({ size: "sm", variant: "ghost" }))} to="/offers">
         ← Маркетплейс
       </Link>
