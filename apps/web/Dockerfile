@@ -19,17 +19,16 @@ COPY apps/web/ ./apps/web/
 
 ARG VITE_SERVER_URL
 ENV VITE_SERVER_URL=${VITE_SERVER_URL}
+ENV NITRO_PRESET=node-server
 
 RUN pnpm --filter=web build
-RUN pnpm --filter=web deploy --prod --legacy /standalone
-RUN cp -r apps/web/dist /standalone/dist
 
 FROM node:22-alpine AS runner
 WORKDIR /app
 
-COPY --from=builder /standalone ./
+COPY --from=builder /repo/apps/web/.output ./
 
 ENV PORT=3001
 EXPOSE 3001
 
-CMD ["node", "dist/server/server.js"]
+CMD ["node", "server/index.mjs"]
