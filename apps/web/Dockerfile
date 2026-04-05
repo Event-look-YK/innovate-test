@@ -25,9 +25,9 @@ RUN pnpm --filter=web build
 FROM node:22-alpine AS runner
 WORKDIR /app
 
-COPY --from=builder /repo/apps/web/.output ./
+COPY --from=builder /repo/apps/web/dist ./
 
 ENV PORT=3001
 EXPOSE 3001
 
-CMD ["node", "server/index.mjs"]
+CMD ["node", "server/server.js"]
