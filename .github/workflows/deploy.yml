@@ -49,6 +49,26 @@ jobs:
           docker compose -f compose.yaml build server
           docker compose -f compose.yaml push server
 
+      - name: Set secrets on server container app
+        run: |
+          SERVER_FQDN=$(az containerapp show \
+            --name ${{ secrets.SERVER_APP_NAME }} \
+            --resource-group ${{ secrets.AZURE_RESOURCE_GROUP }} \
+            --query 'properties.configuration.ingress.fqdn' --output tsv)
+          WEB_FQDN=$(az containerapp show \
+            --name ${{ secrets.WEB_APP_NAME }} \
+            --resource-group ${{ secrets.AZURE_RESOURCE_GROUP }} \
+            --query 'properties.configuration.ingress.fqdn' --output tsv)
+          az containerapp secret set \
+            --name ${{ secrets.SERVER_APP_NAME }} \
+            --resource-group ${{ secrets.AZURE_RESOURCE_GROUP }} \
+            --secrets \
+              database-url="${{ secrets.DATABASE_URL }}" \
+              better-auth-secret="${{ secrets.BETTER_AUTH_SECRET }}" \
+              better-auth-url="https://${SERVER_FQDN}" \
+              cors-origin="https://${WEB_FQDN}" \
+              gemini-api-key="${{ secrets.GEMINI_API_KEY }}"
+
       - name: Deploy server container app
         run: |
           az containerapp update \
@@ -62,34 +82,6 @@ jobs:
               CORS_ORIGIN=secretref:cors-origin \
               GEMINI_API_KEY=secretref:gemini-api-key \
               NODE_ENV=production
-
-      - name: Set secrets on server container app
-        run: |
-          az containerapp secret set \
-            --name ${{ secrets.SERVER_APP_NAME }} \
-            --resource-group ${{ secrets.AZURE_RESOURCE_GROUP }} \
-            --secrets \
-              database-url="${{ secrets.DATABASE_URL }}" \
-              better-auth-secret="${{ secrets.BETTER_AUTH_SECRET }}" \
-              better-auth-url="https://$(az containerapp show \
-                --name ${{ secrets.SERVER_APP_NAME }} \
-                --resource-group ${{ secrets.AZURE_RESOURCE_GROUP }} \
-                --query 'properties.configuration.ingress.fqdn' --output tsv)" \
-              cors-origin="https://$(az containerapp show \
-                --name ${{ secrets.WEB_APP_NAME }} \
-                --resource-group ${{ secrets.AZURE_RESOURCE_GROUP }} \
-                --query 'properties.configuration.ingress.fqdn' --output tsv)" \
-              gemini-api-key="${{ secrets.GEMINI_API_KEY }}"
-
-      - name: Restart server to pick up new secrets
-        run: |
-          az containerapp revision restart \
-            --name ${{ secrets.SERVER_APP_NAME }} \
-            --resource-group ${{ secrets.AZURE_RESOURCE_GROUP }} \
-            --revision $(az containerapp revision list \
-              --name ${{ secrets.SERVER_APP_NAME }} \
-              --resource-group ${{ secrets.AZURE_RESOURCE_GROUP }} \
-              --query '[0].name' --output tsv)
 
       - name: Get server FQDN
         id: get-fqdn
