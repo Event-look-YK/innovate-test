@@ -1,8 +1,7 @@
 import { Link } from "@tanstack/react-router";
-import { buttonVariants } from "@innovate-test/ui/components/button";
+import { Button } from "@innovate-test/ui/components/button";
 import { Skeleton } from "@innovate-test/ui/components/skeleton";
-import { cn } from "@innovate-test/ui/lib/utils";
-import { RouteIcon } from "lucide-react";
+import { RouteIcon, SparklesIcon } from "lucide-react";
 
 export const RoutesListLoading = () => (
   <div className="flex flex-col gap-2">
@@ -30,8 +29,8 @@ export const RoutesListEmpty = () => (
         Create a plan to assign stops and distances to your trucks.
       </p>
     </div>
-    <Link className={cn(buttonVariants(), "mt-2")} to="/routes/generate">
+    <Button className="mt-2" icon={<SparklesIcon size={10} />} nativeButton={false} render={<Link to="/routes/generate" />}>
       Generate route
-    </Link>
+    </Button>
   </div>
 );

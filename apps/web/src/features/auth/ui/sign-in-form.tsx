@@ -46,12 +46,7 @@ export const SignInForm = () => {
 
   return (
     <Card className="border-border/60 shadow-xl shadow-primary/8 overflow-hidden">
-      <div
-        aria-hidden
-        className="h-1 w-full"
-        style={{ background: "linear-gradient(90deg, oklch(0.540 0.200 267), oklch(0.580 0.200 300))" }}
-      />
-      <CardHeader className="flex flex-col gap-1 pb-2 pt-6">
+      <CardHeader className="flex flex-col gap-1">
         <CardTitle className="text-2xl font-bold tracking-tight">Welcome back</CardTitle>
         <CardDescription className="text-muted-foreground">Sign in to your logistics workspace</CardDescription>
       </CardHeader>

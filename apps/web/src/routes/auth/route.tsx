@@ -1,5 +1,4 @@
 import { Outlet, createFileRoute, Link } from "@tanstack/react-router";
-import { TruckIcon } from "lucide-react";
 
 export const Route = createFileRoute("/auth")({
   component: AuthLayout,
@@ -28,13 +27,11 @@ function AuthLayout() {
         }}
       />
 
-      <div className="relative z-10 flex w-full max-w-md flex-col items-center gap-8">
+      <div className="relative z-10 flex w-full max-w-xl flex-col items-center gap-8">
         <Link to="/" className="flex flex-col items-center gap-3 text-center">
           <div className="relative">
             <div className="absolute inset-0 rounded-2xl bg-primary/20 blur-xl" />
-            <div className="relative flex size-14 items-center justify-center rounded-2xl bg-primary/10 text-primary ring-2 ring-primary/25 shadow-lg shadow-primary/10">
-              <TruckIcon className="size-7" />
-            </div>
+            <img src="/favicon.svg" alt="Innovate Logistics" className="size-16" />
           </div>
           <div className="flex flex-col gap-0.5">
             <h1 className="text-xl font-bold tracking-tight">Innovate Logistics</h1>
