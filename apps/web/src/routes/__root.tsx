@@ -1,11 +1,19 @@
 import { Toaster } from "@innovate-test/ui/components/sonner";
 import { TooltipProvider } from "@innovate-test/ui/components/tooltip";
 import { HeadContent, Outlet, Scripts, createRootRouteWithContext } from "@tanstack/react-router";
-import { TanStackRouterDevtools } from "@tanstack/react-router-devtools";
+import { lazy } from "react";
 
 import appCss from "../index.css?url";
 import { QueryProvider } from "@/shared/providers/query-provider";
 import { ThemeProvider } from "@/shared/providers/theme-provider";
+
+const TanStackRouterDevtools = import.meta.env.PROD
+  ? () => null
+  : lazy(() =>
+      import("@tanstack/react-router-devtools").then((m) => ({
+        default: m.TanStackRouterDevtools,
+      })),
+    );
 
 export interface RouterAppContext {}
 

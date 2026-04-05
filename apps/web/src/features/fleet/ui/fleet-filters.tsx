@@ -9,6 +9,21 @@ import {
 } from "@innovate-test/ui/components/select";
 import type { TruckStatus, TruckType } from "@/shared/types/truck";
 
+const typeFilterLabels: Record<TruckType | "all", string> = {
+  all: "All types",
+  Truck: "Truck",
+  Semi: "Semi",
+  Refrigerated: "Refrigerated",
+  Flatbed: "Flatbed",
+};
+
+const statusFilterLabels: Record<TruckStatus | "all", string> = {
+  all: "All statuses",
+  idle: "Idle",
+  on_road: "On road",
+  maintenance: "Maintenance",
+};
+
 type Props = {
   q: string;
   onQChange: (value: string) => void;
@@ -35,7 +50,9 @@ export const FleetFilters = ({
     />
     <Select onValueChange={(v) => onTypeFilterChange(v as TruckType | "all")} value={typeFilter}>
       <SelectTrigger className="w-full sm:w-[min(100%,11.25rem)]">
-        <SelectValue placeholder="Type" />
+        <SelectValue placeholder="Type">
+          {(value: string | null) => (value ? typeFilterLabels[value as TruckType | "all"] ?? value : null)}
+        </SelectValue>
       </SelectTrigger>
       <SelectContent>
         <SelectGroup>
@@ -52,7 +69,10 @@ export const FleetFilters = ({
       value={statusFilter}
     >
       <SelectTrigger className="w-full sm:w-[min(100%,11.25rem)]">
-        <SelectValue placeholder="Status" />
+        <SelectValue placeholder="Status">
+          {(value: string | null) =>
+            value ? statusFilterLabels[value as TruckStatus | "all"] ?? value : null}
+        </SelectValue>
       </SelectTrigger>
       <SelectContent>
         <SelectGroup>

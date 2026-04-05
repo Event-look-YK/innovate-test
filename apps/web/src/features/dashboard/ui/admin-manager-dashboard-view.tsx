@@ -117,7 +117,7 @@ export const AdminManagerDashboardView = () => {
       <div className="grid gap-4 md:grid-cols-3">
 
         <Card className="overflow-hidden border-border/60 shadow-sm hover:shadow-md transition-shadow">
-          <CardContent className="pb-5 pt-6">
+          <CardContent>
             <div className="flex items-center justify-between mb-3">
               <p className="text-[10px] font-bold uppercase tracking-[0.15em] text-muted-foreground">
                 Fleet utilization
@@ -163,7 +163,7 @@ export const AdminManagerDashboardView = () => {
         </Card>
 
         <Card className="overflow-hidden border-border/60 shadow-sm hover:shadow-md transition-shadow">
-          <CardContent className="pb-5 pt-6">
+          <CardContent>
             <div className="flex items-center justify-between mb-3">
               <p className="text-[10px] font-bold uppercase tracking-[0.15em] text-muted-foreground">
                 Active tasks
@@ -191,7 +191,7 @@ export const AdminManagerDashboardView = () => {
         </Card>
 
         <Card className="overflow-hidden border-border/60 shadow-sm hover:shadow-md transition-shadow">
-          <CardContent className="pb-5 pt-6">
+          <CardContent>
             <div className="flex items-center justify-between mb-3">
               <p className="text-[10px] font-bold uppercase tracking-[0.15em] text-muted-foreground">
                 Route efficiency
@@ -231,7 +231,7 @@ export const AdminManagerDashboardView = () => {
       <div className="grid gap-4 lg:grid-cols-[1fr_268px]">
 
         <Card className="border-border/60 shadow-sm">
-          <CardHeader className="pb-3">
+          <CardHeader>
             <div className="flex items-center gap-2.5">
               <div className="h-4 w-0.5 rounded-full bg-primary" />
               <CardTitle className="text-sm font-semibold">Recent activity</CardTitle>
@@ -296,7 +296,7 @@ export const AdminManagerDashboardView = () => {
         <div className="flex flex-col gap-3">
 
           <Card className="overflow-hidden border-l-4 border-l-amber-400 border-border/60 shadow-sm">
-            <CardContent className="py-4">
+            <CardContent>
               <div className="flex items-start gap-3">
                 <div className="flex size-9 shrink-0 items-center justify-center rounded-xl bg-amber-50 ring-1 ring-amber-100">
                   <PackageIcon className="size-4 text-amber-600" />
@@ -310,8 +310,8 @@ export const AdminManagerDashboardView = () => {
           </Card>
 
           <Card className="border-border/60 shadow-sm">
-            <CardContent className="flex flex-col gap-0.5 pb-3 pt-4">
-              <p className="mb-2 px-3 text-[10px] font-bold uppercase tracking-[0.15em] text-muted-foreground">
+            <CardContent className="flex flex-col gap-0.5">
+              <p className="mb-2 text-[10px] font-bold uppercase tracking-[0.15em] text-muted-foreground">
                 Quick actions
               </p>
               {QUICK_ACTIONS.map(({ to, icon: Icon, label, color }) => (
@@ -319,7 +319,7 @@ export const AdminManagerDashboardView = () => {
                   key={to}
                   className={cn(
                     buttonVariants({ variant: "ghost" }),
-                    "h-9 justify-start gap-3 rounded-lg px-3 text-sm",
+                    "h-9 justify-start gap-3 rounded-lg text-sm px-0",
                   )}
                   to={to}
                 >
