@@ -18,9 +18,6 @@ jobs:
     name: Server — build, push & deploy
     runs-on: ubuntu-latest
 
-    outputs:
-      server_fqdn: ${{ steps.get-fqdn.outputs.fqdn }}
-
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -83,16 +80,6 @@ jobs:
               GEMINI_API_KEY=secretref:gemini-api-key \
               NODE_ENV=production
 
-      - name: Get server FQDN
-        id: get-fqdn
-        run: |
-          FQDN=$(az containerapp show \
-            --name ${{ secrets.SERVER_APP_NAME }} \
-            --resource-group ${{ secrets.AZURE_RESOURCE_GROUP }} \
-            --query "properties.configuration.ingress.fqdn" \
-            --output tsv)
-          echo "fqdn=${FQDN}" >> "$GITHUB_OUTPUT"
-
   build-push-web:
     name: Web — build, push & deploy
     runs-on: ubuntu-latest
@@ -116,13 +103,17 @@ jobs:
         env:
           ACR_NAME: ${{ secrets.ACR_NAME }}
           TAG: ${{ github.sha }}
-          VITE_SERVER_URL: https://${{ needs.build-push-server.outputs.server_fqdn }}
           DATABASE_URL: placeholder
           BETTER_AUTH_SECRET: placeholder-secret-at-least-32-chars-long
           BETTER_AUTH_URL: https://placeholder.example.com
           CORS_ORIGIN: https://placeholder.example.com
           GEMINI_API_KEY: placeholder
         run: |
+          SERVER_FQDN=$(az containerapp show \
+            --name ${{ secrets.SERVER_APP_NAME }} \
+            --resource-group ${{ secrets.AZURE_RESOURCE_GROUP }} \
+            --query 'properties.configuration.ingress.fqdn' --output tsv)
+          export VITE_SERVER_URL="https://${SERVER_FQDN}"
           docker compose -f compose.yaml build web
           docker compose -f compose.yaml push web
 
@@ -141,11 +132,13 @@ jobs:
 
       - name: Print deployed URLs
         run: |
-          SERVER_URL="https://${{ needs.build-push-server.outputs.server_fqdn }}"
-          WEB_URL="https://$(az containerapp show \
+          SERVER_FQDN=$(az containerapp show \
+            --name ${{ secrets.SERVER_APP_NAME }} \
+            --resource-group ${{ secrets.AZURE_RESOURCE_GROUP }} \
+            --query 'properties.configuration.ingress.fqdn' --output tsv)
+          WEB_FQDN=$(az containerapp show \
             --name ${{ secrets.WEB_APP_NAME }} \
             --resource-group ${{ secrets.AZURE_RESOURCE_GROUP }} \
-            --query 'properties.configuration.ingress.fqdn' \
-            --output tsv)"
-          echo "Server: ${SERVER_URL}"
-          echo "Web:    ${WEB_URL}"
+            --query 'properties.configuration.ingress.fqdn' --output tsv)
+          echo "Server: https://${SERVER_FQDN}"
+          echo "Web:    https://${WEB_FQDN}"
