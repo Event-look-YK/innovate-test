@@ -18,8 +18,8 @@ COPY packages/ ./packages/
 COPY apps/server/ ./apps/server/
 
 RUN pnpm --filter=server build
-
 RUN pnpm --filter=server deploy --prod --legacy /standalone
+RUN cp -r apps/server/dist /standalone/dist
 
 FROM node:22-alpine AS runner
 WORKDIR /app
