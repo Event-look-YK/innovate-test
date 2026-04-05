@@ -1,5 +1,10 @@
 # innovate-test
 
+## Deployment
+
+- Web: https://web.calmdune-1a76a269.eastus.azurecontainerapps.io/
+- Server: https://server.calmdune-1a76a269.eastus.azurecontainerapps.io/api/docs
+
 This project was created with [Better-T-Stack](https://github.com/AmanVarshney01/create-better-t-stack), a modern TypeScript stack that combines React, TanStack Start, Fastify, and more.
 
 ## Features
