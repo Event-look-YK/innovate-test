@@ -33,8 +33,8 @@ export const MessagesThreadPanel = ({ threadId, messages }: Props) => {
   };
 
   return (
-    <div className="flex flex-col">
-      <ScrollArea className="h-[min(420px,50vh)] p-4 md:h-auto md:max-h-[calc(100vh-220px)]">
+    <div className="flex min-h-0 flex-1 flex-col">
+      <ScrollArea className="min-h-0 flex-1 p-4">
         <div className="flex flex-col gap-3">
           {messages?.map((m) => (
             <div

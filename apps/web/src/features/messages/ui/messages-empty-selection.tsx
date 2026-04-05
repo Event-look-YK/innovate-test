@@ -7,7 +7,9 @@ export const MessagesEmptySelection = () => (
     </div>
     <div>
       <p className="font-semibold text-foreground">Select a thread</p>
-      <p className="mt-0.5 text-sm text-muted-foreground">Choose a conversation from the left to view messages.</p>
+      <p className="mt-0.5 text-sm text-muted-foreground">
+        Pick a conversation in the list to read and send messages.
+      </p>
     </div>
   </div>
 );
