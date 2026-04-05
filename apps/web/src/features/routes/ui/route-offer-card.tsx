@@ -1,4 +1,5 @@
 import { Button } from "@innovate-test/ui/components/button";
+import { PlusIcon } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@innovate-test/ui/components/card";
 import { toast } from "sonner";
 
@@ -40,7 +41,12 @@ export const RouteOfferCard = ({ routeId }: Props) => {
       </CardHeader>
       <CardContent className="flex flex-col gap-3">
         {!offer && (
-          <Button disabled={createOffer.isPending} type="button" onClick={handleCreate}>
+          <Button
+            disabled={createOffer.isPending}
+            icon={<PlusIcon />}
+            type="button"
+            onClick={handleCreate}
+          >
             {createOffer.isPending ? "..." : "Запропонувати фрілансерам"}
           </Button>
         )}
@@ -83,7 +89,12 @@ export const RouteOfferCard = ({ routeId }: Props) => {
             <span className="inline-flex w-fit items-center rounded-full bg-slate-50 px-2.5 py-0.5 text-xs font-bold text-slate-600 ring-1 ring-slate-200">
               Скасовано
             </span>
-            <Button disabled={createOffer.isPending} type="button" onClick={handleCreate}>
+            <Button
+              disabled={createOffer.isPending}
+              icon={<PlusIcon />}
+              type="button"
+              onClick={handleCreate}
+            >
               {createOffer.isPending ? "..." : "Запропонувати знову"}
             </Button>
           </>

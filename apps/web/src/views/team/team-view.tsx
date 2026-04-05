@@ -1,6 +1,6 @@
 import { Link } from "@tanstack/react-router";
-import { buttonVariants } from "@innovate-test/ui/components/button";
-import { cn } from "@innovate-test/ui/lib/utils";
+import { Button } from "@innovate-test/ui/components/button";
+import { UserPlusIcon } from "lucide-react";
 
 import { useTeam } from "@/features/team/hooks/use-team";
 import { TeamListEmpty, TeamListLoading } from "@/features/team/ui/team-list-states";
@@ -16,9 +16,14 @@ export const TeamView = () => {
           <h1 className="text-2xl font-bold tracking-tight">Team</h1>
           <p className="text-sm text-muted-foreground">Members and invites</p>
         </div>
-        <Link className={cn(buttonVariants(), "w-full shrink-0 sm:w-auto")} to="/team/invite">
+        <Button
+          className="w-full shrink-0 sm:w-auto"
+          icon={<UserPlusIcon />}
+          nativeButton={false}
+          render={<Link to="/team/invite" />}
+        >
           Invite
-        </Link>
+        </Button>
       </div>
 
       {isPending ? (

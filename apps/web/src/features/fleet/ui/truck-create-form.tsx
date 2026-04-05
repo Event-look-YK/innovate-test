@@ -1,6 +1,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useNavigate } from "@tanstack/react-router";
 import { Button } from "@innovate-test/ui/components/button";
+import { SaveIcon } from "lucide-react";
 import { Field, FieldError, FieldGroup, FieldLabel } from "@innovate-test/ui/components/field";
 import { Input } from "@innovate-test/ui/components/input";
 import {
@@ -91,7 +92,7 @@ export const TruckCreateForm = () => {
         </Field>
       </FieldGroup>
       <div className="flex gap-2">
-        <Button disabled={createTruck.isPending} type="submit">
+        <Button disabled={createTruck.isPending} icon={<SaveIcon />} type="submit">
           {createTruck.isPending ? "Saving..." : "Save truck"}
         </Button>
         <Button type="button" variant="outline" onClick={() => void navigate({ to: "/fleet" })}>

@@ -1,5 +1,6 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Button } from "@innovate-test/ui/components/button";
+import { SaveIcon } from "lucide-react";
 import {
   Dialog,
   DialogContent,
@@ -126,7 +127,7 @@ export const TruckEditDialog = ({ open, onOpenChange, truck }: Props) => {
             <Button type="button" variant="outline" onClick={() => onOpenChange(false)}>
               Cancel
             </Button>
-            <Button disabled={updateTruck.isPending} type="submit">
+            <Button disabled={updateTruck.isPending} icon={<SaveIcon />} type="submit">
               {updateTruck.isPending ? "Saving..." : "Save"}
             </Button>
           </DialogFooter>

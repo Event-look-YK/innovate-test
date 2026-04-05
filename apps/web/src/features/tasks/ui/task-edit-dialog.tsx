@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Button } from "@innovate-test/ui/components/button";
+import { SaveIcon } from "lucide-react";
 import {
   Dialog,
   DialogContent,
@@ -203,7 +204,7 @@ export const TaskEditDialog = ({ task, open, onOpenChange }: Props) => {
             <Button type="button" variant="outline" onClick={() => onOpenChange(false)}>
               Cancel
             </Button>
-            <Button disabled={updateTask.isPending} type="submit">
+            <Button disabled={updateTask.isPending} icon={<SaveIcon />} type="submit">
               {updateTask.isPending ? "Saving..." : "Save changes"}
             </Button>
           </DialogFooter>

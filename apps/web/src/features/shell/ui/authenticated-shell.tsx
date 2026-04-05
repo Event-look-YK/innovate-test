@@ -12,7 +12,6 @@ import { AppSidebar } from "@/features/shell/ui/app-sidebar";
 import { filterNavByRole, NAV_ITEMS } from "@/shared/lib/nav-config";
 import { useCurrentUser } from "@/shared/hooks/use-current-user";
 import { ConnectivityBadge } from "@/shared/ui/connectivity-badge";
-import { DevRoleToolbar } from "@/shared/ui/dev-role-toolbar";
 
 const useActiveNavItem = () => {
   const pathname = useRouterState({ select: (s) => s.location.pathname });
@@ -41,7 +40,7 @@ export const AuthenticatedShell = () => {
         <SidebarInset className="min-h-0 flex-1 overflow-hidden">
           <header className="flex h-14 shrink-0 items-center gap-3 border-b border-border/60 px-4 bg-background/80 backdrop-blur-sm">
             <SidebarTrigger className="-ml-1 text-muted-foreground hover:text-foreground transition-colors" />
-            <Separator className="h-5 opacity-40" orientation="vertical" />
+            <Separator className="h-2/3 opacity-40" orientation="vertical" />
 
             {activeItem && (
               <div className="flex items-center gap-2.5">

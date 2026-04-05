@@ -5,8 +5,8 @@ import { FleetFilters } from "@/features/fleet/ui/fleet-filters";
 import { FleetListEmpty, FleetListLoading } from "@/features/fleet/ui/fleet-list-states";
 import { FleetTruckRow } from "@/features/fleet/ui/fleet-truck-row";
 import { useFleet } from "@/features/fleet/hooks/use-fleet";
-import { buttonVariants } from "@innovate-test/ui/components/button";
-import { cn } from "@innovate-test/ui/lib/utils";
+import { Button } from "@innovate-test/ui/components/button";
+import { PlusIcon } from "lucide-react";
 import type { TruckStatus, TruckType } from "@/shared/types/truck";
 
 export const FleetView = () => {
@@ -32,9 +32,14 @@ export const FleetView = () => {
           <h1 className="text-2xl font-bold tracking-tight">Fleet</h1>
           <p className="text-sm text-muted-foreground">Trucks and trailers</p>
         </div>
-        <Link className={cn(buttonVariants(), "w-full shrink-0 sm:w-auto")} to="/fleet/new">
+        <Button
+          className="w-full shrink-0 sm:w-auto"
+          icon={<PlusIcon />}
+          nativeButton={false}
+          render={<Link to="/fleet/new" />}
+        >
           Add truck
-        </Link>
+        </Button>
       </div>
 
       <FleetFilters
