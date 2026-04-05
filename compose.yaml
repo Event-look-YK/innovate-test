@@ -1,0 +1,27 @@
+services:
+  server:
+    build:
+      context: .
+      dockerfile: apps/server/Dockerfile
+    image: ${ACR_NAME}.azurecr.io/server:${TAG:-latest}
+    ports:
+      - "3000:3000"
+    environment:
+      DATABASE_URL: ${DATABASE_URL}
+      BETTER_AUTH_SECRET: ${BETTER_AUTH_SECRET}
+      BETTER_AUTH_URL: ${BETTER_AUTH_URL}
+      CORS_ORIGIN: ${CORS_ORIGIN}
+      GEMINI_API_KEY: ${GEMINI_API_KEY}
+      NODE_ENV: production
+
+  web:
+    build:
+      context: .
+      dockerfile: apps/web/Dockerfile
+      args:
+        VITE_SERVER_URL: ${VITE_SERVER_URL}
+    image: ${ACR_NAME}.azurecr.io/web:${TAG:-latest}
+    ports:
+      - "3001:3001"
+    depends_on:
+      - server

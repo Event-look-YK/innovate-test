@@ -1,0 +1,17 @@
+services:
+  server:
+    image: ${ACR_NAME}.azurecr.io/server:${TAG:-placeholder}
+    ports:
+      - "3000:3000"
+    environment:
+      DATABASE_URL: ${DATABASE_URL}
+      BETTER_AUTH_SECRET: ${BETTER_AUTH_SECRET}
+      BETTER_AUTH_URL: ${BETTER_AUTH_URL}
+      CORS_ORIGIN: ${CORS_ORIGIN}
+      GEMINI_API_KEY: ${GEMINI_API_KEY}
+      NODE_ENV: production
+
+  web:
+    image: ${ACR_NAME}.azurecr.io/web:${TAG:-placeholder}
+    ports:
+      - "3001:3001"

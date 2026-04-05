@@ -1,0 +1,153 @@
+name: Deploy to Azure Container Apps
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  id-token: write
+  contents: read
+
+env:
+  ACR_LOGIN_SERVER: ${{ secrets.ACR_NAME }}.azurecr.io
+
+jobs:
+  build-push-server:
+    name: Server — build, push & deploy
+    runs-on: ubuntu-latest
+
+    outputs:
+      server_fqdn: ${{ steps.get-fqdn.outputs.fqdn }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Azure login (OIDC)
+        uses: azure/login@v2
+        with:
+          client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+
+      - name: Log in to ACR
+        run: az acr login --name ${{ secrets.ACR_NAME }}
+
+      - name: Build and push server image
+        env:
+          ACR_NAME: ${{ secrets.ACR_NAME }}
+          TAG: ${{ github.sha }}
+          DATABASE_URL: placeholder
+          BETTER_AUTH_SECRET: placeholder-secret-at-least-32-chars-long
+          BETTER_AUTH_URL: https://placeholder.example.com
+          CORS_ORIGIN: https://placeholder.example.com
+          GEMINI_API_KEY: placeholder
+          VITE_SERVER_URL: https://placeholder.example.com
+        run: |
+          docker compose -f compose.yaml build server
+          docker compose -f compose.yaml push server
+
+      - name: Deploy server container app
+        run: |
+          az containerapp update \
+            --name ${{ secrets.SERVER_APP_NAME }} \
+            --resource-group ${{ secrets.AZURE_RESOURCE_GROUP }} \
+            --image ${{ env.ACR_LOGIN_SERVER }}/server:${{ github.sha }} \
+            --set-env-vars \
+              DATABASE_URL=secretref:database-url \
+              BETTER_AUTH_SECRET=secretref:better-auth-secret \
+              BETTER_AUTH_URL=secretref:better-auth-url \
+              CORS_ORIGIN=secretref:cors-origin \
+              GEMINI_API_KEY=secretref:gemini-api-key \
+              NODE_ENV=production
+
+      - name: Set secrets on server container app
+        run: |
+          az containerapp secret set \
+            --name ${{ secrets.SERVER_APP_NAME }} \
+            --resource-group ${{ secrets.AZURE_RESOURCE_GROUP }} \
+            --secrets \
+              database-url="${{ secrets.DATABASE_URL }}" \
+              better-auth-secret="${{ secrets.BETTER_AUTH_SECRET }}" \
+              better-auth-url="https://$(az containerapp show \
+                --name ${{ secrets.SERVER_APP_NAME }} \
+                --resource-group ${{ secrets.AZURE_RESOURCE_GROUP }} \
+                --query 'properties.configuration.ingress.fqdn' --output tsv)" \
+              cors-origin="https://$(az containerapp show \
+                --name ${{ secrets.WEB_APP_NAME }} \
+                --resource-group ${{ secrets.AZURE_RESOURCE_GROUP }} \
+                --query 'properties.configuration.ingress.fqdn' --output tsv)" \
+              gemini-api-key="${{ secrets.GEMINI_API_KEY }}"
+
+      - name: Restart server to pick up new secrets
+        run: |
+          az containerapp revision restart \
+            --name ${{ secrets.SERVER_APP_NAME }} \
+            --resource-group ${{ secrets.AZURE_RESOURCE_GROUP }} \
+            --revision $(az containerapp revision list \
+              --name ${{ secrets.SERVER_APP_NAME }} \
+              --resource-group ${{ secrets.AZURE_RESOURCE_GROUP }} \
+              --query '[0].name' --output tsv)
+
+      - name: Get server FQDN
+        id: get-fqdn
+        run: |
+          FQDN=$(az containerapp show \
+            --name ${{ secrets.SERVER_APP_NAME }} \
+            --resource-group ${{ secrets.AZURE_RESOURCE_GROUP }} \
+            --query "properties.configuration.ingress.fqdn" \
+            --output tsv)
+          echo "fqdn=${FQDN}" >> "$GITHUB_OUTPUT"
+
+  build-push-web:
+    name: Web — build, push & deploy
+    runs-on: ubuntu-latest
+    needs: build-push-server
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Azure login (OIDC)
+        uses: azure/login@v2
+        with:
+          client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+
+      - name: Log in to ACR
+        run: az acr login --name ${{ secrets.ACR_NAME }}
+
+      - name: Build and push web image
+        env:
+          ACR_NAME: ${{ secrets.ACR_NAME }}
+          TAG: ${{ github.sha }}
+          VITE_SERVER_URL: https://${{ needs.build-push-server.outputs.server_fqdn }}
+          DATABASE_URL: placeholder
+          BETTER_AUTH_SECRET: placeholder-secret-at-least-32-chars-long
+          BETTER_AUTH_URL: https://placeholder.example.com
+          CORS_ORIGIN: https://placeholder.example.com
+          GEMINI_API_KEY: placeholder
+        run: |
+          docker compose -f compose.yaml build web
+          docker compose -f compose.yaml push web
+
+      - name: Deploy web container app
+        run: |
+          az containerapp update \
+            --name ${{ secrets.WEB_APP_NAME }} \
+            --resource-group ${{ secrets.AZURE_RESOURCE_GROUP }} \
+            --image ${{ env.ACR_LOGIN_SERVER }}/web:${{ github.sha }}
+
+      - name: Print deployed URLs
+        run: |
+          SERVER_URL="https://${{ needs.build-push-server.outputs.server_fqdn }}"
+          WEB_URL="https://$(az containerapp show \
+            --name ${{ secrets.WEB_APP_NAME }} \
+            --resource-group ${{ secrets.AZURE_RESOURCE_GROUP }} \
+            --query 'properties.configuration.ingress.fqdn' \
+            --output tsv)"
+          echo "Server: ${SERVER_URL}"
+          echo "Web:    ${WEB_URL}"
